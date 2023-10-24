@@ -23,11 +23,11 @@ pour la base de donnée regarder le make file
   //composer create-project symfony/skeleton:"6.3.*" my_project_directory
     cd my_project_directory
     composer require webapp  
-  
+### prise en main du projet  
   symfony check:requirements
   composer install ou composer install --ignore-platform-reqs
   composer update
-  composer require symfony/webapp-pack 
+  composer require webapp  
   symfony server:start pour tester le site web
 ### commande base de donnée installation :
 #### important bien configurer son .env locale pour plus d'infos regarder la doc symfony installation
