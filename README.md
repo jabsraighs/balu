@@ -15,15 +15,17 @@
    
 # Commande Symfony
 ## Site 
-installer symfony regarder la doc symfony 
+installer symfony regarder la doc symfony
+https://symfony.com/doc/current/index.html 
 pour la base de donnée regarder le make file 
 
 ### commande d'installation basique pour le lancement du projet 
-  symfony new //titre du site --webapp 
+  //if not create symfony new //titre du site --webapp  
+  
   symfony check:requirements
-  composer install
+  composer install ou composer install --ignore-platform-reqs
   composer update
-  composer install --ignore-platform-reqs
+  composer require symfony/webapp-pack 
   symfony server:start pour tester le site web
 ### commande base de donnée installation :
 #### important bien configurer son .env locale pour plus d'infos regarder la doc symfony installation
