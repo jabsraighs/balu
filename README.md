@@ -1,5 +1,5 @@
 # balu
-# Contributeur
+## Contributeur
   blandine-228
   aalomatsi@myges.fr
 
@@ -8,3 +8,6 @@
 
    Lyzabouzar@gmail.com
    Lbouzar
+   
+   abouaki1@myges.fr
+   jabsraighs
