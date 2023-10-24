@@ -20,7 +20,9 @@ https://symfony.com/doc/current/index.html
 pour la base de donnée regarder le make file 
 
 ### commande d'installation basique pour le lancement du projet 
-  //if not create symfony new //titre du site --webapp  
+  //composer create-project symfony/skeleton:"6.3.*" my_project_directory
+    cd my_project_directory
+    composer require webapp  
   
   symfony check:requirements
   composer install ou composer install --ignore-platform-reqs
