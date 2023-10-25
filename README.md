@@ -49,3 +49,5 @@ pour la base de donnée regarder le make file
     @tailwind base;@tailwind components;@tailwind utilities;
 
  test la bonne installation de ton tailwind via la command  npm run build
+
+email sender registrations confirmations devisbalu698@gmail.com mdp esgiChallenge a virer avant que adrian voit ça
