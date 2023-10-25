@@ -37,9 +37,8 @@ pour la base de donnée regarder le make file
     php bin/console doctrine:schema:create  
     php bin/console doctrine:database:create                
    
-### installation de tailwind / react  command :
+### installation de tailwind command :
   composer require symfony/webpack-encore-bundle // composer require symfony/webpack-encore-bundle --ignore-platform-req=ext-zip
-  composer require symfony/ux-react  // composer require symfony/ux-react --ignore-platform-req=ext-zip   
   npm install --force
   npm install -D tailwindcss postcss autoprefixer postcss-loader
   npx tailwindcss init -p
