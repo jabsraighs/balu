@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Security;
+namespace App\Login;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
@@ -48,5 +48,6 @@ class EmailVerifier
 
         $this->entityManager->persist($user);
         $this->entityManager->flush();
+
     }
 }

@@ -48,6 +48,10 @@ pour la base de donnée regarder le make file
     et enfin dans le dossier assets styles supprimer ce qu'il ya present et ajouter cette ligne :  
     @tailwind base;@tailwind components;@tailwind utilities;
 
- test la bonne installation de ton tailwind via la command  npm run build
+ test la bonne installation de ton tailwind via la command npmm run dev puis npm run build
 
 email sender registrations confirmations devisbalu698@gmail.com mdp esgiChallenge a virer avant que adrian voit ça
+
+maildev : confirmation Email Login 
+commande : 
+  maildev
