@@ -18,6 +18,6 @@ class HomeController extends AbstractController
     #[Route('/accueil', name: 'app_accueil',methods: ['GET'])]
     public function getAccueil(): Response
     {
-        return $this->render('home/index.html.twig', []);
+        return $this->render('home/accueil.html.twig', []);
     }
 }
