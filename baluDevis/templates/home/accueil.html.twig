@@ -3,10 +3,10 @@
 {% block title %}accueil suite à une connexion{% endblock %}
 
 {% block body %}
-    
-    <br>
-    <h1> Welcome To the Accueil Page  </h1>
-        
-       
-    
+    {% if is_granted('ROLE_USER') and app.user.isVerified == true %}
+        <br>
+        <h1> Welcome To the Accueil Page  </h1>
+    {% else %}
+      <h1> please confirm your email</h1>
+    {% endif %}
 {% endblock %}
