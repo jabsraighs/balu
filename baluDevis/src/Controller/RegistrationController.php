@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Form\RegistrationFormType;
 use App\Login\EmailVerifier;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -63,7 +64,7 @@ class RegistrationController extends AbstractController
         ]);
     }
 
-    #[Route('/verify/email', name: 'app_verify_email',methods: ['GET'])]
+    #[Route('/verify/email/', name: 'app_verify_email',methods: ['GET'])]
     public function verifyUserEmail(Request $request, TranslatorInterface $translator): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
@@ -82,4 +83,35 @@ class RegistrationController extends AbstractController
 
         return $this->redirectToRoute('app_accueil');
     }
+    #[Route('/resend/email', name: 'app_Resend_email',methods: ['GET','POST'])]
+    public function reSendEmail(): Response {
+
+     $user = $this->getUser();
+        if (!$user) {
+            $this->addFlash('warning', 'Vous devez être connecté pour accéder à cette page');
+            return $this->redirectToRoute('app_login');
+        }
+
+        if ($user->IsVerified()) {
+            $this->addFlash('warning', 'Cet utilisateur est déjà vérifié');
+            return $this->redirectToRoute('app_accueil');
+        }
+
+        try {
+            $this->emailVerifier->sendEmailConfirmation('app_verify_email', $user,
+                (new TemplatedEmail())
+                    ->from(new Address('devisbalu698@gmail.com', 'baludevis'))
+                    ->to($user->getEmail())
+                    ->subject('Please Confirm your Email to verify it.')
+                    ->htmlTemplate('registration/confirmation_email.html.twig')
+            );
+
+            $this->addFlash('success', 'Un email de vérification a été envoyé à votre adresse.');
+        } catch (\Exception $e) {
+            $this->addFlash('error', 'Une erreur s\'est produite lors de l\'envoi de l\'email de vérification.');
+        }
+
+        return $this->redirectToRoute('app_accueil');
+    }
+      
 }
