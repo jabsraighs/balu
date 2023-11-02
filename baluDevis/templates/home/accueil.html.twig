@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}accueil suite à une connexion{% endblock %}
+
+{% block body %}
+    {% if is_granted('ROLE_USER') and app.user.isVerified == true %}
+        <br>
+        <h1> Welcome To the Accueil Page  </h1>
+    {% else %}
+      <h1> please confirm your email</h1>
+      <a href="{{path('app_Resend_email')}}"> resend confirmation link to verifie email </a>
+    {% endif %}
+{% endblock %}
