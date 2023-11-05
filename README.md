@@ -45,7 +45,7 @@ pour la base de donnée regarder le make file
 
 
 ### commande base de donnée installation :
-#### important bien configurer son .env locale pour plus d'infos regarder la doc symfony installation
+#### important bien configurer son .env.locale pour plus d'infos regarder la doc symfony installation
   Database : regarder chaque command fais quoi exactement avant de les utiliser
   php bin/console doctrine:database:create 
   php bin/console doctrine:schema:update --force 
