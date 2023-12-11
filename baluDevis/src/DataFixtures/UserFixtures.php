@@ -19,6 +19,12 @@ class UserFixtures extends Fixture
             ->setEmail($faker->email())
             ->setRoles(['ROLE_USER'])
             ->setPassword($password)
+            ->$user->setPassword(
+                $userPasswordHasher->hashPassword(
+                    $user,
+                    $form->get('plainPassword')->getData()
+                )
+            )
             ->setCreatedAt($date);
         $manager->persist($object);
         $this->addReference('user', $object);

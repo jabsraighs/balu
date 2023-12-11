@@ -67,3 +67,11 @@ commande :
   taskkill /PID <PID> /F
 
 Symfony server:start pour tester le site web
+
+## Fixtures command :
+  php bin/console doctrine:fixtures:load 
+  php bin/console doctrine:fixtures:load --group=UserFixtures
+  // pas necesssaire
+  composer require --dev orm-fixtures
+  composer require fakerphp/faker --dev
+  php bin/console doctrine:fixtures:load --purge-exclusions=post_category --purge-exclusions=comment_type
