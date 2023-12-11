@@ -22,17 +22,20 @@ pour la base de donnée regarder le make file
 ### commande d'installation basique pour le lancement du projet ("creation du projet")
   //composer create-project symfony/skeleton:"6.3.*" my_project_directory
     cd my_project_directory
-    composer require webapp  
+   // composer require webapp  
 ### prise en main du projet  
   symfony check:requirements
   composer install ou composer install --ignore-platform-reqs
   composer update
-  composer require webapp  
+ // composer require webapp  
 ### installation de tailwind command :
-  composer require symfony/webpack-encore-bundle // composer require symfony/webpack-encore-bundle --ignore-platform-req=ext-zip
+  // composer require symfony/webpack-encore-bundle // composer require symfony/webpack-encore-bundle --ignore-platform-req=ext-zip
+
   npm install --force
-  npm install -D tailwindcss postcss autoprefixer postcss-loader
-  npx tailwindcss init -p
+
+/*npm install -D tailwindcss postcss autoprefixer postcss-loader
+  
+   npx tailwindcss init -p
      dans le fichier tailwind.config.js ajouter dans content c'est deux lignes :
      "./assests/**/*.js", "./templates/**/*.html.twig;"
      dans le fichier webpaxk.config.Js ajouter à la fin cette commande  
@@ -42,14 +45,16 @@ pour la base de donnée regarder le make file
 
  test la bonne installation de ton tailwind via la command npm run dev puis npm run build
  
-
+*/
 
 ### commande base de donnée installation :
-#### important bien configurer son .env.locale pour plus d'infos regarder la doc symfony installation
+#### important bien configurer son .env.local pour plus d'infos regarder la doc symfony installation
+https://symfony.com/doc/current/configuration.html allez dans la partie selecting active Environnement
+outils de debug :  php bin/console debug:dotenv
   Database : regarder chaque command fais quoi exactement avant de les utiliser
   php bin/console doctrine:database:create 
   php bin/console doctrine:schema:update --force 
-  // les commandes sont à utilisée en fct de la situation
+  // recap des commandes sont à utilisée en fct de la situation
   //  php bin/console doctrine:schema:update                     
   //  php bin/console doctrine:schema:create  
   //  php bin/console doctrine:database:create 

@@ -5,9 +5,17 @@ namespace App\DataFixtures;
 use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
-class UserFixtures extends Fixture
-{
+
+class UserFixtures extends Fixture {
+     private $passwordEncoder;
+
+    public function __construct(UserPasswordHasherInterface $passwordEncoder)
+    {
+        $this->passwordEncoder = $passwordEncoder;
+    }
+
     public function load(ObjectManager $manager): void
     {
         // $product = new Product();
@@ -15,16 +23,17 @@ class UserFixtures extends Fixture
         $faker = \Faker\Factory::create('fr-Fr'); // Fix the namespace here
         $password = 'azerty';
         $date = new \DateTimeImmutable();
+        $hashedPassword = $this->passwordEncoder->hashPassword(
+            (new User())
+                ->setEmail($faker->email())
+                ->setRoles(['ROLE_USER'])
+                ->setCreatedAt($date),
+            $password
+        );
         $object = (new User())
             ->setEmail($faker->email())
             ->setRoles(['ROLE_USER'])
-            ->setPassword($password)
-            ->$user->setPassword(
-                $userPasswordHasher->hashPassword(
-                    $user,
-                    $form->get('plainPassword')->getData()
-                )
-            )
+            ->setPassword($hashedPassword)
             ->setCreatedAt($date);
         $manager->persist($object);
         $this->addReference('user', $object);
@@ -32,16 +41,18 @@ class UserFixtures extends Fixture
         $object = (new User())
             ->setEmail($faker->email())
             ->setRoles(['ROLE_ADMIN'])
-            ->setPassword($password)
+            ->setIsVerified(true)
+            ->setPassword($hashedPassword)
             ->setCreatedAt($date);
         $manager->persist($object);
         $this->addReference('admin', $object);
-
+         $isVerified= [false,true];
         for ($i = 0; $i < 10; $i++) {
             $object = (new User())
                 ->setEmail($faker->email())
                 ->setRoles(['ROLE_USER'])
-                ->setPassword($password)
+                ->setPassword($hashedPassword)
+                 ->setIsVerified($isVerified[array_rand($isVerified)])
                 ->setCreatedAt($date);
             $manager->persist($object);
         }
