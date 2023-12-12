@@ -6,6 +6,7 @@ use App\Entity\User;
 use PHPUnit\Framework\Constraint\IsTrue as ConstraintIsTrue;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -28,7 +29,17 @@ class UserType extends AbstractType
                 ],
                 'required' => 'false'
             ])
-            ->add('roles')
+            ->add('roles',ChoiceType::class,[
+                'label' => 'Roles',
+                'choices' => [
+                    'user' => 'ROLE_USER',
+                    'administrateur' => 'ROLE_ADMIN',
+                    // ... autres rôles
+                ],
+                'multiple' => true, // Activez cette option pour permettre plusieurs choix
+                'expanded' => true, // Activez cette option pour afficher les cases à cocher plutôt qu'un menu déroulant
+
+            ])
             ->add('plainPassword',PasswordType::class,[
                 'required' => false,
                 'mapped' => false,
@@ -44,16 +55,7 @@ class UserType extends AbstractType
                     ])
                 ]
             ])
-            ->add('agreeTerms',CheckboxType::class,[
-                'label' => 'accepter les conditions',
-                'mapped' => false,
-                'constraints' => [
-                    new IsTrue([
-                        'message' => 'vous devez accepter les conditions'
-                    ]),
-                ],
-                'required' => false
-            ])
+           
         ;   
     }
 

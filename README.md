@@ -33,7 +33,7 @@ pour la base de donnée regarder le make file
 
   npm install --force
 
-/*npm install -D tailwindcss postcss autoprefixer postcss-loader
+npm install -D tailwindcss postcss autoprefixer postcss-loader
   
    npx tailwindcss init -p
      dans le fichier tailwind.config.js ajouter dans content c'est deux lignes :
