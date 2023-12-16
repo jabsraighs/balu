@@ -17,10 +17,17 @@ class Quote
     private ?int $id = null;
 
     #[ORM\Column(type: Types::DATE_IMMUTABLE)]
+<<<<<<< HEAD
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\Column(type: Types::DATE_IMMUTABLE)]
     private ?\DateTimeImmutable $expiryAt = null;
+=======
+    private ?\DateTimeImmutable $createdDate = null;
+
+    #[ORM\Column(type: Types::DATE_IMMUTABLE)]
+    private ?\DateTimeImmutable $expiryDate = null;
+>>>>>>> 9c7d706 (Added database schema + entities)
 
     #[ORM\Column(length: 50)]
     private ?string $status = null;
@@ -39,8 +46,11 @@ class Quote
 
     public function __construct()
     {
+<<<<<<< HEAD
         $this->createdAt = new \DateTimeImmutable();
         $this->expiryAt = (new \DateTimeImmutable())->modify('+1 month');
+=======
+>>>>>>> 9c7d706 (Added database schema + entities)
         $this->quoteLines = new ArrayCollection();
         $this->invoices = new ArrayCollection();
     }
@@ -50,6 +60,7 @@ class Quote
         return $this->id;
     }
 
+<<<<<<< HEAD
     public function getCreatedAt(): ?\DateTimeImmutable
     {
         return $this->createdAt;
@@ -58,18 +69,36 @@ class Quote
     public function setCreatedAt(\DateTimeImmutable $createdAt): static
     {
         $this->createdAt = $createdAt;
+=======
+    public function getCreatedDate(): ?\DateTimeImmutable
+    {
+        return $this->createdDate;
+    }
+
+    public function setCreatedDate(\DateTimeImmutable $createdDate): static
+    {
+        $this->createdDate = $createdDate;
+>>>>>>> 9c7d706 (Added database schema + entities)
 
         return $this;
     }
 
     public function getExpiryDate(): ?\DateTimeImmutable
     {
+<<<<<<< HEAD
         return $this->expiryAt;
+=======
+        return $this->expiryDate;
+>>>>>>> 9c7d706 (Added database schema + entities)
     }
 
     public function setExpiryDate(\DateTimeImmutable $expiryDate): static
     {
+<<<<<<< HEAD
         $this->expiryAt = $expiryDate;
+=======
+        $this->expiryDate = $expiryDate;
+>>>>>>> 9c7d706 (Added database schema + entities)
 
         return $this;
     }
