@@ -19,9 +19,10 @@
                     <li><a href="#" id="logo"> LOGO </a></li>
                     <li><a href="{{path('app_accueil')}}"> Home </a></li>
                     <li><a href="{{path('app_logout')}}"> Log out </a></li>
+
                 </ul>
             </nav>
-        </div>  
+        </div>
         {% else %}
                 <div id="navigation-bar">
                     <nav>
@@ -32,12 +33,11 @@
                             <li><a href="{{path('app_register')}}"> Register </a></li>
                         </ul>
                     </nav>
-                </div> 
-        {%endif %} 
-    {% endblock%}   
+                </div>
+        {%endif %}
+    {% endblock%}
     </head>
 
-    
     <body>
      <br><br><br>
     {% for message in app.flashes("message")%}
@@ -46,42 +46,15 @@
                     <button type ="button" class="btn-close" data-bs-dismiss="alert" aria-label="close"></button>
                 </div>
 
-            {%endfor%}  
+            {%endfor%}
         {% block body %}
-              {% for message in app.flashes("message")%}
-                {%for messages in message%}
-                    <div class ="alert alert-success alert-dismissible fade show" role="alert">
-                        {{message}}
-                    <button type ="button" class="btn-close" data-bs-dismiss="alert" aria-label="close"></button>
-                    </div>
-                {%endfor%}
-            {%endfor%}  
-        {% if is_granted('ROLE_USER') %}
-          <div class="container d-flex flex-wrap">
-                <ul class="nav me-auto">
-                    <li class="nav-item"><a href="{{path('app_home')}}" class="nav-link link-body-emphasis px-2 active" aria-current="page">Home</a></li>
-                </ul>
-                <ul class="nav">
-                    <li class="nav-item"><a href="{{path('app_logout')}}" class="nav-link link-body-emphasis px-2">Log out</a></li>
-                </ul>
-            </div> 
-        {% else %}
-         <div class="container d-flex flex-wrap">
-                <ul class="nav me-auto">
-                    <li class="nav-item"><a href="{{path('app_home')}}" class="nav-link link-body-emphasis px-2 active" aria-current="page">Home</a></li>
-                </ul>
-                <ul class="nav">
-                    <li class="nav-item"><a href="{{path('app_login')}}" class="nav-link link-body-emphasis px-2">Sign in</a></li>
-                    <li class="nav-item"><a href="{{path('app_register')}}" class="nav-link link-body-emphasis px-2">Register</a></li>
-                </ul>
-            </div> 
-        {% endif %}
+
         {% endblock %}
     </body>
-    
-        <footer class="py-3 my-4">
+
+    <footer class="py-3 my-4">
         {% block footer%}
-            
-        {% endblock %}   
+
+        {% endblock %}
     </footer>
 </html>

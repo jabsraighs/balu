@@ -35,7 +35,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $password = null;
 
     #[ORM\Column(type: 'boolean')]
-    private $isVerified = false;
+    private  $isVerified = false;
 
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
@@ -125,6 +125,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setIsVerified(bool $isVerified): static
     {
         $this->isVerified = $isVerified;
+
+        return $this;
+    }
+    public function setIsVerifiedTrue(): static
+    {
+        $this->isVerified = true;
 
         return $this;
     }

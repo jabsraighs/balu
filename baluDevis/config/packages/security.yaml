@@ -7,8 +7,9 @@ security:
         # used to reload user from session & other features (e.g. switch_user)
         app_user_provider:
             entity:
-                class: App\Entity\User
-                property: email
+                class: App\Entity\Admin
+                property: 'y'
+        # used to reload user from session & other features (e.g. switch_user)
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
@@ -16,7 +17,10 @@ security:
         main:
             lazy: true
             provider: app_user_provider
-            custom_authenticator: App\Login\UserAuthenticator
+            custom_authenticator:
+                - App\Login\UserAuthenticator
+                - App\Security\AdminAuthenticator
+            entry_point: App\Login\UserAuthenticator
             logout:
                 path: app_logout
                 # where to redirect after logout
@@ -37,7 +41,7 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
-        # - { path: ^/admin, roles: ROLE_ADMIN }
+         - { path: ^/admin, roles: ROLE_ADMIN }
          # - { path: ^/home, roles: ROLE_USER }
 
 when@test:
