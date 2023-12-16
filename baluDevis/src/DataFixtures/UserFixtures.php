@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Admin;
 use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
@@ -38,12 +39,10 @@ class UserFixtures extends Fixture {
         $manager->persist($object);
         $this->addReference('user', $object);
 
-        $object = (new User())
-            ->setEmail($faker->email())
+        $object = (new Admin())
+            ->setY($faker->email())
             ->setRoles(['ROLE_ADMIN'])
-            ->setIsVerified(true)
-            ->setPassword($hashedPassword)
-            ->setCreatedAt($date);
+            ->setPassword($hashedPassword);
         $manager->persist($object);
         $this->addReference('admin', $object);
          $isVerified= [false,true];
