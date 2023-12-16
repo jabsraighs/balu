@@ -17,7 +17,7 @@ class Invoice
     private ?int $id = null;
 
     #[ORM\Column(type: Types::DATE_IMMUTABLE)]
-    private ?\DateTimeImmutable $createdAt = null;
+    private ?\DateTimeImmutable $createdDate = null;
 
     #[ORM\Column(type: Types::DATE_IMMUTABLE)]
     private ?\DateTimeImmutable $dueDate = null;
@@ -37,7 +37,6 @@ class Invoice
 
     public function __construct()
     {
-        $this->createdAt = new \DateTimeImmutable();
         $this->payments = new ArrayCollection();
     }
 
@@ -48,12 +47,12 @@ class Invoice
 
     public function getCreatedDate(): ?\DateTimeImmutable
     {
-        return $this->createdAt;
+        return $this->createdDate;
     }
 
-    public function setCreatedDate(\DateTimeImmutable $createdAt): static
+    public function setCreatedDate(\DateTimeImmutable $createdDate): static
     {
-        $this->createdAt = $createdAt;
+        $this->createdDate = $createdDate;
 
         return $this;
     }
