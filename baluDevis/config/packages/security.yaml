@@ -43,13 +43,13 @@ security:
             remember_me:
                 secret: '%kernel.secret%'
                 lifetime: 604800
-                path: /admin
+                path: ^/admin/login
                 always_remember_me: false
 
       
 
     access_control:
-        - { path: ^/admin, roles: ROLE_ADMIN }
+        - { path: ^/admin/login, roles: ROLE_ADMIN }
         - { path: ^/user, roles: ROLE_USER }
 
 when@test:
