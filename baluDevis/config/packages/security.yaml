@@ -18,6 +18,20 @@ security:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
 
+        user:
+            lazy: true
+            provider: app_user_provider
+            custom_authenticator:
+                - App\Login\UserAuthenticator
+            entry_point: App\Login\UserAuthenticator
+            logout:
+                path: app_logout
+            remember_me:
+                secret: '%kernel.secret%'
+                lifetime: 604800
+                path: /user
+                always_remember_me: true
+
         admin:
             lazy: true
             provider: app_admin_provider
@@ -32,19 +46,7 @@ security:
                 path: /admin
                 always_remember_me: false
 
-        user:
-            lazy: true
-            provider: app_user_provider
-            custom_authenticator:
-                - App\Login\UserAuthenticator
-            entry_point: App\Login\UserAuthenticator
-            logout:
-                path: app_logout_user
-            remember_me:
-                secret: '%kernel.secret%'
-                lifetime: 604800
-                path: /user
-                always_remember_me: true
+      
 
     access_control:
         - { path: ^/admin, roles: ROLE_ADMIN }
