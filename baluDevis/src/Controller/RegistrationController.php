@@ -5,17 +5,12 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Form\RegistrationFormType;
 use App\Login\EmailVerifier;
-use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use App\Service\SendEmailService;
 use App\Service\VerifEmailService;
-use Doctrine\ORM\EntityManager;
-use phpDocumentor\Reflection\PseudoTypes\True_;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Mime\Address;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -45,7 +40,7 @@ class RegistrationController extends AbstractController{
                     $form->get('plainPassword')->getData()
                 )
             );
-
+            $user->setRoles(['ROLE_USER']);
             $entityManager->persist($user);
             $entityManager->flush();
             $this->addFlash('message', 'Your account has been created Please Confirm your Email to verifie it..');
@@ -69,7 +64,7 @@ class RegistrationController extends AbstractController{
     }
 
    #[Route('/verify/email/', name: 'app_verify_email', methods: ['GET'])]
-public function verifyUserEmail(EntityManagerInterface $entityManager, VerifEmailService $verifEmailService, Request $request, TranslatorInterface $translator): Response
+public function verifyUserEmail(VerifEmailService $verifEmailService, Request $request, TranslatorInterface $translator): Response
 {
     $user = $this->getUser();
     $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
@@ -97,17 +92,12 @@ public function verifyUserEmail(EntityManagerInterface $entityManager, VerifEmai
             return $this->redirectToRoute('app_login');
         }
 
-        if ($this->$user->IsVerfied()) {
-            $this->addFlash('warning', 'Cet utilisateur est déjà vérifié');
-            return $this->redirectToRoute('app_accueil');
-        }
-
         try {
            $mailService->send(
                     'app_verify_email',
                     $user,
                     'devisbalu698@gmail.com',
-                    $this->$user->getEmail(),
+                    $user->getEmail(),
                     'Please Confirm your Email to verifie it. ',
                     'registration/confirmation_email.html.twig',
 
