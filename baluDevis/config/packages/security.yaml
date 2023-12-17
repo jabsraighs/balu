@@ -31,8 +31,6 @@ security:
                 lifetime: 604800
                 path: /user
                 always_remember_me: true
-            access_control:
-                - { path: ^/user, roles: ROLE_USER }
 
 
     access_control:
