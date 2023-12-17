@@ -11,7 +11,7 @@ security:
         app_user_provider:
             entity:
                 class: App\Entity\User
-                property: 'username'  # Replace with the actual property used for user usernames
+                property: 'email'  # Replace with the actual property used for user usernames
 
     firewalls:
         dev:
