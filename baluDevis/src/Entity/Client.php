@@ -33,10 +33,6 @@ class Client
     #[ORM\OneToMany(mappedBy: 'client', targetEntity: Quote::class)]
     private Collection $quotes;
 
-    #[ORM\ManyToOne(inversedBy: 'clients')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?User $userClient = null;
-
     public function __construct()
     {
         $this->quotes = new ArrayCollection();
@@ -133,19 +129,7 @@ class Client
                 $quote->setClient(null);
             }
         }
-
-        return $this;
-    }
-
-    public function getUserClient(): ?User
-    {
-        return $this->userClient;
-    }
-
-    public function setUserClient(?User $userClient): static
-    {
-        $this->userClient = $userClient;
-
+ 
         return $this;
     }
 }
