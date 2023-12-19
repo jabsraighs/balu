@@ -26,26 +26,27 @@ class UserFixtures extends Fixture {
         $hashedPassword = $this->passwordEncoder->hashPassword(
             (new User())
                 ->setEmail($faker->email())
-                ->setRoles(['ROLE_USER'])
+                ->setRoles([])
                 ->setCreatedAt($date),
             $password
         );
         $object = (new User())
             ->setEmail($faker->email())
-            ->setRoles(['ROLE_USER'])
+            ->setRoles([])
             ->setPassword($hashedPassword)
             ->setCreatedAt($date);
         $manager->persist($object);
         $this->addReference('user', $object);
 
         $object = (new User())
-            ->setEmail($faker->email())
+            ->setEmail('admin@gmail.com')
             ->setRoles(['ROLE_ADMIN'])
             ->setIsVerified(true)
             ->setPassword($hashedPassword)
             ->setCreatedAt($date);
         $manager->persist($object);
         $this->addReference('admin', $object);
+
          $isVerified= [false,true];
         for ($i = 0; $i < 10; $i++) {
             $object = (new User())
