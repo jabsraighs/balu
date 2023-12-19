@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New QuoteLine{% endblock %}
+
+{% block body %}
+    <h1>Create new QuoteLine</h1>
+
+    {{ include('admin/user/quote_line/_form.html.twig') }}
+
+    <a href="{{ path('app_admin_user_quote_line_index') }}">back to list</a>
+{% endblock %}
