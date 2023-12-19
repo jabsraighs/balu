@@ -37,8 +37,8 @@ class UserFixtures extends Fixture {
         $manager->persist($object);
         $this->addReference('user', $object);
 
-        $object = (new Admin())
-            ->setY($faker->email())
+        $object = (new User())
+            ->setEmail($faker->email())
             ->setRoles(['ROLE_ADMIN'])
             ->setPassword($hashedPassword)
             ->setCreatedAt($date);
