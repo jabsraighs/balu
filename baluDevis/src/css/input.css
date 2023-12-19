@@ -1,6 +1,13 @@
  @tailwind base;
  @tailwind components;
  @tailwind utilities;
+
+@layer components {
+  .btn{
+    @apply mt-2;
+  }
+}
+
 @layer base { 
     @import url("https://fonts.googleapis.com/css?family=Fira+Sans");
 

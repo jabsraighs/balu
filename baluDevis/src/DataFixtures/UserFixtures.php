@@ -19,37 +19,36 @@ class UserFixtures extends Fixture {
 
     public function load(ObjectManager $manager): void
     {
-        // $product = new Product();
-        // $manager->persist($product);
         $faker = \Faker\Factory::create('fr-Fr'); // Fix the namespace here
         $password = 'azerty';
         $date = new \DateTimeImmutable();
         $hashedPassword = $this->passwordEncoder->hashPassword(
             (new User())
                 ->setEmail($faker->email())
-                ->setRoles(['ROLE_USER'])
+                ->setRoles([])
                 ->setCreatedAt($date),
             $password
         );
         $object = (new User())
             ->setEmail($faker->email())
-            ->setRoles(['ROLE_USER'])
+            ->setRoles([])
             ->setPassword($hashedPassword)
             ->setCreatedAt($date);
         $manager->persist($object);
         $this->addReference('user', $object);
 
-        $object = (new Admin())
-            ->setY($faker->email())
+        $object = (new User())
+            ->setEmail($faker->email())
             ->setRoles(['ROLE_ADMIN'])
-            ->setPassword($hashedPassword);
+            ->setPassword($hashedPassword)
+            ->setCreatedAt($date);
         $manager->persist($object);
-        $this->addReference('admin', $object);
+
          $isVerified= [false,true];
         for ($i = 0; $i < 10; $i++) {
             $object = (new User())
                 ->setEmail($faker->email())
-                ->setRoles(['ROLE_USER'])
+                ->setRoles([])
                 ->setPassword($hashedPassword)
                  ->setIsVerified($isVerified[array_rand($isVerified)])
                 ->setCreatedAt($date);

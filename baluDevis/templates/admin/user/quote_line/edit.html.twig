@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit QuoteLine{% endblock %}
+
+{% block body %}
+    <h1>Edit QuoteLine</h1>
+
+    {{ include('admin/user/quote_line/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('app_admin_user_quote_line_index') }}">back to list</a>
+
+    {{ include('admin/user/quote_line/_delete_form.html.twig') }}
+{% endblock %}
