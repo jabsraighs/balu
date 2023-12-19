@@ -32,25 +32,9 @@ security:
                 path: /user
                 always_remember_me: true
 
-        admin:
-            lazy: true
-            provider: app_admin_provider
-            custom_authenticator:
-                - App\Security\AdminAuthenticator
-            entry_point: App\Security\AdminAuthenticator
-            logout:
-                path: app_logout_admin
-            remember_me:
-                secret: '%kernel.secret%'
-                lifetime: 604800
-                path: ^/admin/login
-                always_remember_me: false
-
-      
-
     access_control:
-        - { path: ^/admin/login, roles: ROLE_ADMIN }
-        - { path: ^/user, roles: ROLE_USER }
+        - { path: ^/admin, roles: ROLE_ADMIN }
+        - { path: ^/user, roles: ROLE_USER}
 
 when@test:
     security:
