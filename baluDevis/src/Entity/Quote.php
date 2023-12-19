@@ -62,14 +62,14 @@ class Quote
         return $this;
     }
 
-    public function getExpiryDate(): ?\DateTimeImmutable
+    public function getExpiryAt(): ?\DateTimeImmutable
     {
         return $this->expiryAt;
     }
 
-    public function setExpiryDate(\DateTimeImmutable $expiryDate): static
+    public function setExpiryAt(\DateTimeImmutable $expiryAt): static
     {
-        $this->expiryAt = $expiryDate;
+        $this->expiryAt = $expiryAt;
 
         return $this;
     }

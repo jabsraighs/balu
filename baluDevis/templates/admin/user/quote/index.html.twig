@@ -10,7 +10,7 @@
             <tr>
                 <th>Id</th>
                 <th>CreatedDate</th>
-                <th>ExpiryDate</th>
+                <th>ExpiryAt</th>
                 <th>Status</th>
                 <th>TotalAmount</th>
                 <th>actions</th>
@@ -20,8 +20,8 @@
         {% for quote in quotes %}
             <tr>
                 <td>{{ quote.id }}</td>
-                <td>{{ quote.createdDate ? quote.createdDate|date('Y-m-d') : '' }}</td>
-                <td>{{ quote.expiryDate ? quote.expiryDate|date('Y-m-d') : '' }}</td>
+                <td>{{ quote.createdAt? quote.createdAt|date('Y-m-d') : '' }}</td>
+                <td>{{ quote.expiryAt ? quote.expiryAt|date('Y-m-d') : '' }}</td>
                 <td>{{ quote.status }}</td>
                 <td>{{ quote.totalAmount }}</td>
                 <td>
