@@ -17,17 +17,11 @@ class Quote
     private ?int $id = null;
 
     #[ORM\Column(type: Types::DATE_IMMUTABLE)]
-<<<<<<< HEAD
+
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\Column(type: Types::DATE_IMMUTABLE)]
     private ?\DateTimeImmutable $expiryAt = null;
-=======
-    private ?\DateTimeImmutable $createdDate = null;
-    private ?\DateTimeImmutable $createdAt = null;
-
-    #[ORM\Column(type: Types::DATE_IMMUTABLE)]
-    private ?\DateTimeImmutable $expiryDate = null;
 
     #[ORM\Column(length: 50)]
     private ?string $status = null;
