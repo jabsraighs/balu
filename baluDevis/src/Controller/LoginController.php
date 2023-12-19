@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use Doctrine\ORM\EntityManager;
+use App\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -14,7 +16,7 @@ class LoginController extends AbstractController
     {
         // if ($this->getUser()) {
         //     return $this->redirectToRoute('target_path');
-        // }   
+        // }
 
         // get the login error if there is one
         $error = $authenticationUtils->getLastAuthenticationError();
@@ -28,8 +30,20 @@ class LoginController extends AbstractController
     }
 
     #[Route(path: '/logout', name: 'app_logout')]
-    public function logout(): void
-    {
+    public function logout(EntityManager $entityManager,User $user): void{
+         $user = $this->getUser();
+
+         if ($this->isGranted('ROLE_ADMIN')) {
+            // Modify isVerified based on the user's role.
+
+            // Modify the isVerified property based on your conditions.
+            $this->$user->setIsVerified(false); // Replace with your actual logic.
+
+            // Save the changes to the user entity.
+            $entityManager->persist($user);
+            $entityManager->flush();
+        }
         throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
+
     }
 }

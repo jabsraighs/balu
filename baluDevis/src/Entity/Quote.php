@@ -17,10 +17,14 @@ class Quote
     private ?int $id = null;
 
     #[ORM\Column(type: Types::DATE_IMMUTABLE)]
-    private ?\DateTimeImmutable $createdDate = null;
+<<<<<<< HEAD
+
+=======
+>>>>>>> 1588d52a0a366fd042ad42a9b3b1e0064bb92490
+    private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\Column(type: Types::DATE_IMMUTABLE)]
-    private ?\DateTimeImmutable $expiryDate = null;
+    private ?\DateTimeImmutable $expiryAt = null;
 
     #[ORM\Column(length: 50)]
     private ?string $status = null;
@@ -39,6 +43,8 @@ class Quote
 
     public function __construct()
     {
+        $this->createdAt = new \DateTimeImmutable();
+        $this->expiryAt = (new \DateTimeImmutable())->modify('+1 month');
         $this->quoteLines = new ArrayCollection();
         $this->invoices = new ArrayCollection();
     }
@@ -48,26 +54,26 @@ class Quote
         return $this->id;
     }
 
-    public function getCreatedDate(): ?\DateTimeImmutable
+    public function getCreatedAt(): ?\DateTimeImmutable
     {
-        return $this->createdDate;
+        return $this->createdAt;
     }
 
-    public function setCreatedDate(\DateTimeImmutable $createdDate): static
+    public function setCreatedAt(\DateTimeImmutable $createdAt): static
     {
-        $this->createdDate = $createdDate;
+        $this->createdAt = $createdAt;
 
         return $this;
     }
 
     public function getExpiryDate(): ?\DateTimeImmutable
     {
-        return $this->expiryDate;
+        return $this->expiryAt;
     }
 
     public function setExpiryDate(\DateTimeImmutable $expiryDate): static
     {
-        $this->expiryDate = $expiryDate;
+        $this->expiryAt = $expiryDate;
 
         return $this;
     }
