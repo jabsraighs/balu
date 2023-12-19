@@ -38,11 +38,12 @@ class UserFixtures extends Fixture {
         $this->addReference('user', $object);
 
         $object = (new User())
-            ->setEmail($faker->email())
+            ->setEmail('admin@gmail.com')
             ->setRoles(['ROLE_ADMIN'])
             ->setPassword($hashedPassword)
             ->setCreatedAt($date);
         $manager->persist($object);
+        $this->addReference('user', $object);
 
          $isVerified= [false,true];
         for ($i = 0; $i < 10; $i++) {
