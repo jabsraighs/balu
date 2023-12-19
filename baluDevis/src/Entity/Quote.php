@@ -17,7 +17,10 @@ class Quote
     private ?int $id = null;
 
     #[ORM\Column(type: Types::DATE_IMMUTABLE)]
+<<<<<<< HEAD
 
+=======
+>>>>>>> 1588d52a0a366fd042ad42a9b3b1e0064bb92490
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\Column(type: Types::DATE_IMMUTABLE)]
