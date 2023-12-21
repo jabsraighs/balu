@@ -15,7 +15,7 @@ class CategoryFixtures extends Fixture
 
         for($i = 0 ; $i < count($categories) ; $i++) {
             $object= (new Category())
-                ->setName(array_rand($categories));
+                ->setName($categories[array_rand($categories)]);
                 $manager->persist($object);
         }
         $manager->flush();

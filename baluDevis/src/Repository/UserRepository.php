@@ -38,6 +38,17 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $this->getEntityManager()->persist($user);
         $this->getEntityManager()->flush();
     }
+    public function findLimitUser($value): array {
+        return $this->createQueryBuilder('u')
+            ->select('DISTINCT u.id, u.user') // Add distinct and select the necessary fields
+            ->andWhere('u.user = :val')
+            ->setMaxResults(3)
+            ->groupBy('u.id') // Group by user identifier
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
 
 //    /**
 //     * @return User[] Returns an array of User objects
