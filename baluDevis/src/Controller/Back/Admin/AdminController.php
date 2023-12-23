@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller\Admin;
+namespace App\Controller\Back\Admin;
 
 use App\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -9,7 +9,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class AdminController extends AbstractController
 {
-    #[Route('/admin', name: 'app_admin')]
+    #[Route('/', name: '')]
     public function index(User $user): Response {
         if($this->isGranted('ROLE_ADMIN')) {
             return $this->render('admin/index.html.twig', [

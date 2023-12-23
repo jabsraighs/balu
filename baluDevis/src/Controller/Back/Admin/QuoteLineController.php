@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller\Admin;
+namespace App\Controller\Back\Admin;
 
 use App\Entity\QuoteLine;
 use App\Form\QuoteLineType;
@@ -11,13 +11,13 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('admin/user/quote/line',name: 'app_admin_user')]
+#[Route('/user/quote/line',name: '_user')]
 class QuoteLineController extends AbstractController
 {
     #[Route('/', name: '_quote_line_index', methods: ['GET'])]
     public function index(QuoteLineRepository $quoteLineRepository): Response
     {
-        return $this->render('admin/user/quote_line/index.html.twig', [
+        return $this->render('Back/admin/user/quote_line/index.html.twig', [
             'quote_lines' => $quoteLineRepository->findAll(),
         ]);
     }
@@ -33,19 +33,19 @@ class QuoteLineController extends AbstractController
             $entityManager->persist($quoteLine);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_admin_user_quote_line_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('back_admin_user_quote_line_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->render('admin/user/quote_line/new.html.twig', [
+        return $this->render('Back/admin/user/quote_line/new.html.twig', [
             'quote_line' => $quoteLine,
             'form' => $form,
         ]);
     }
 
-    #[Route('/{id}', name: 'app_quote_line_show', methods: ['GET'])]
+    #[Route('/{id}', name: '_quote_line_show', methods: ['GET'])]
     public function show(QuoteLine $quoteLine): Response
     {
-        return $this->render('admin/user/quote_line/show.html.twig', [
+        return $this->render('Back/admin/user/quote_line/show.html.twig', [
             'quote_line' => $quoteLine,
         ]);
     }
@@ -59,10 +59,10 @@ class QuoteLineController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_admin_user_quote_line_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('back_admin_user_quote_line_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->render('admin/user/quote_line/edit.html.twig', [
+        return $this->render('Back/admin/user/quote_line/edit.html.twig', [
             'quote_line' => $quoteLine,
             'form' => $form,
         ]);
@@ -76,6 +76,6 @@ class QuoteLineController extends AbstractController
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('app_admin_user_quote_line_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('back_admin_user_quote_line_index', [], Response::HTTP_SEE_OTHER);
     }
 }
