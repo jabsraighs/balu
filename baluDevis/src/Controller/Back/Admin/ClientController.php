@@ -10,8 +10,11 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-
+use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 #[Route('/user/client',name: '_user')]
+#[isGranted("ROLE_ADMIN")]
+
 class ClientController extends AbstractController
 {
     #[Route('/', name: '_client_index', methods: ['GET'])]

@@ -23,7 +23,7 @@ class QuoteType extends AbstractType
             ->add('totalAmount')
             ->add('client', EntityType::class, [
                 'class' => Client::class,
-'choice_label' => 'id',
+                'choice_label' => 'id',
             ])
         ;
     }

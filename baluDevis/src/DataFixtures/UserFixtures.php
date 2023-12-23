@@ -9,11 +9,11 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 
 class UserFixtures extends Fixture {
-     private $passwordEncoder;
 
-    public function __construct(UserPasswordHasherInterface $passwordEncoder)
+
+    public function __construct(private readonly UserPasswordHasherInterface $passwordHasher)
     {
-        $this->passwordEncoder = $passwordEncoder;
+
     }
 
     public function load(ObjectManager $manager): void
@@ -22,37 +22,35 @@ class UserFixtures extends Fixture {
         // $manager->persist($product);
         $faker = \Faker\Factory::create('fr-Fr'); // Fix the namespace here
         $password = 'azerty';
+        $isVerified = [false,true];
         $date = new \DateTimeImmutable();
-        $hashedPassword = $this->passwordEncoder->hashPassword(
-            (new User())
-                ->setEmail($faker->email())
-                ->setRoles([])
-                ->setCreatedAt($date),
-            $password
-        );
+
         $date = new \DateTimeImmutable();
         $object = (new User())
-            ->setEmail($faker->email())
+            ->setEmail('azerty@gmail.com')
             ->setRoles([])
-            ->setPassword($hashedPassword)
+            ->setIsVerified(true)
             ->setCreatedAt($date);
+            $object->setPassword($this->passwordHasher->hashPassword($object, $password));
         $manager->persist($object);
         $this->addReference('user', $object);
 
         $object = (new User())
             ->setEmail('admin@test.com')
             ->setRoles(['ROLE_ADMIN'])
-            ->setPassword($hashedPassword)
+            ->setIsVerified(true)
             ->setCreatedAt($date);
-        $manager->persist($object);
+            $object->setPassword($this->passwordHasher->hashPassword($object, $password));
+            $manager->persist($object);
 
 
-        for ($i = 0; $i < 10; $i++) {
+        for ($i = 0; $i < 20; $i++) {
             $object = (new User())
                 ->setEmail($faker->email())
                 ->setRoles([])
-                ->setPassword($hashedPassword)
+                ->setIsVerified($isVerified[array_rand($isVerified)])
                 ->setCreatedAt($date);
+            $object->setPassword($this->passwordHasher->hashPassword($object, $password));
             $manager->persist($object);
         }
 

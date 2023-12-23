@@ -96,7 +96,7 @@ public function verifyUserEmail(VerifEmailService $verifEmailService, Request $r
                     'app_verify_email',
                     $user,
                     'devisbalu698@gmail.com',
-                    $user->getEmail(),
+                    $this->$user->getEmail(),
                     'Please Confirm your Email to verifie it. ',
                     'registration/confirmation_email.html.twig',
 
