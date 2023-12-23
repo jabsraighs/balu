@@ -9,7 +9,7 @@ controllers_register:
 controllers_front:
     resource: ../src/Controller/Front
     type: attribute
-    name_prefix:  front_
+    name_prefix:  front
 
 
 controllers_back:

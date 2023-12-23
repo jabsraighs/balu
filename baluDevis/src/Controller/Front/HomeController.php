@@ -10,12 +10,12 @@ use Symfony\Component\Routing\Annotation\Route;
 #[route('/')]
 class HomeController extends AbstractController
 {
-    #[Route('/', name: 'app_home',methods: ['GET'])]
+    #[Route('/', name: '_home',methods: ['GET'])]
     public function getHome(): Response
     {
         return $this->render('Front/home/index.html.twig', []);
     }
-    #[Route('/accueil', name: 'app_accueil',methods: ['GET'])]
+    #[Route('/accueil', name: '_accueil',methods: ['GET'])]
     public function getAccueil(): Response
     {
         return $this->render('Front/home/accueil.html.twig', []);

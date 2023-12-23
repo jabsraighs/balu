@@ -54,7 +54,7 @@ class RegistrationController extends AbstractController{
 
             );
             // do anything else you need here, like send an email
-            return $this->redirectToRoute('app_home');
+            return $this->redirectToRoute('front_home');
         }
 
         return $this->render('registration/register.html.twig', [
@@ -74,13 +74,13 @@ public function verifyUserEmail(VerifEmailService $verifEmailService, Request $r
     } catch (VerifyEmailExceptionInterface $exception) {
         $this->addFlash('verify_email_error', $translator->trans($exception->getReason(), [], 'VerifyEmailBundle'));
 
-        return $this->redirectToRoute('app_accueil');
+        return $this->redirectToRoute('front_accueil');
     }
 
     // Redirect or do something else after successful verification
     // For example, you can add a flash message and redirect to a success page.
     $this->addFlash('success', 'Email verified successfully!');
-    return $this->redirectToRoute('app_accueil');
+    return $this->redirectToRoute('front_accueil');
 }
     #[Route('/resend/email', name: 'app_Resend_email',methods: ['GET','POST'])]
     public function reSendEmail(SendEmailService $mailService): Response {
@@ -106,7 +106,7 @@ public function verifyUserEmail(VerifEmailService $verifEmailService, Request $r
             $this->addFlash('error', 'Une erreur s\'est produite lors de l\'envoi de l\'email de vérification.');
         }
 
-        return $this->redirectToRoute('app_accueil');
+        return $this->redirectToRoute('front_accueil');
     }
 
 }

@@ -40,7 +40,7 @@ security:
         - { path: ^/register, roles: PUBLIC_ACCESS }
         - { path: ^/, roles: PUBLIC_ACCESS }
         - { path: ^/reset-password, roles: PUBLIC_ACCESS }
-        - { path: ^/accueil, roles: ROLE_USER }
+        - { path: ^/accueil, roles: ROLE_USER}
 
     role_hierarchy:
         # ROLE_MODERATOR: ROLE_USER
