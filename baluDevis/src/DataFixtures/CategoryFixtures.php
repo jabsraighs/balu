@@ -11,7 +11,7 @@ class CategoryFixtures extends Fixture
 {
     public function load(ObjectManager $manager): void {
 
-        $categories = ['vitrine','e-commerce','site mobile','application web','site communautaire','blog'];
+        $categories = ['vitrine','e-commerce','application mobile','application web','site communautaire','blog'];
 
         for($i = 0 ; $i < count($categories) ; $i++) {
             $object= (new Category())

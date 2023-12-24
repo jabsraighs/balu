@@ -1,7 +1,3 @@
-{% extends 'base.html.twig' %}
-
-{% block title %}Client index{% endblock %}
-
 {% block body %}
     <h1>Client index</h1>
 
@@ -14,25 +10,23 @@
                 <th>Address</th>
                 <th>Email</th>
                 <th>Phone</th>
-                <th>User client : </th>
                 <th>actions</th>
             </tr>
         </thead>
         <tbody>
         {% for client in clients %}
             <tr>
+
                 <td>{{ client.id }}</td>
                 <td>{{ client.firstname }}</td>
                 <td>{{ client.lastname }}</td>
                 <td>{{ client.address }}</td>
                 <td>{{ client.email }} </td>
                 <td>{{ client.phone }}</td>
-                {% for userClient in userClients %}
-                    <td>    {{ userClient.email}}   </td>
-                {%endfor%}
                 <td>
                     <a href="{{ path('back_admin_user_client_show', {'id': client.id}) }}">show</a>
-                    <a href="{{ path('back_admin_user_client_edit', {'id': client.id}) }}">edit</a>
+                    <a href="{{ path('back_admin_user_client_edit', {'id': client.id}) }}">update</a>
+                </td>
                 </td>
             </tr>
         {% else %}

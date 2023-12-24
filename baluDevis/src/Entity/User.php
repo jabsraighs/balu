@@ -42,7 +42,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\OneToMany(mappedBy: 'userClient', targetEntity: Client::class)]
     private Collection $clients;
+
     public function __construct(){
+
         $this->createdAt = new \DateTimeImmutable();
         $this->clients = new ArrayCollection();
     }

@@ -25,6 +25,8 @@
                 <td>
                     <a href="{{ path('back_admin_user_show', {'id': user.id}) }}">show</a>
                     <a href="{{ path('back_admin_user_update', {'id': user.id}) }}">update</a>
+                    <a href="{{ path('back_admin_user_show_clients', {'id': user.id}) }}"> clients </a>
+                </td>
                 </td>
             </tr>
         {% else %}

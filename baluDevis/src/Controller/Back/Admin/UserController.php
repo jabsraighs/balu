@@ -4,6 +4,7 @@ namespace App\Controller\Back\Admin;
 
 use App\Entity\User;
 use App\Form\UserType;
+use App\Repository\ClientRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -26,6 +27,7 @@ class UserController extends AbstractController
         ]);
     }
 // pas sur que c'est necessaire  cette route
+    #[isGranted("ROLE_ADMIN")]
     #[Route('/new', name: '_new', methods: ['GET', 'POST'])]
     public function new(Request $request,HasherUserPasswordHasherInterface $userPasswordHasher,EntityManagerInterface $entityManager): Response
     {
@@ -52,7 +54,7 @@ class UserController extends AbstractController
             'form' => $form,
         ]);
     }
-
+    #[isGranted("ROLE_ADMIN")]
     #[Route('/{id}', name: '_show', methods: ['GET'])]
     public function show(User $user): Response
     {
@@ -60,7 +62,18 @@ class UserController extends AbstractController
             'user' => $user,
         ]);
     }
+    #[isGranted("ROLE_ADMIN")]
+    #[Route('/{id}/clients', name: '_show_clients', methods: ['GET'])]
+    public function showClientsByUserId(ClientRepository $clientRepository,$id): Response
+    {
 
+        return $this->render('Back/admin/user/showClients.html.twig', [
+
+        'clients' => $clientRepository->findUsersByClientId($id),
+
+        ]);
+    }
+    #[isGranted("ROLE_ADMIN")]
     #[Route('/{id}/edit', name: '_update', methods: ['GET', 'POST'])]
     public function edit(Request $request, User $user, EntityManagerInterface $entityManager): Response
     {
@@ -78,7 +91,7 @@ class UserController extends AbstractController
             'form' => $form,
         ]);
     }
-
+    #[isGranted("ROLE_ADMIN")]
     #[Route('/{id}', name: '_delete', methods: ['POST'])]
     public function delete(Request $request, User $user, EntityManagerInterface $entityManager): Response
     {

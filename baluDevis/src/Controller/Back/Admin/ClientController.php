@@ -20,6 +20,7 @@ class ClientController extends AbstractController
     #[Route('/', name: '_client_index', methods: ['GET'])]
     public function index(ClientRepository $clientRepository): Response
     {
+
         return $this->render('Back/admin/user/client/index.html.twig', [
             'clients' => $clientRepository->findAll(),
         ]);
@@ -52,6 +53,7 @@ class ClientController extends AbstractController
             'client' => $client,
         ]);
     }
+
 
     #[Route('/{id}/edit', name: '_client_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Client $client, EntityManagerInterface $entityManager): Response

@@ -10,6 +10,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 
 #[route('/')]
+
 class HomeController extends AbstractController
 {
     #[Route('/', name: '_home',methods: ['GET'])]
