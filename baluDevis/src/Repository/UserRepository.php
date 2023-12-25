@@ -38,6 +38,15 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $this->getEntityManager()->persist($user);
         $this->getEntityManager()->flush();
     }
+    public function findClientsByUserId($userId)
+    {
+        return $this->createQueryBuilder('u')
+            ->join('u.clients', 'c') // Assurez-vous que la relation entre User et Client est correctement définie dans votre entité User
+            ->where('c.userClient = :userId') // Assurez-vous que le nom de la colonne correspond à votre modèle de données réel
+            ->setParameter('userId', $userId)
+            ->getQuery()
+            ->getResult();
+    }
 
 //    /**
 //     * @return User[] Returns an array of User objects

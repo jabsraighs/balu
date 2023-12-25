@@ -19,7 +19,7 @@ class QuoteLineType extends AbstractType
             ->add('subtotal')
             ->add('quote', EntityType::class, [
                 'class' => Quote::class,
-'choice_label' => 'id',
+                'choice_label' => 'id',
             ])
         ;
     }

@@ -20,6 +20,15 @@ class ClientRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Client::class);
     }
+    public function findUsersByClientId($clientId)
+    {
+        return $this->createQueryBuilder('u')
+            ->join('u.userClient', 'c') // Assurez-vous que la relation entre User et Client est correctement définie dans votre entité User
+            ->where('c.id = :clientId')
+            ->setParameter('clientId', $clientId)
+            ->getQuery()
+            ->getResult();
+    }
 
 //    /**
 //     * @return Client[] Returns an array of Client objects

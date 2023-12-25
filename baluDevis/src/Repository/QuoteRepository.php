@@ -20,6 +20,14 @@ class QuoteRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Quote::class);
     }
+    public function findValidQuotes()
+    {
+        return $this->createQueryBuilder('q')
+            ->andWhere('q.status = :status')
+            ->setParameter('status', 'valider')
+            ->getQuery()
+            ->getResult();
+    }
 
 //    /**
 //     * @return Quote[] Returns an array of Quote objects
