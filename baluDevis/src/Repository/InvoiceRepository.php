@@ -20,6 +20,14 @@ class InvoiceRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Invoice::class);
     }
+     public function findValidInvoices()
+    {
+        return $this->createQueryBuilder('i')
+            ->andWhere('i.paymentStatus = :status')
+            ->setParameter('status', 'valider')
+            ->getQuery()
+            ->getResult();
+    }
 
 //    /**
 //     * @return Invoice[] Returns an array of Invoice objects
