@@ -26,6 +26,9 @@ class QuoteLine
     #[ORM\JoinColumn(nullable: false)]
     private ?Quote $quote = null;
 
+    public function __construct() {
+        $subtotal = 0;
+    }
     public function getId(): ?int
     {
         return $this->id;
