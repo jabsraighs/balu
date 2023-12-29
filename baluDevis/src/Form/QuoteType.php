@@ -46,13 +46,14 @@ class QuoteType extends AbstractType
                 'query_builder' => fn (ClientRepository $clientRepository) => $clientRepository->createQueryBuilder('c')->orderBy('c.email', 'ASC'),  
              ])
              ->add('quoteLines', CollectionType::class, [
-                'entry_type' => QuoteLineType::class, // Assuming QuoteLineType is your QuoteLine form type
+                'entry_type' => QuoteLineType::class,
                 'allow_add' => true,
                 'allow_delete' => true,
-                'by_reference' => false,
+                'by_reference' => false, // Set to false to use the setter method for Quote::setQuoteLines
+                'label' => 'quoteLines',
+                
             ]);
     }
-
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([

@@ -1,4 +1,40 @@
 {{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button class="btn">{{ button_label|default('Save') }}</button>
+    {{ form_widget(form.expiryAt) }}
+    {{ form_widget(form.status) }}
+    {{ form_widget(form.client) }}
+
+
+
+    {# Render other fields if any #}
+<div id="quoteLines">
+    {{ form_widget(form.quoteLines) }}
+    {% for quoteLineForm in form.quoteLines %}
+        <div class="quoteLine">
+            {{ form_widget(quoteLineForm.quantity) }}
+            {{ form_widget(quoteLineForm.unitPrice) }}
+            {# Add other fields for QuoteLineType as needed #}
+            {{ form_row(quoteLineForm._delete, {'label': 'Delete'}) }}
+        </div>
+    {% endfor %}
+</div>
+<button type="button" class="add-quoteLine">Add Quote Item</button>
+<button class="btn">{{ button_label|default('Save') }}</button>
 {{ form_end(form) }}
+
+<script>
+    // Add new quote line form on button click
+    var $quoteLinesContainer = $('#quoteLines');
+    var index = {{ form.quoteLines|length }};
+
+    $('.add-quoteLine').on('click', function() {
+        var prototype = $quoteLinesContainer.data('prototype');
+        var newForm = prototype.replace(/__name__/g, index);
+        index++;
+        $quoteLinesContainer.append(newForm);
+    });
+
+    // Handle removal of quote line forms
+    $quoteLinesContainer.on('click', '.quoteLine .delete', function() {
+        $(this).closest('.quoteLine').remove();
+    });
+</script>
