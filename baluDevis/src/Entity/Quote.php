@@ -28,10 +28,12 @@ class Quote
     #[ORM\Column]
     private ?float $totalAmount = null;
 
+    
+
     #[ORM\ManyToOne(inversedBy: 'quotes')]
     private ?Client $client = null;
 
-    #[ORM\OneToMany(mappedBy: 'quote', targetEntity: QuoteLine::class)]
+    #[ORM\OneToMany(mappedBy: 'quote', targetEntity: QuoteLine::class , cascade: ['persist'])]
     private Collection $quoteLines;
 
     #[ORM\OneToMany(mappedBy: 'quote', targetEntity: Invoice::class)]

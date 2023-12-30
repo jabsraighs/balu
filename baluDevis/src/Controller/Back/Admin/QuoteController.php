@@ -31,12 +31,29 @@ class QuoteController extends AbstractController
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $quote = new Quote();
-        
+
         $form = $this->createForm(QuoteType::class, $quote);
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+                foreach ($quote->getQuoteLines() as $quoteLine) {
+                    // Calculate subTotal for each QuoteLine (replace this with your business logic)
+                    $subTotal = $quoteLine->getQuantity() * $quoteLine->getUnitPrice();
+                    $quoteLine->setSubTotal($subTotal);
+                }
+                // Calculate totalAmount for the entire Quote
+                $quoteLines = $quote->getQuoteLines();
+                $totalAmount = 0;
 
+                foreach ($quoteLines as $quoteLine) {
+                    $totalAmount += $quoteLine->getSubTotal();
+                }
+
+                // Set totalAmount for the Quote
+                $quote->setTotalAmount($totalAmount);
+
+                // Persist and flush the entities
+                dd($quote);
             $entityManager->persist($quote);
             $entityManager->flush();
 

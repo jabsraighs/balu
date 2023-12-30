@@ -28,7 +28,7 @@ class QuoteLineType extends AbstractType
             ]);
             //->add('subtotal',TextType::class,[
                  // Adjust this divisor based on your currency ])
-                
+
     }
 
     public function configureOptions(OptionsResolver $resolver): void
