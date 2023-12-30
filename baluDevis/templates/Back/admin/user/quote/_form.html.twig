@@ -1,40 +1,62 @@
-{{ form_start(form) }}
-    {{ form_widget(form.expiryAt) }}
-    {{ form_widget(form.status) }}
-    {{ form_widget(form.client) }}
+{% block titile %} Creer_devis {% endblock %}
+{% block body%}
+        {{ form_start(form) }}
+            {{ form_widget(form.expiryAt) }}
+            {{ form_widget(form.status) }}
+            {{ form_widget(form.client) }}
 
 
 
-    {# Render other fields if any #}
-<div id="quoteLines">
-    {{ form_widget(form.quoteLines) }}
-    {% for quoteLineForm in form.quoteLines %}
-        <div class="quoteLine">
-            {{ form_widget(quoteLineForm.quantity) }}
-            {{ form_widget(quoteLineForm.unitPrice) }}
-            {# Add other fields for QuoteLineType as needed #}
-            {{ form_row(quoteLineForm._delete, {'label': 'Delete'}) }}
-        </div>
-    {% endfor %}
-</div>
-<button type="button" class="add-quoteLine">Add Quote Item</button>
-<button class="btn">{{ button_label|default('Save') }}</button>
-{{ form_end(form) }}
+            {# Render other fields if any #}
+            <div id="quoteItem" data-prototype="{{form_row(form.quoteLines.vars.prototype)|e('html_attr')}}">
+                 {{ form_row(form.quoteLines) }}
+                <span></span>
+            </div>
 
-<script>
+        {{ form_end(form) }}
+{%endblock %}
+
+{% block javascripts %}
+    <script>
     // Add new quote line form on button click
-    var $quoteLinesContainer = $('#quoteLines');
-    var index = {{ form.quoteLines|length }};
+    let collection , buttonAdd , span
+    window.onload = () => {
+        collection = document.querySelector("#quoteItem");
+        span = collection.querySelector("span");
+        
+        buttonAdd = document.createElement("button");
+        buttonAdd.className = "add-quoteLine btn ";
+        buttonAdd.innerText = "add quote item" ;
 
-    $('.add-quoteLine').on('click', function() {
-        var prototype = $quoteLinesContainer.data('prototype');
-        var newForm = prototype.replace(/__name__/g, index);
-        index++;
-        $quoteLinesContainer.append(newForm);
-    });
+        let newButton = span.append(buttonAdd);
+        collection.dataset.index = collection.querySelectorAll("input").length;
 
-    // Handle removal of quote line forms
-    $quoteLinesContainer.on('click', '.quoteLine .delete', function() {
-        $(this).closest('.quoteLine').remove();
-    });
+
+        buttonAdd.addEventListener("click" , function() {
+            addButton(collection, newButton);
+        })
+    }
+    
+    function addButton(collection , newButton) {
+        let prototype = collection.dataset.prototype;
+        let index = collection.dataset.index;
+        prototype = prototype.replace(/__name__/g, index);
+        let content = document.createElement("html");
+        content.innerHTML = prototype;
+        let newForm = content.querySelector("div");
+        let deleteButton = document.createElement("button");
+        deleteButton.type = "button";
+        deleteButton.className =  "supp-quoteLine btn red secondary" ; 
+        deleteButton.id = "delete-quote-item" + index;
+        deleteButton.innerText = "delete quote item" ;
+        newForm.append(deleteButton);
+        collection.dataset.index++;
+        let buttoAdd = collection.querySelector(".add-quoteLine btn secondary");
+        span.insertBefore(newForm,buttonAdd);
+
+        deleteButton.addEventListener("click",function() {
+            this.previousElementSibling.parentElement.remove();
+        })
+    }
 </script>
+{% endblock %}

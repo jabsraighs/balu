@@ -20,15 +20,12 @@ class QuoteLine
     private ?float $unitPrice = null;
 
     #[ORM\Column]
-    private ?float $subtotal = 0;
+    private ?float $subtotal = null;
 
     #[ORM\ManyToOne(inversedBy: 'quoteLines')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Quote $quote = null;
 
-    public function __construct() {
-
-    }
     public function getId(): ?int
     {
         return $this->id;

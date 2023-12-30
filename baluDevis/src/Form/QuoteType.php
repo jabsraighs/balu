@@ -2,7 +2,7 @@
 
 namespace App\Form;
 
-use App\Entity\Client;
+use App\Entity\Client; 
 use App\Entity\Quote;
 use App\Form\QuoteLineType;
 use App\Repository\ClientRepository;
@@ -12,6 +12,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -47,12 +48,15 @@ class QuoteType extends AbstractType
              ])
              ->add('quoteLines', CollectionType::class, [
                 'entry_type' => QuoteLineType::class,
+                'label' => 'QuoteLines',
+                'entry_options' => ['label' => false],
                 'allow_add' => true,
                 'allow_delete' => true,
                 'by_reference' => false, // Set to false to use the setter method for Quote::setQuoteLines
-                'label' => 'quoteLines',
                 
-            ]);
+                
+            ])
+            ->add("valider",SubmitType::class);
     }
     public function configureOptions(OptionsResolver $resolver): void
     {

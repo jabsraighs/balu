@@ -3,6 +3,8 @@
 namespace App\Controller\Back\Admin;
 
 use App\Entity\Quote;
+use App\Entity\QuoteLine;
+use App\Form\QuoteLineType;
 use App\Form\QuoteType;
 use App\Repository\QuoteRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -29,10 +31,12 @@ class QuoteController extends AbstractController
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $quote = new Quote();
+        
         $form = $this->createForm(QuoteType::class, $quote);
-        $form->handleRequest($request);
 
+        $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+
             $entityManager->persist($quote);
             $entityManager->flush();
 
