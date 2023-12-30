@@ -42,6 +42,9 @@ class Quote
     #[ORM\OneToMany(mappedBy: 'quote', targetEntity: Invoice::class)]
     private Collection $invoices;
 
+    #[ORM\Column(length: 50)]
+    private ?string $Description = null;
+
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
@@ -192,6 +195,18 @@ class Quote
                 $invoice->setQuote(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->Description;
+    }
+
+    public function setDescription(string $Description): static
+    {
+        $this->Description = $Description;
 
         return $this;
     }

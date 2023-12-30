@@ -60,7 +60,6 @@ class QuoteController extends AbstractController
                 $quote->setTotalAmount($totalAmount);
 
                 // Persist and flush the entities
-                dd($quote);
             $entityManager->persist($quote);
             $entityManager->flush();
 

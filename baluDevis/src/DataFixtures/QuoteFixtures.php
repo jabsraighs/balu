@@ -28,6 +28,7 @@ class QuoteFixtures extends Fixture implements DependentFixtureInterface {
             $createdAt = $faker->dateTimeThisDecade();
             $expiredAt = $faker->dateTimeInInterval($createdAt, '+1 year');
             $quotes = (new Quote())
+                    ->setDescription($faker->paragraph())
                     ->setCreatedAt(\DateTimeImmutable::createFromMutable($createdAt))
                     ->setExpiryAt(\DateTimeImmutable::createFromMutable($expiredAt))
                     ->setStatus($status[array_rand($status)])
