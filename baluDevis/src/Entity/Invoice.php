@@ -38,6 +38,7 @@ class Invoice
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
+        $this->dueDate = (new \DateTimeImmutable())->modify('+1 month');
         $this->payments = new ArrayCollection();
     }
 

@@ -52,8 +52,8 @@ class QuoteType extends AbstractType
                 'expanded' => true,
             ])
            // ->add('totalAmount')  total amount pas besoin vu que les item et leur sub total qui le determine
-             ->add('client', EntityType::class, [
-                'label' => 'Client',
+                ->add('client', EntityType::class, [
+                    'label' => 'Client',
                 'class' => Client::class,
                 'choice_label' => 'email',
                 'multiple' => false,
