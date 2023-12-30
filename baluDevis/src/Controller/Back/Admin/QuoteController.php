@@ -3,6 +3,8 @@
 namespace App\Controller\Back\Admin;
 
 use App\Entity\Quote;
+use App\Entity\QuoteLine;
+use App\Form\QuoteLineType;
 use App\Form\QuoteType;
 use App\Repository\QuoteRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -29,10 +31,35 @@ class QuoteController extends AbstractController
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $quote = new Quote();
-        $form = $this->createForm(QuoteType::class, $quote);
-        $form->handleRequest($request);
 
+        $form = $this->createForm(QuoteType::class, $quote);
+
+        $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+                foreach ($quote->getQuoteLines() as $quoteLine) {
+                    // Calculate subTotal for each QuoteLine (ht per item)
+                    $subTotal = $quoteLine->getQuantity() * $quoteLine->getUnitPrice();
+                    $quoteLine->setSubTotal($subTotal);
+                }
+                // Calculate totalAmount for the entire Quote
+                $quoteLines = $quote->getQuoteLines() ;
+                $totalTva = 0;
+
+                foreach ($quoteLines as $quoteLine) {
+                    // total tva = total ht * tva
+                     $totalTva += $quoteLine->getSubTotal() * $quote->getTva();
+                }
+                $totalAmount = 0;
+
+                foreach ($quoteLines as $quoteLine) {
+                    $totalAmount += $quoteLine->getSubTotal() + $totalTva ;
+                }
+
+                // Set totalAmount for the Quote
+                $quote->setTotalTva($totalTva);
+                $quote->setTotalAmount($totalAmount);
+
+                // Persist and flush the entities
             $entityManager->persist($quote);
             $entityManager->flush();
 
