@@ -37,6 +37,16 @@ class QuoteType extends AbstractType
                 'multiple' => false,
                 'expanded' => true,
             ])
+            ->add('tva',ChoiceType::class, [
+                'label' => 'status',
+                'choices' => [
+                    "0%" =>  "0" ,
+                    "10%" =>  "0.10",
+                    "20" => "0.20"
+                ],
+                'multiple' => false,
+                'expanded' => true,
+            ])
            // ->add('totalAmount')  total amount pas besoin vu que les item et leur sub total qui le determine
              ->add('client', EntityType::class, [
                 'label' => 'Client',

@@ -28,7 +28,10 @@ class Quote
     #[ORM\Column]
     private ?float $totalAmount = null;
 
-    
+    #[ORM\Column]
+    private ?float $tva = null;
+    #[ORM\Column]
+    private ?float $totalTva = null;
 
     #[ORM\ManyToOne(inversedBy: 'quotes')]
     private ?Client $client = null;
@@ -99,6 +102,27 @@ class Quote
 
         return $this;
     }
+    public function setTva(float $tva): static
+    {
+        $this->tva = $tva;
+
+        return $this;
+    }
+    public function getTva(): ?float
+    {
+        return $this->tva;
+    }
+     public function setTotalTva(float $totalTva): static
+    {
+        $this->totalTva = $totalTva;
+
+        return $this;
+    }
+    public function getTotalTva(): ?float
+    {
+        return $this->tva;
+    }
+
 
     public function getClient(): ?Client
     {

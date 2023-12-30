@@ -37,19 +37,26 @@ class QuoteController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
                 foreach ($quote->getQuoteLines() as $quoteLine) {
-                    // Calculate subTotal for each QuoteLine (replace this with your business logic)
+                    // Calculate subTotal for each QuoteLine (ht per item)
                     $subTotal = $quoteLine->getQuantity() * $quoteLine->getUnitPrice();
                     $quoteLine->setSubTotal($subTotal);
                 }
                 // Calculate totalAmount for the entire Quote
-                $quoteLines = $quote->getQuoteLines();
+                $quoteLines = $quote->getQuoteLines() ;
+                $totalTva = 0;
+
+                foreach ($quoteLines as $quoteLine) {
+                    // total tva = total ht * tva
+                     $totalTva += $quoteLine->getSubTotal() * $quote->getTva();
+                }
                 $totalAmount = 0;
 
                 foreach ($quoteLines as $quoteLine) {
-                    $totalAmount += $quoteLine->getSubTotal();
+                    $totalAmount += $quoteLine->getSubTotal() + $totalTva ;
                 }
 
                 // Set totalAmount for the Quote
+                $quote->setTotalTva($totalTva);
                 $quote->setTotalAmount($totalAmount);
 
                 // Persist and flush the entities
