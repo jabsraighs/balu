@@ -35,7 +35,7 @@ class QuoteType extends AbstractType
                 'label' => 'status',
                 'choices' => [
                     "in progress" =>  "in Progress" ,
-                    "validate" =>  "validate",
+                    "validate" =>  "valider",
                     "decline" => "decline"
                 ],
                 'multiple' => false,

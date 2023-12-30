@@ -32,6 +32,8 @@ class InvoiceController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $totalAmountQuote = $invoice->getQuote()->getTotalAmount();
+            $invoice = $invoice->setTotalAmount($totalAmountQuote);
             $entityManager->persist($invoice);
             $entityManager->flush();
 

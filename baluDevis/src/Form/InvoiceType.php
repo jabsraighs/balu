@@ -11,6 +11,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -25,11 +26,11 @@ class InvoiceType extends AbstractType
                 'input' => 'datetime_immutable'
             ])
             ->add('paymentStatus',ChoiceType::class, [
-                'label' => 'paymentstatus',
+                'label' => 'payment Status',
                 'choices' => [
-                    "in progress" =>  "in Progress" ,
-                    "validate" =>  "validate",
-                    "decline" => "decline"
+                    "waiting " =>  "waiting" ,
+                    "paid" =>  "paid",
+                    "unpaid" => "unpaid"
                 ],
                 'multiple' => false,
                 'expanded' => true,
@@ -48,16 +49,7 @@ class InvoiceType extends AbstractType
             }
 
             ])
-            ->add('quote', CollectionType::class, [
-                'required' => true,
-                'entry_type' => QuoteType::class,
-                'label' => 'Quote',
-                'entry_options' => ['label' => false],
-                'allow_add' => true,
-                'allow_delete' => true,
-                'by_reference' => false, // Set to false to use the setter method for Quote::setQuoteLines
-
-            ]);
+            ->add("valider",SubmitType::class);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
