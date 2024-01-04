@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller\Back\Admin;
+namespace App\Controller\Front;
 
 use App\Entity\Client;
 use App\Form\ClientType;
@@ -12,19 +12,16 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-#[Route('/user/client',name: '_user')]
-#[isGranted("ROLE_ADMIN")]
-
+#[Route('/user/client',name: 'user')]
+#[isGranted("ROLE_USER")]
 class ClientController extends AbstractController
 {
-    #[isGranted("ROLE_ADMIN")]
-    #[Route('/', name: '_client_index', methods: ['GET'])]
+    #[Route('/{id}', name: '_client_index', methods: ['GET'])]
     public function index(ClientRepository $clientRepository): Response
     {
-
-        return $this->render('Back/admin/user/client/index.html.twig', [
+        
+        return $this->render('Front/user/client/index.html.twig', [
             'clients' => $clientRepository->findAll(),
-
         ]);
     }
 
@@ -39,10 +36,10 @@ class ClientController extends AbstractController
             $entityManager->persist($client);
             $entityManager->flush();
 
-            return $this->redirectToRoute('back_admin_user_client_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('user_client_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->render('Back/admin/user/client/new.html.twig', [
+        return $this->render('Front/user/client/new.html.twig', [
             'client' => $client,
             'form' => $form,
         ]);
@@ -51,7 +48,7 @@ class ClientController extends AbstractController
     #[Route('/{id}', name: '_client_show', methods: ['GET'])]
     public function show(Client $client): Response
     {
-        return $this->render('Back/admin/user/client/show.html.twig', [
+        return $this->render('Front/user/client/show.html.twig', [
             'client' => $client,
         ]);
     }
@@ -66,10 +63,10 @@ class ClientController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
 
-            return $this->redirectToRoute('back_admin_user_client_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('user_client_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->render('Back/admin/user/client/edit.html.twig', [
+        return $this->render('Front/user/client/edit.html.twig', [
             'client' => $client,
             'form' => $form,
         ]);
@@ -83,6 +80,6 @@ class ClientController extends AbstractController
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('back_admin_user_client_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('user_client_index', [], Response::HTTP_SEE_OTHER);
     }
 }
