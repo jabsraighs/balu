@@ -22,8 +22,12 @@ class QuoteController extends AbstractController
     #[Route('/', name: '_quote_index', methods: ['GET'])]
     public function index(QuoteRepository $quoteRepository): Response
     {
+      
+        $user = $this->getUser()->getId();
+        $userQuote= $quoteRepository->findBy(['client_id' => $user]);
+
         return $this->render('Front/user/quote/index.html.twig', [
-            'quotes' => $quoteRepository->findAll(),
+            'users' => $userQuote,
         ]);
     }
 

@@ -2,6 +2,7 @@
 
 namespace App\Controller\Front;
 
+use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -22,8 +23,13 @@ class HomeController extends AbstractController
 
     #[Route('/accueil', name: '_accueil',methods: ['GET'])]
     #[IsGranted("ROLE_USER")]
-    public function getAccueil(): Response
+    public function getAccueil(UserRepository $userRepository): Response
     {
-        return $this->render('Front/home/accueil.html.twig', []);
+          $user = $this->getUser()->getId();
+        $userInfo = $userRepository->findBy(['id' => $user]);
+
+        return $this->render('Front/home/accueil.html.twig', [
+            'users' => $userInfo,
+        ]);
     }
 }

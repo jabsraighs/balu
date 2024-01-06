@@ -47,6 +47,13 @@ class Quote
     #[ORM\Column(length: 50)]
     private ?string $Description = null;
 
+    #[ORM\ManyToOne(inversedBy: 'quotes')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $userQuote = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $name = null;
+
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
@@ -209,6 +216,30 @@ class Quote
     public function setDescription(string $Description): static
     {
         $this->Description = $Description;
+
+        return $this;
+    }
+
+    public function getUserQuote(): ?User
+    {
+        return $this->userQuote;
+    }
+
+    public function setUserQuote(?User $userQuote): static
+    {
+        $this->userQuote = $userQuote;
+
+        return $this;
+    }
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function setName(string $name): static
+    {
+        $this->name = $name;
 
         return $this;
     }
