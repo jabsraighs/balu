@@ -16,7 +16,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 #[isGranted("ROLE_USER")]
-#[Route('/user/quote',name: 'user')]
+#[Route('/user/quote',name: '_user')]
 class QuoteController extends AbstractController
 {
     #[Route('/', name: '_quote_index', methods: ['GET'])]
@@ -63,7 +63,7 @@ class QuoteController extends AbstractController
             $entityManager->persist($quote);
             $entityManager->flush();
 
-            return $this->redirectToRoute('user_quote_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('front_user_quote_index', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('Front/user/quote/new.html.twig', [
@@ -89,7 +89,7 @@ class QuoteController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
 
-            return $this->redirectToRoute('user_quote_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('front_user_quote_index', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('Front/user/quote/edit.html.twig', [
@@ -106,6 +106,6 @@ class QuoteController extends AbstractController
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('user_quote_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('front_user_quote_index', [], Response::HTTP_SEE_OTHER);
     }
 }

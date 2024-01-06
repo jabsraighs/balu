@@ -14,7 +14,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 
 #[isGranted("ROLE_USER")]
-#[Route('/user/quote/line',name: 'user')]
+#[Route('/user/quote/line',name: '_user')]
 class QuoteLineController extends AbstractController
 {
     #[Route('/', name: '_quote_line_index', methods: ['GET'])]
@@ -36,7 +36,7 @@ class QuoteLineController extends AbstractController
             $entityManager->persist($quoteLine);
             $entityManager->flush();
 
-            return $this->redirectToRoute('user_quote_line_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('front_user_quote_line_index', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('Front/user/quote_line/new.html.twig', [
@@ -62,7 +62,7 @@ class QuoteLineController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
 
-            return $this->redirectToRoute('user_quote_line_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('front_user_quote_line_index', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('Front/user/quote_line/edit.html.twig', [
@@ -79,6 +79,6 @@ class QuoteLineController extends AbstractController
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('user_quote_line_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('front_user_quote_line_index', [], Response::HTTP_SEE_OTHER);
     }
 }

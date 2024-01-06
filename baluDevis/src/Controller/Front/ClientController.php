@@ -16,12 +16,12 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 #[isGranted("ROLE_USER")]
 class ClientController extends AbstractController
 {
-    #[Route('/{id}', name: '_client_index', methods: ['GET'])]
+    #[Route('/', name: '_client_index', methods: ['GET'])]
     public function index(ClientRepository $clientRepository): Response
     {
-        
+
         return $this->render('Front/user/client/index.html.twig', [
-            'clients' => $clientRepository->findAll(),
+            'clients' => $clientRepository->find(),
         ]);
     }
 
@@ -36,7 +36,7 @@ class ClientController extends AbstractController
             $entityManager->persist($client);
             $entityManager->flush();
 
-            return $this->redirectToRoute('user_client_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('front_user_client_index', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('Front/user/client/new.html.twig', [
@@ -63,7 +63,7 @@ class ClientController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
 
-            return $this->redirectToRoute('user_client_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('front_user_client_index', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('Front/user/client/edit.html.twig', [
@@ -80,6 +80,6 @@ class ClientController extends AbstractController
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('user_client_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('front_user_client_index', [], Response::HTTP_SEE_OTHER);
     }
 }

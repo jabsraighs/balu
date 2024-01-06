@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-#[Route('/user/invoice',name: 'user')]
+#[Route('/user/invoice',name: '_user')]
 #[isGranted("ROLE_USER")]
 class InvoiceController extends AbstractController
 {
@@ -37,7 +37,7 @@ class InvoiceController extends AbstractController
             $entityManager->persist($invoice);
             $entityManager->flush();
 
-            return $this->redirectToRoute('user_invoice_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('front_user_invoice_index', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('Front/user/invoice/new.html.twig', [
@@ -63,7 +63,7 @@ class InvoiceController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
 
-            return $this->redirectToRoute('user_invoice_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('front_user_invoice_index', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('Front/user/invoice/edit.html.twig', [
@@ -80,6 +80,6 @@ class InvoiceController extends AbstractController
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('user_invoice_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('front_user_invoice_index', [], Response::HTTP_SEE_OTHER);
     }
 }

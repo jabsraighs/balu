@@ -24,8 +24,8 @@
                 <td>{{ client.email }} </td>
                 <td>{{ client.phone }}</td>
                 <td>
-                    <a href="{{ path('user_client_show', {'id': client.id}) }}">show</a>
-                    <a href="{{ path('user_client_edit', {'id': client.id}) }}">update</a>
+                    <a href="{{ path('front_user_client_show', {'id': client.id}) }}">show</a>
+                    <a href="{{ path('front_user_client_edit', {'id': client.id}) }}">update</a>
                 </td>
                 </td>
             </tr>
@@ -37,5 +37,5 @@
         </tbody>
     </table>
 
-    <a href="{{ path('user_client_new') }}">Create new</a>
+    <a href="{{ path('front_user_client_new') }}">Create new</a>
 {% endblock %}

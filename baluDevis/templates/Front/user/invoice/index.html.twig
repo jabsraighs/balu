@@ -25,8 +25,8 @@
                 <td>{{ invoice.paymentStatus }}</td>
                 <td>{{ invoice.totalAmount }}</td>
                 <td>
-                    <a href="{{ path('user_invoice_show', {'id': invoice.id}) }}">show</a>
-                    <a href="{{ path('user_invoice_edit', {'id': invoice.id}) }}">edit</a>
+                    <a href="{{ path('front_user_invoice_show', {'id': invoice.id}) }}">show</a>
+                    <a href="{{ path('front_user_invoice_edit', {'id': invoice.id}) }}">edit</a>
                 </td>
             </tr>
         {% else %}
@@ -37,5 +37,5 @@
         </tbody>
     </table>
 
-    <a href="{{ path('user_invoice_new') }}">Create new</a>
+    <a href="{{ path('front_user_invoice_new') }}">Create new</a>
 {% endblock %}

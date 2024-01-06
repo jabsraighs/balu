@@ -31,8 +31,8 @@
                     <td>    {{ userClient.email}}   </td>
                 {%endfor%}
                 <td>
-                    <a href="{{ path('user_client_show', {'id': client.id}) }}">show</a>
-                    <a href="{{ path('user_client_edit', {'id': client.id}) }}">edit</a>
+                    <a href="{{ path('front_user_client_show', {'id': client.id}) }}">show</a>
+                    <a href="{{ path('front_user_client_edit', {'id': client.id}) }}">edit</a>
                 </td>
             </tr>
         {% else %}
@@ -43,5 +43,5 @@
         </tbody>
     </table>
 
-    <a href="{{ path('user_client_new') }}">Create new</a>
+    <a href="{{ path('front_user_client_new') }}">Create new</a>
 {% endblock %}
