@@ -8,28 +8,24 @@
     <table class="table">
         <thead>
             <tr>
-                <th>Id</th>
+
                 <th>Firstname</th>
                 <th>Lastname</th>
                 <th>Address</th>
                 <th>Email</th>
                 <th>Phone</th>
-                <th>User client : </th>
                 <th>actions</th>
             </tr>
         </thead>
         <tbody>
         {% for client in clients %}
             <tr>
-                <td>{{ client.id }}</td>
                 <td>{{ client.firstname }}</td>
                 <td>{{ client.lastname }}</td>
                 <td>{{ client.address }}</td>
                 <td>{{ client.email }} </td>
                 <td>{{ client.phone }}</td>
-                {% for userClient in userClients %}
-                    <td>    {{ userClient.email}}   </td>
-                {%endfor%}
+
                 <td>
                     <a href="{{ path('front_user_client_show', {'id': client.id}) }}">show</a>
                     <a href="{{ path('front_user_client_edit', {'id': client.id}) }}">edit</a>

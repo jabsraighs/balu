@@ -10,20 +10,22 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Http\Attribute\IsGranted;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-#[Route('/user/client',name: 'user')]
-#[isGranted("ROLE_USER")]
+
+#[Route('/user/client',name: '_user')]
 class ClientController extends AbstractController
 {
     #[Route('/', name: '_client_index', methods: ['GET'])]
     public function index(ClientRepository $clientRepository): Response
     {
+        $user = $this->getUser()->getId();
+        $userClients = $clientRepository->findBy(['userClient' => $user]);
 
         return $this->render('Front/user/client/index.html.twig', [
-            'clients' => $clientRepository->find(),
+            'clients' => $userClients,
         ]);
     }
+
+
 
     #[Route('/new', name: '_client_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
@@ -50,6 +52,7 @@ class ClientController extends AbstractController
     {
         return $this->render('Front/user/client/show.html.twig', [
             'client' => $client,
+            dump($client)
         ]);
     }
 
