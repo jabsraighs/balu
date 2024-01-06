@@ -8,7 +8,7 @@
     <table class="table">
         <thead>
             <tr>
-                <th>Id</th>
+
                 <th>CreatedDate</th>
                 <th>ExpiryAt</th>
                 <th>Status</th>
@@ -19,7 +19,7 @@
         <tbody>
         {% for quote in quotes %}
             <tr>
-                <td>{{ quote.id }}</td>
+
                 <td>{{ quote.createdAt? quote.createdAt|date('Y-m-d') : '' }}</td>
                 <td>{{ quote.expiryAt ? quote.expiryAt|date('Y-m-d') : '' }}</td>
                 <td>{{ quote.status }}</td>
@@ -37,5 +37,5 @@
         </tbody>
     </table>
 
-    <a href="{{ path('front_user_quote_new') }}">Create new</a>
+    <a href="{{ path('front_user_quote_new') }}">Create new Devis</a>
 {% endblock %}

@@ -8,7 +8,7 @@
     <table class="table">
         <thead>
             <tr>
-                <th>Id</th>
+
                 <th>CreatedAt</th>
                 <th>DueDate</th>
                 <th>PaymentStatus</th>
@@ -19,7 +19,7 @@
         <tbody>
         {% for invoice in invoices %}
             <tr>
-                <td>{{ invoice.id }}</td>
+
                 <td>{{ invoice.createdAt ? invoice.createdAt|date('Y-m-d') : '' }}</td>
                 <td>{{ invoice.dueDate ? invoice.dueDate|date('Y-m-d') : '' }}</td>
                 <td>{{ invoice.paymentStatus }}</td>

@@ -8,7 +8,6 @@
     <table class="table">
         <thead>
             <tr>
-                <th>Id</th>
                 <th>Quantity</th>
                 <th>UnitPrice</th>
                 <th>Subtotal</th>
@@ -18,7 +17,6 @@
         <tbody>
         {% for quote_line in quote_lines %}
             <tr>
-                <td>{{ quote_line.id }}</td>
                 <td>{{ quote_line.quantity }}</td>
                 <td>{{ quote_line.unitPrice }}</td>
                 <td>{{ quote_line.subtotal }}</td>
