@@ -30,34 +30,6 @@ class UserController extends AbstractController
         ]);
     }
 
-// pas sur que c'est necessaire  cette route
-    #[Route('/new', name: '_new', methods: ['GET', 'POST'])]
-    public function new(Request $request,HasherUserPasswordHasherInterface $userPasswordHasher,EntityManagerInterface $entityManager): Response
-    {
-        $user = new User();
-        $form = $this->createForm(UserType::class, $user);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-          // encode the plain password
-            $user->setPassword(
-                $userPasswordHasher->hashPassword(
-                    $user,
-                    $form->get('plainPassword')->getData()
-                )
-            );
-            $entityManager->persist($user);
-            $entityManager->flush();
-
-            return $this->redirectToRoute('front_user_index', [], Response::HTTP_SEE_OTHER);
-        }
-
-        return $this->render('Front/user/new.html.twig', [
-            'user' => $user,
-            'form' => $form,
-        ]);
-    }
-    #[isGranted("ROLE_ADMIN")]
     #[Route('/{id}', name: '_show', methods: ['GET'])]
     public function show(User $user): Response
     {
