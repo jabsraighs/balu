@@ -31,10 +31,12 @@ class ClientController extends AbstractController
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $client = new Client();
+        $user = $this->getUser();
         $form = $this->createForm(ClientType::class, $client);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $client = $client->setUserClient($user);
             $entityManager->persist($client);
             $entityManager->flush();
 
@@ -74,7 +76,6 @@ class ClientController extends AbstractController
             'form' => $form,
         ]);
     }
-
     #[Route('/{id}', name: '_client_delete', methods: ['POST'])]
     public function delete(Request $request, Client $client, EntityManagerInterface $entityManager): Response
     {

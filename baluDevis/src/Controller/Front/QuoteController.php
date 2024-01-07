@@ -3,9 +3,10 @@
 namespace App\Controller\Front;
 
 use App\Entity\Quote;
-use App\Entity\QuoteLine;
-use App\Form\QuoteLineType;
+use App\Entity\Client;
+use App\Form\ClientType;
 use App\Form\QuoteType;
+use App\Repository\ClientRepository;
 use App\Repository\QuoteRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -22,22 +23,25 @@ class QuoteController extends AbstractController
     #[Route('/', name: '_quote_index', methods: ['GET'])]
     public function index(QuoteRepository $quoteRepository): Response
     {
-      
+        
         $user = $this->getUser()->getId();
-        $userQuote= $quoteRepository->findBy(['client_id' => $user]);
+        $userQuote= $quoteRepository->findBy(['userQuote' => $user]);
 
         return $this->render('Front/user/quote/index.html.twig', [
-            'users' => $userQuote,
+            'quotes' => $userQuote,
         ]);
     }
 
     #[Route('/new', name: '_quote_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(Request $request, EntityManagerInterface $entityManager,ClientRepository $clientRepository): Response
     {
         $quote = new Quote();
-
+        $user = $this->getUser();
+        // Récupérer les clients de l'utilisateur
+        $clients = $clientRepository->findBy(['userClient' => $user]);
+        // Créer le formulaire et transmettre les clients
         $form = $this->createForm(QuoteType::class, $quote);
-
+        $form = $this->createForm(QuoteType::class, null, ['clients' => $clients]);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
                 foreach ($quote->getQuoteLines() as $quoteLine) {
@@ -85,9 +89,12 @@ class QuoteController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: '_quote_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Quote $quote, EntityManagerInterface $entityManager): Response
-    {
-        $form = $this->createForm(QuoteType::class, $quote);
+    public function edit(Request $request, Quote $quote, EntityManagerInterface $entityManager, ClientRepository $clientRepository): Response{
+         $user = $this->getUser();
+    // Récupérer les clients de l'utilisateur
+        $clients = $clientRepository->findBy(['userClient' => $user]);
+    // Créer le formulaire et transmettre les clients
+        $form = $this->createForm(QuoteType::class, null, ['clients' => $clients]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

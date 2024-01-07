@@ -56,7 +56,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->quotes = new ArrayCollection();
         $this->invoices = new ArrayCollection();
     }
-
+    public function __toString(){
+        return $this->getEmail(); // Replace with the appropriate property or method representing the string value.
+    }
     public function getId(): ?Uuid
     {
         return $this->id;

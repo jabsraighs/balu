@@ -5,6 +5,7 @@ namespace App\Controller\Front;
 use App\Entity\Invoice;
 use App\Form\InvoiceType;
 use App\Repository\InvoiceRepository;
+use App\Repository\QuoteRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -19,9 +20,9 @@ class InvoiceController extends AbstractController
     #[Route('/', name: '_invoice_index', methods: ['GET'])]
     public function index(InvoiceRepository $invoiceRepository): Response
     {
-        
+
         $user = $this->getUser()->getId();
-        $userInvoice = $userRepository->findBy(['user_id' => $user]);
+        $userInvoice = $invoiceRepository->findBy(['userInvoice' => $user]);
 
         return $this->render('Front/user/invoice/index.html.twig', [
             'invoices' => $userInvoice,
@@ -59,9 +60,14 @@ class InvoiceController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: '_invoice_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Invoice $invoice, EntityManagerInterface $entityManager): Response
+    public function edit(Request $request, Invoice $invoice, EntityManagerInterface $entityManager,QuoteRepository $quoteRepository): Response
     {
-        $form = $this->createForm(InvoiceType::class, $invoice);
+        $user = $this->getUser();
+
+        $quotes =  $quoteRepository->findBy(['userQuote' => $user]);
+
+        $form = $this->createForm(InvoiceType::class, null, ['quotes' => $quotes]);
+
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

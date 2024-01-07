@@ -5,8 +5,6 @@ namespace App\Form;
 use App\Entity\Client; 
 use App\Entity\Quote;
 use App\Form\QuoteLineType;
-use App\Repository\ClientRepository;
-
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -17,10 +15,13 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+
 class QuoteType extends AbstractType
 {
+
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        $clients = $options['clients'];
         $builder
             ->add('description',TextType::class,[
                 'label' => 'description',
@@ -53,12 +54,12 @@ class QuoteType extends AbstractType
             ])
            // ->add('totalAmount')  total amount pas besoin vu que les item et leur sub total qui le determine
                 ->add('client', EntityType::class, [
-                    'label' => 'Client',
+                'label' => 'Client',
                 'class' => Client::class,
                 'choice_label' => 'email',
+                'choices' => $clients,
                 'multiple' => false,
                 'expanded' => false,
-                'query_builder' => fn (ClientRepository $clientRepository) => $clientRepository->createQueryBuilder('c')->orderBy('c.email', 'ASC'),  
              ])
              ->add('quoteLines', CollectionType::class, [
                 'required' => true,
@@ -76,6 +77,7 @@ class QuoteType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Quote::class,
+            'clients' => [],
         ]);
     }
 }

@@ -29,6 +29,7 @@
                 <td>
                     <a href="{{ path('front_user_client_show', {'id': client.id}) }}">show</a>
                     <a href="{{ path('front_user_client_edit', {'id': client.id}) }}">edit</a>
+                    <a href="{{ path('front_user_client_delete', {'id': client.id}) }}">delete</a>
                 </td>
             </tr>
         {% else %}
@@ -39,5 +40,5 @@
         </tbody>
     </table>
 
-    <a href="{{ path('front_user_client_new') }}">Create new</a>
+    <a href="{{ path('front_user_client_new') }}"> Create new Client </a>
 {% endblock %}

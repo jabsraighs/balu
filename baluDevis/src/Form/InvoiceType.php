@@ -19,6 +19,7 @@ class InvoiceType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        $quotes = $options['quotes'];
         $builder
             ->add('dueDate', DateType::class,[
                 'label' => 'dueDate',
@@ -38,15 +39,10 @@ class InvoiceType extends AbstractType
 
             ->add('quote', EntityType::class, [
             'class' => Quote::class,
-            'choice_label' => 'id',
+            'choice_label' => 'name',
+            'choices' => $quotes,
             'multiple' => false,
             'expanded' => false,
-            'query_builder' => function (QuoteRepository $quoteRepository): QueryBuilder {
-                return $quoteRepository->createQueryBuilder('q')
-                    ->andWhere('q.status = :status')
-                    ->setParameter('status', 'valider')
-                    ->orderBy('q.id', 'ASC');
-            }
 
             ])
             ->add("valider",SubmitType::class);
@@ -56,6 +52,7 @@ class InvoiceType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Invoice::class,
+            'quotes' => [],
         ]);
     }
 }

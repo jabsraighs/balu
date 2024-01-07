@@ -8,7 +8,7 @@
     <table class="table">
         <thead>
             <tr>
-
+                <th>Quote name</th>
                 <th>CreatedDate</th>
                 <th>ExpiryAt</th>
                 <th>Status</th>
@@ -19,7 +19,7 @@
         <tbody>
         {% for quote in quotes %}
             <tr>
-
+                <td> {{quote.name}} </td>
                 <td>{{ quote.createdAt? quote.createdAt|date('Y-m-d') : '' }}</td>
                 <td>{{ quote.expiryAt ? quote.expiryAt|date('Y-m-d') : '' }}</td>
                 <td>{{ quote.status }}</td>
