@@ -91,6 +91,7 @@ class QuoteController extends AbstractController
     #[Route('/{id}/edit', name: '_quote_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Quote $quote, EntityManagerInterface $entityManager, ClientRepository $clientRepository): Response{
          $user = $this->getUser();
+
     // Récupérer les clients de l'utilisateur
         $clients = $clientRepository->findBy(['userClient' => $user]);
     // Créer le formulaire et transmettre les clients
