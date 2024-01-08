@@ -2,6 +2,7 @@
 
 namespace App\Controller\Front;
 
+use App\Entity\Invoice;
 use App\Entity\Quote;
 use App\Entity\Client;
 use App\Form\ClientType;
@@ -108,6 +109,22 @@ class QuoteController extends AbstractController
             'quote' => $quote,
             'form' => $form,
         ]);
+    }
+    #[Route('/{id}/quote/facture', name: '_quote_facture', methods: ['GET', 'POST'])]
+    public function genererFactureAuto(Request $request, Quote $quote, EntityManagerInterface $entityManager, ClientRepository $clientRepository): Response{
+        $invoice = new Invoice();
+        $user = $this->getUser();
+        $invoice = $invoice->setQuote($quote);
+        $invoiceName = $invoice->generateName($quote);
+        $invoice = $invoice->setName($invoiceName);
+
+        $invoice = $invoice->setUserInvoice($user);
+        $invoice = $invoice->setPaymentStatus('waiting');
+        $invoice = $invoice->setTotalAmount($quote->getTotalAmount());
+        $entityManager->persist($invoice);
+        $entityManager->flush();
+        return $this->redirectToRoute('front_user_quote_index', [], Response::HTTP_SEE_OTHER);
+
     }
 
     #[Route('/{id}', name: '_quote_delete', methods: ['POST'])]

@@ -49,6 +49,7 @@ class Invoice
         $this->createdAt = new \DateTimeImmutable();
         $this->dueDate = (new \DateTimeImmutable())->modify('+1 month');
         $this->payments = new ArrayCollection();
+
     }
 
     public function getId(): ?Uuid
@@ -169,4 +170,23 @@ class Invoice
 
         return $this;
     }
+    public function generateName(Quote $quote): string
+    {
+        if ($this->getCreatedAt() === null || $this->getQuote() === null) {
+            // Handle the case where necessary properties are not set
+            throw new \RuntimeException('Cannot generate invoice name. Missing required properties.');
+        }
+
+        // Format the date part of the name using the creation date
+        $datePart = $this->getCreatedAt()->format('Ymd');
+
+        // Get the ID of the associated quote and take the first four digits
+        $quoteIdPart = substr((string) $quote->getId(), 0, 4);
+
+        // Combine the date and quote ID to create the invoice name
+        $invoiceName = "{$datePart}_{$quoteIdPart}";
+
+        return $invoiceName;
+    }
+
 }
