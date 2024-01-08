@@ -243,4 +243,23 @@ class Quote
 
         return $this;
     }
+    public function generateName(): String
+    {
+     if ($this->getCreatedAt() === null || $this->getId() === null) {
+            // Handle the case where necessary properties are not set
+            throw new \RuntimeException('Cannot generate Quote name. Missing required properties.');
+        }
+
+        // Format the date part of the name using the creation date
+        $datePart = $this->getCreatedAt()->format('Y_m_d');
+
+        // Get the ID of the associated quote and take the first four digits
+        $quoteIdPart = substr((string) $this->getId(), -4);
+
+        // Combine the date and quote ID to create the invoice name
+        $invoiceName = "Devis n° {$datePart}_{$quoteIdPart}";
+
+        return $invoiceName;
+    }
 }
+

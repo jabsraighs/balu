@@ -170,21 +170,21 @@ class Invoice
 
         return $this;
     }
-    public function generateName(Quote $quote): string
+     public function generateName(): String
     {
-        if ($this->getCreatedAt() === null || $this->getQuote() === null) {
+     if ($this->getCreatedAt() === null || $this->getId() === null) {
             // Handle the case where necessary properties are not set
-            throw new \RuntimeException('Cannot generate invoice name. Missing required properties.');
+            throw new \RuntimeException('Cannot generate Quote name. Missing required properties.');
         }
 
         // Format the date part of the name using the creation date
-        $datePart = $this->getCreatedAt()->format('Ymd');
+        $datePart = $this->getCreatedAt()->format('Y_m_d');
 
         // Get the ID of the associated quote and take the first four digits
-        $quoteIdPart = substr((string) $quote->getId(), 0, 4);
+        $quoteIdPart = substr((string) $this->getId(), -4);
 
         // Combine the date and quote ID to create the invoice name
-        $invoiceName = "{$datePart}_{$quoteIdPart}";
+        $invoiceName = "Devis n° {$datePart}_{$quoteIdPart}";
 
         return $invoiceName;
     }

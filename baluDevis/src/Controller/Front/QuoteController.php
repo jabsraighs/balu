@@ -41,10 +41,12 @@ class QuoteController extends AbstractController
         // Récupérer les clients de l'utilisateur
         $clients = $clientRepository->findBy(['userClient' => $user]);
         // Créer le formulaire et transmettre les clients
-        $form = $this->createForm(QuoteType::class, $quote);
-        $form = $this->createForm(QuoteType::class, null, ['clients' => $clients]);
+    
+        $form = $this->createForm(QuoteType::class,$quote, ['clients' => $clients]);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+          
+            
                 foreach ($quote->getQuoteLines() as $quoteLine) {
                     // Calculate subTotal for each QuoteLine (ht per item)
                     $subTotal = $quoteLine->getQuantity() * $quoteLine->getUnitPrice();
@@ -67,9 +69,12 @@ class QuoteController extends AbstractController
                 // Set totalAmount for the Quote
                 $quote->setTotalTva($totalTva);
                 $quote->setTotalAmount($totalAmount);
-
+                $quote->setUserQuote($user);    
                 // Persist and flush the entities
             $entityManager->persist($quote);
+            $quoteName = $quote->generateName();
+            $quote = $quote->setName($quoteName);
+            dd($quote);
             $entityManager->flush();
 
             return $this->redirectToRoute('front_user_quote_index', [], Response::HTTP_SEE_OTHER);
@@ -110,7 +115,7 @@ class QuoteController extends AbstractController
             'form' => $form,
         ]);
     }
-    #[Route('/{id}/quote/facture', name: '_quote_facture', methods: ['GET', 'POST'])]
+    #[Route('/{id}/quote/invoice', name: '_quote_invoice', methods: ['GET', 'POST'])]
     public function genererFactureAuto(Request $request, Quote $quote, EntityManagerInterface $entityManager, ClientRepository $clientRepository): Response{
         $invoice = new Invoice();
         $user = $this->getUser();
@@ -123,7 +128,8 @@ class QuoteController extends AbstractController
         $invoice = $invoice->setTotalAmount($quote->getTotalAmount());
         $entityManager->persist($invoice);
         $entityManager->flush();
-        return $this->redirectToRoute('front_user_quote_index', [], Response::HTTP_SEE_OTHER);
+        $this->addFlash('message', 'you create the invoice');
+        return $this->redirectToRoute('front_user_invoice_index', [], Response::HTTP_SEE_OTHER);
 
     }
 
