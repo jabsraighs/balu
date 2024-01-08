@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20240106180549 extends AbstractMigration
+final class Version20240108205506 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -29,11 +29,13 @@ final class Version20240106180549 extends AbstractMigration
         $this->addSql('CREATE TABLE invoice (id BLOB NOT NULL --(DC2Type:uuid)
         , quote_id BLOB NOT NULL --(DC2Type:uuid)
         , user_invoice_id BLOB NOT NULL --(DC2Type:uuid)
+        , client_id BLOB NOT NULL --(DC2Type:uuid)
         , created_at DATE NOT NULL --(DC2Type:date_immutable)
         , due_date DATE NOT NULL --(DC2Type:date_immutable)
-        , payment_status VARCHAR(50) NOT NULL, total_amount DOUBLE PRECISION NOT NULL, name VARCHAR(255) NOT NULL, PRIMARY KEY(id), CONSTRAINT FK_90651744DB805178 FOREIGN KEY (quote_id) REFERENCES quote (id) NOT DEFERRABLE INITIALLY IMMEDIATE, CONSTRAINT FK_906517448EEE3711 FOREIGN KEY (user_invoice_id) REFERENCES "user" (id) NOT DEFERRABLE INITIALLY IMMEDIATE)');
+        , payment_status VARCHAR(50) NOT NULL, total_amount DOUBLE PRECISION NOT NULL, name VARCHAR(255) NOT NULL, tva DOUBLE PRECISION NOT NULL, total_tva DOUBLE PRECISION NOT NULL, PRIMARY KEY(id), CONSTRAINT FK_90651744DB805178 FOREIGN KEY (quote_id) REFERENCES quote (id) NOT DEFERRABLE INITIALLY IMMEDIATE, CONSTRAINT FK_906517448EEE3711 FOREIGN KEY (user_invoice_id) REFERENCES "user" (id) NOT DEFERRABLE INITIALLY IMMEDIATE, CONSTRAINT FK_9065174419EB6921 FOREIGN KEY (client_id) REFERENCES client (id) NOT DEFERRABLE INITIALLY IMMEDIATE)');
         $this->addSql('CREATE INDEX IDX_90651744DB805178 ON invoice (quote_id)');
         $this->addSql('CREATE INDEX IDX_906517448EEE3711 ON invoice (user_invoice_id)');
+        $this->addSql('CREATE INDEX IDX_9065174419EB6921 ON invoice (client_id)');
         $this->addSql('CREATE TABLE payment (id BLOB NOT NULL --(DC2Type:uuid)
         , invoice_id BLOB NOT NULL --(DC2Type:uuid)
         , amount_paid DOUBLE PRECISION NOT NULL, payment_date DATE NOT NULL --(DC2Type:date_immutable)
@@ -53,8 +55,10 @@ final class Version20240106180549 extends AbstractMigration
         $this->addSql('CREATE INDEX IDX_6B71CBF43B0DB578 ON quote (user_quote_id)');
         $this->addSql('CREATE TABLE quote_line (id BLOB NOT NULL --(DC2Type:uuid)
         , quote_id BLOB NOT NULL --(DC2Type:uuid)
-        , quantity INTEGER NOT NULL, unit_price DOUBLE PRECISION NOT NULL, subtotal DOUBLE PRECISION NOT NULL, PRIMARY KEY(id), CONSTRAINT FK_43F3EB7CDB805178 FOREIGN KEY (quote_id) REFERENCES quote (id) NOT DEFERRABLE INITIALLY IMMEDIATE)');
+        , invoice_id BLOB DEFAULT NULL --(DC2Type:uuid)
+        , quantity INTEGER NOT NULL, unit_price DOUBLE PRECISION NOT NULL, subtotal DOUBLE PRECISION NOT NULL, PRIMARY KEY(id), CONSTRAINT FK_43F3EB7CDB805178 FOREIGN KEY (quote_id) REFERENCES quote (id) NOT DEFERRABLE INITIALLY IMMEDIATE, CONSTRAINT FK_43F3EB7C2989F1FD FOREIGN KEY (invoice_id) REFERENCES invoice (id) NOT DEFERRABLE INITIALLY IMMEDIATE)');
         $this->addSql('CREATE INDEX IDX_43F3EB7CDB805178 ON quote_line (quote_id)');
+        $this->addSql('CREATE INDEX IDX_43F3EB7C2989F1FD ON quote_line (invoice_id)');
         $this->addSql('CREATE TABLE "user" (id BLOB NOT NULL --(DC2Type:uuid)
         , email VARCHAR(180) NOT NULL, roles CLOB NOT NULL --(DC2Type:json)
         , password VARCHAR(255) NOT NULL, is_verified BOOLEAN NOT NULL, created_at DATETIME NOT NULL --(DC2Type:datetime_immutable)

@@ -28,6 +28,9 @@ class QuoteLine
     #[ORM\JoinColumn(nullable: false)]
     private ?Quote $quote = null;
 
+    #[ORM\ManyToOne(inversedBy: 'quoteLines')]
+    private ?Invoice $invoice = null;
+
     public function getId(): ?Uuid
     {
         return $this->id;
@@ -77,6 +80,18 @@ class QuoteLine
     public function setQuote(?Quote $quote): static
     {
         $this->quote = $quote;
+
+        return $this;
+    }
+
+    public function getInvoice(): ?Invoice
+    {
+        return $this->invoice;
+    }
+
+    public function setInvoice(?Invoice $invoice): static
+    {
+        $this->invoice = $invoice;
 
         return $this;
     }

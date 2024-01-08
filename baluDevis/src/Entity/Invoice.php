@@ -44,11 +44,25 @@ class Invoice
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
+    #[ORM\Column]
+    private ?float $tva = null;
+
+    #[ORM\Column]
+    private ?float $totalTva = null;
+
+    #[ORM\ManyToOne(inversedBy: 'invoices')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Client $client= null;
+
+    #[ORM\OneToMany(mappedBy: 'invoice', targetEntity: QuoteLine::class)]
+    private Collection $quoteLines;
+
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
         $this->dueDate = (new \DateTimeImmutable())->modify('+1 month');
         $this->payments = new ArrayCollection();
+        $this->quoteLines = new ArrayCollection();
 
     }
 
@@ -187,6 +201,72 @@ class Invoice
         $invoiceName = "{$datePart}_{$quoteIdPart}";
 
         return $invoiceName;
+    }
+
+    public function getTva(): ?float
+    {
+        return $this->tva;
+    }
+
+    public function setTva(float $tva): static
+    {
+        $this->tva = $tva;
+
+        return $this;
+    }
+
+    public function getTotalTva(): ?float
+    {
+        return $this->totalTva;
+    }
+
+    public function setTotalTva(float $totalTva): static
+    {
+        $this->totalTva = $totalTva;
+
+        return $this;
+    }
+
+    public function getClient(): ?Client
+    {
+        return $this->client;
+    }
+
+    public function setClient(?Client $client): static
+    {
+        $this->client = $client;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, QuoteLine>
+     */
+    public function getQuoteLines(): Collection
+    {
+        return $this->quoteLines;
+    }
+
+    public function addQuoteLine(QuoteLine $quoteLine): static
+    {
+        if (!$this->quoteLines->contains($quoteLine)) {
+            $this->quoteLines->add($quoteLine);
+            $quoteLine->setInvoice($this);
+        }
+
+        return $this;
+    }
+
+    public function removeQuoteLine(QuoteLine $quoteLine): static
+    {
+        if ($this->quoteLines->removeElement($quoteLine)) {
+            // set the owning side to null (unless already changed)
+            if ($quoteLine->getInvoice() === $this) {
+                $quoteLine->setInvoice(null);
+            }
+        }
+
+        return $this;
     }
 
 }

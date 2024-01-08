@@ -20,7 +20,7 @@ class InvoiceType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $quotes = $options['quotes'];
+        $client = $options['client'];
         $builder
             ->add('dueDate', DateType::class,[
                 'label' => 'dueDate',
@@ -50,7 +50,7 @@ class InvoiceType extends AbstractType
                 'label' => 'Client',
                 'class' => Client::class,
                 'choice_label' => 'email',
-                'choices' => $clients,
+                'choices' => $client,
                 'multiple' => false,
                 'expanded' => false,
              ])
@@ -71,7 +71,7 @@ class InvoiceType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Invoice::class,
-            'quotes' => [],
+            'client' => [],
         ]);
     }
 }

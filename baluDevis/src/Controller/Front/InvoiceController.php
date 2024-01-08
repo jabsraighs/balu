@@ -31,13 +31,13 @@ class InvoiceController extends AbstractController
     }
 
     #[Route('/new', name: '_invoice_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager , ClientRepository $clientRepository ,InvoiceRepository $invoiceRepository): Response
+    public function new(Request $request, EntityManagerInterface $entityManager , ClientRepository $clientRepository): Response
     {
         $user = $this->getUser()->getId();
         $invoice = new Invoice();
-        $clients = $clientRepository->findBy(['userInvoice' => $user]);
+        $clientsInvoice = $clientRepository->findBy(['userClient' => $user]);
         // Créer le formulaire et transmettre les clients
-        $form = $this->createForm(InvoiceType::class,$invoice, ['clients' => $clients]);
+        $form = $this->createForm(InvoiceType::class,$invoice, ['client' => $clientsInvoice]);
 
         $form->handleRequest($request);
 
