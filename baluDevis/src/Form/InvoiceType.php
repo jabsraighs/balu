@@ -2,6 +2,7 @@
 
 namespace App\Form;
 
+use App\Entity\Client;
 use App\Entity\Invoice;
 use App\Entity\Quote;
 use Doctrine\ORM\QueryBuilder;
@@ -35,14 +36,32 @@ class InvoiceType extends AbstractType
                 ],
                 'multiple' => false,
                 'expanded' => true,
+            ])->add('tva',ChoiceType::class, [
+                'label' => 'status',
+                'choices' => [
+                    "0%" =>  "0" ,
+                    "10%" =>  "0.10",
+                    "20" => "0.20"
+                ],
+                'multiple' => false,
+                'expanded' => true,
             ])
-
-            ->add('quote', EntityType::class, [
-            'class' => Quote::class,
-            'choice_label' => 'name',
-            'choices' => $quotes,
-            'multiple' => false,
-            'expanded' => false,
+                ->add('client', EntityType::class, [
+                'label' => 'Client',
+                'class' => Client::class,
+                'choice_label' => 'email',
+                'choices' => $clients,
+                'multiple' => false,
+                'expanded' => false,
+             ])
+             ->add('quoteLines', CollectionType::class, [
+                'required' => true,
+                'entry_type' => QuoteLineType::class,
+                'label' => 'QuoteLines',
+                'entry_options' => ['label' => false],
+                'allow_add' => true,
+                'allow_delete' => true,
+                'by_reference' => false, // Set to false to use the setter method for Quote::setQuoteLines
 
             ])
             ->add("valider",SubmitType::class);

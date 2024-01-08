@@ -4,6 +4,7 @@ namespace App\Controller\Front;
 
 use App\Entity\Invoice;
 use App\Form\InvoiceType;
+use App\Repository\ClientRepository;
 use App\Repository\InvoiceRepository;
 use App\Repository\QuoteRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -30,10 +31,14 @@ class InvoiceController extends AbstractController
     }
 
     #[Route('/new', name: '_invoice_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(Request $request, EntityManagerInterface $entityManager , ClientRepository $clientRepository ,InvoiceRepository $invoiceRepository): Response
     {
+        $user = $this->getUser()->getId();
         $invoice = new Invoice();
-        $form = $this->createForm(InvoiceType::class, $invoice);
+        $clients = $clientRepository->findBy(['userInvoice' => $user]);
+        // Créer le formulaire et transmettre les clients
+        $form = $this->createForm(InvoiceType::class,$invoice, ['clients' => $clients]);
+
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
