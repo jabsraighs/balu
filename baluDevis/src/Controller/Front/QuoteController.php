@@ -91,11 +91,12 @@ class QuoteController extends AbstractController
     #[Route('/{id}', name: '_quote_show', methods: ['GET'])]
     public function show(Quote $quote,ClientRepository $clientRepository): Response
     {
+        $client = $quote->getClient()->getEmail();
 
         return $this->render('Front/user/quote/show.html.twig', [
-            
-            'quote' => $quote,
 
+            'quote' => $quote,
+            'client' => $client
         ]);
     }
 
