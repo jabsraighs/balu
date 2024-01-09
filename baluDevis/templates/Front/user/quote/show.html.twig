@@ -1,0 +1,53 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Quote{% endblock %}
+
+{% block body %}
+    <h1>Quote</h1>
+
+    <table class="table">
+        <tbody>
+
+            <tr>
+                <th>CreatedAt</th>
+                <td>{{ quote.createdAt ? quote.createdAt|date('Y-m-d') : '' }}</td>
+            </tr>
+            <tr>
+                <th>ExpiryAt</th>
+                <td>{{ quote.expiryAt ? quote.expiryAt|date('Y-m-d') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Status</th>
+                <td>{{ quote.status }}</td>
+                  <tr>
+              
+            <tr>
+                <th>tva</th>
+                <td>{{ quote.expiryAt ? quote.expiryAt|date('Y-m-d') : '' }}</td>
+            </tr>
+            <tr>
+                <th>total tva </th>
+                <td>{{ quote.totalTva}}</td>
+            </tr>
+            <tr>
+                <th>TotalAmount</th>
+                <td>{{ quote.totalAmount }}</td>
+            </tr>
+            </tr>
+            <tr>
+                <th>quote Line</th>
+                <td>{{ quote.totalAmount }}</td>
+            </tr>
+              <tr>
+                <th>client</th>
+                <td>{{client}} </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('front_user_quote_index') }}">back to list</a>
+
+    <a href="{{ path('front_user_quote_edit', {'id': quote.id}) }}">edit</a>
+
+    {{ include('Front/user/quote/_delete_form.html.twig') }}
+{% endblock %}

@@ -1,0 +1,39 @@
+{% block body %}
+    <h1>Client index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Firstname</th>
+                <th>Lastname</th>
+                <th>Address</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for client in clients %}
+            <tr>
+                <td>{{ client.firstname }}</td>
+                <td>{{ client.lastname }}</td>
+                <td>{{ client.address }}</td>
+                <td>{{ client.email }} </td>
+                <td>{{ client.phone }}</td>
+                <td>
+                    <a href="{{ path('front_user_show_clients', {'id': client.id}) }}">show</a>
+                    <a href="{{ path('front_user_client_edit', {'id': client.id}) }}">update</a>
+                </td>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="7">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('front_user_client_new') }}">Create new clients</a>
+
+{% endblock %}

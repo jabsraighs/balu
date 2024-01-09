@@ -2,7 +2,7 @@
 
 namespace App\DataFixtures;
 
-
+use App\Entity\Invoice;
 use App\Entity\Quote;
 use App\Entity\QuoteLine;
 use Doctrine\Bundle\FixturesBundle\Fixture;
@@ -22,7 +22,7 @@ class QuoteLineFixtures extends Fixture implements DependentFixtureInterface {
         $faker = \Faker\Factory::create('fr-Fr'); // Fix the namespace here
         //$date = new \DateTimeImmutable();
         $quote = $manager->getRepository(Quote::class)->findAll();
-        
+        $invoice = $manager->getRepository(Invoice::class)->findAll();
         for ($i = 0; $i < 10; $i++) {
             $quantity = $faker->numberBetween(1, 100);
             $unitPrice = $faker->randomFloat(2,1,100);

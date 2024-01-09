@@ -61,7 +61,11 @@ outils de debug :  php bin/console debug:dotenv
 Fix error duplicate table (en rapport avec le cours uniquement; quand vous faites un pull du git du cours)
 Supprimer l'ensemble de vos migrations et faire les commandes suivantes :
 
-docker compose exec php bin/console d:d:d --force docker compose exec php bin/console d:d:c docker compose exec php bin/console make:migr docker compose exec php bin/console d:m:m
+docker compose exec     
+php bin/console d:d:d --force 
+php bin/console d:d:c 
+php bin/console make:migr 
+php bin/console d:m:m
 
 ## MailDev nécessaire pour le test d'inscription d'utilisateur
 commande pour installer maildev 

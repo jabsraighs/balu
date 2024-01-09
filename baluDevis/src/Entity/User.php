@@ -3,14 +3,13 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
-use DateTime;
-use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
@@ -18,9 +17,10 @@ use Symfony\Component\Security\Core\User\UserInterface;
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column]
-    private ?int $id = null;
+    #[ORM\Column(type: 'uuid', unique: true)]
+    #[ORM\GeneratedValue(strategy: 'CUSTOM')]
+    #[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
+    private ?Uuid $id = null;
 
     #[ORM\Column(length: 180, unique: true)]
     private ?string $email = null;
@@ -43,13 +43,23 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'userClient', targetEntity: Client::class)]
     private Collection $clients;
 
+    #[ORM\OneToMany(mappedBy: 'userQuote', targetEntity: Quote::class)]
+    private Collection $quotes;
+
+    #[ORM\OneToMany(mappedBy: 'userInvoice', targetEntity: Invoice::class)]
+    private Collection $invoices;
+
     public function __construct(){
 
         $this->createdAt = new \DateTimeImmutable();
         $this->clients = new ArrayCollection();
+        $this->quotes = new ArrayCollection();
+        $this->invoices = new ArrayCollection();
     }
-
-    public function getId(): ?int
+    public function __toString(){
+        return $this->getEmail(); // Replace with the appropriate property or method representing the string value.
+    }
+    public function getId(): ?Uuid
     {
         return $this->id;
     }
@@ -173,6 +183,66 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($client->getUserClient() === $this) {
                 $client->setUserClient(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Quote>
+     */
+    public function getQuotes(): Collection
+    {
+        return $this->quotes;
+    }
+
+    public function addQuote(Quote $quote): static
+    {
+        if (!$this->quotes->contains($quote)) {
+            $this->quotes->add($quote);
+            $quote->setUserQuote($this);
+        }
+
+        return $this;
+    }
+
+    public function removeQuote(Quote $quote): static
+    {
+        if ($this->quotes->removeElement($quote)) {
+            // set the owning side to null (unless already changed)
+            if ($quote->getUserQuote() === $this) {
+                $quote->setUserQuote(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Invoice>
+     */
+    public function getInvoices(): Collection
+    {
+        return $this->invoices;
+    }
+
+    public function addInvoice(Invoice $invoice): static
+    {
+        if (!$this->invoices->contains($invoice)) {
+            $this->invoices->add($invoice);
+            $invoice->setUserInvoice($this);
+        }
+
+        return $this;
+    }
+
+    public function removeInvoice(Invoice $invoice): static
+    {
+        if ($this->invoices->removeElement($invoice)) {
+            // set the owning side to null (unless already changed)
+            if ($invoice->getUserInvoice() === $this) {
+                $invoice->setUserInvoice(null);
             }
         }
 

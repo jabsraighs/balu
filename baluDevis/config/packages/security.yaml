@@ -4,10 +4,6 @@ security:
 
 
     providers:
-        app_admin_provider:
-            entity:
-                class: App\Entity\Admin
-                property: 'y'  # Replace with the actual property used for admin usernames
 
         app_user_provider:
             entity:

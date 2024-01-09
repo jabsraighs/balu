@@ -17,12 +17,14 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 class ClientController extends AbstractController
 {
+    #[isGranted("ROLE_ADMIN")]
     #[Route('/', name: '_client_index', methods: ['GET'])]
     public function index(ClientRepository $clientRepository): Response
     {
 
         return $this->render('Back/admin/user/client/index.html.twig', [
             'clients' => $clientRepository->findAll(),
+
         ]);
     }
 

@@ -7,14 +7,16 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: QuoteRepository::class)]
 class Quote
 {
     #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column]
-    private ?int $id = null;
+    #[ORM\Column(type: 'uuid', unique: true)]
+    #[ORM\GeneratedValue(strategy: 'CUSTOM')]
+    #[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
+    private ?Uuid $id = null;
 
     #[ORM\Column(type: Types::DATE_IMMUTABLE)]
     private ?\DateTimeImmutable $createdAt = null;
@@ -45,6 +47,13 @@ class Quote
     #[ORM\Column(length: 50)]
     private ?string $Description = null;
 
+    #[ORM\ManyToOne(inversedBy: 'quotes')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $userQuote = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $name = null;
+
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
@@ -53,7 +62,7 @@ class Quote
         $this->invoices = new ArrayCollection();
     }
 
-    public function getId(): ?int
+    public function getId(): ?Uuid
     {
         return $this->id;
     }
@@ -210,4 +219,47 @@ class Quote
 
         return $this;
     }
+
+    public function getUserQuote(): ?User
+    {
+        return $this->userQuote;
+    }
+
+    public function setUserQuote(?User $userQuote): static
+    {
+        $this->userQuote = $userQuote;
+
+        return $this;
+    }
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function setName(string $name): static
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+    public function generateName(): String
+    {
+     if ($this->getCreatedAt() === null || $this->getId() === null) {
+            // Handle the case where necessary properties are not set
+            throw new \RuntimeException('Cannot generate Quote name. Missing required properties.');
+        }
+
+        // Format the date part of the name using the creation date
+        $datePart = $this->getCreatedAt()->format('Y_m_d');
+
+        // Get the ID of the associated quote and take the first four digits
+        $quoteIdPart = substr((string) $this->getId(), -4);
+
+        // Combine the date and quote ID to create the invoice name
+        $quoteName = "Devis n° {$datePart}_{$quoteIdPart}";
+
+        return $quoteName;
+    }
 }
+

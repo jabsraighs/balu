@@ -32,7 +32,7 @@ class ClientFixtures extends Fixture implements DependentFixtureInterface {
             $manager->persist($object);
         $this->addReference('client', $object);
 
-        for ($i = 0; $i < 10; $i++) {
+        for ($i = 0; $i < 100; $i++) {
             $object = (new Client())
             ->setEmail($faker->email())
             //  ->setCreatedAt($date);

@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Quote index{% endblock %}
+
+{% block body %}
+    <h1>Quote index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Quote name</th>
+                <th>CreatedDate</th>
+                <th>ExpiryAt</th>
+                <th>Status</th>
+                <th>TotalAmount</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for quote in quotes %}
+            <tr>
+                <td> {{quote.name}} </td>
+                <td>{{ quote.createdAt? quote.createdAt|date('Y-m-d') : '' }}</td>
+                <td>{{ quote.expiryAt ? quote.expiryAt|date('Y-m-d') : '' }}</td>
+                <td>{{ quote.status }}</td>
+                <td>{{ quote.totalAmount }}</td>
+                <td>
+                    <a href="{{ path('front_user_quote_show', {'id': quote.id}) }}">show</a>
+                    <a href="{{ path('front_user_quote_edit', {'id': quote.id}) }}">edit</a>
+                    <a href="{{ path('front_user_quote_invoice', {'id': quote.id}) }}"> create invoice </a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="6">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('front_user_quote_new') }}">Create new Devis</a>
+{% endblock %}
