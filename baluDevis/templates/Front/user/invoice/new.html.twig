@@ -1,10 +1,10 @@
 {% block titile %} Creer_devis {% endblock %}
 {% block body%}
         {{ form_start(form) }}
-            {{ form_widget(form.dueDate) }}
-            {{ form_widget(form.paymentStatus) }}
-            {{ form_widget(form.tva) }}
-            {{ form_widget(form.client) }}
+            {{ form_row(form.dueDate) }}
+            {{ form_row(form.paymentStatus) }}
+            {{ form_row(form.tva) }}
+            {{ form_row(form.client) }}
          
 
             {# Render other fields if any #}
@@ -12,7 +12,7 @@
                  {{ form_row(form.quoteLines) }}
                 <span></span>
             </div>
-        <button type ="submit"> Create Invoice </button>
+        <button type> Create Invoice </button>
         {{ form_end(form) }}
 {%endblock %}
 

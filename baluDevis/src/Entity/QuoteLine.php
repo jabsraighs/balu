@@ -25,7 +25,7 @@ class QuoteLine
     private ?float $subtotal = null;
 
     #[ORM\ManyToOne(inversedBy: 'quoteLines')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: true)]
     private ?Quote $quote = null;
 
     #[ORM\ManyToOne(inversedBy: 'quoteLines')]

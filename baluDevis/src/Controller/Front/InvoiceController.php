@@ -22,8 +22,11 @@ class InvoiceController extends AbstractController
     public function index(InvoiceRepository $invoiceRepository): Response
     {
 
-        $user = $this->getUser()->getId();
-        $userInvoice = $invoiceRepository->findBy(['userInvoice' => $user]);
+        $user = $this->getUser();
+        $userInvoice = $invoiceRepository->findBy(
+            ['userInvoice' => $user],
+            ['id' => 'Desc']
+            );
 
         return $this->render('Front/user/invoice/index.html.twig', [
             'invoices' => $userInvoice,
@@ -33,7 +36,7 @@ class InvoiceController extends AbstractController
     #[Route('/new', name: '_invoice_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager , ClientRepository $clientRepository): Response
     {
-        $user = $this->getUser()->getId();
+        $user = $this->getUser();
         $invoice = new Invoice();
         $clientsInvoice = $clientRepository->findBy(['userClient' => $user]);
         // Créer le formulaire et transmettre les clients
@@ -42,11 +45,35 @@ class InvoiceController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $totalAmountQuote = $invoice->getQuote()->getTotalAmount();
-            $invoice = $invoice->setTotalAmount($totalAmountQuote);
-            $entityManager->persist($invoice);
-            $entityManager->flush();
+           foreach ($invoice->getQuoteLines() as $quoteLine) {
+                    // Calculate subTotal for each QuoteLine (ht per item)
+                    $subTotal = $quoteLine->getQuantity() * $quoteLine->getUnitPrice();
+                    $quoteLine->setSubTotal($subTotal);
+                }
+                // Calculate totalAmount for the entire Invoice
+                $quoteLines = $invoice->getQuoteLines() ;
+                $totalTva = 0;
 
+                foreach ($quoteLines as $quoteLine) {
+                    // total tva = total ht * tva
+                     $totalTva += $quoteLine->getSubTotal() * $invoice->getTva();
+                }
+                $totalAmount = 0;
+
+                foreach ($quoteLines as $quoteLine) {
+                    $totalAmount += $quoteLine->getSubTotal() + $totalTva ;
+                }
+                
+
+                // Set totalAmount for the Invoice
+                $invoice->setTotalTva($totalTva);
+                $invoice->setTotalAmount($totalAmount);
+                $invoice->setUserInvoice($user);
+                $entityManager->persist($invoice);
+                $invoiceName = $invoice->generateInvoiceName();
+                $invoice = $invoice->setName($invoiceName);
+                $entityManager->flush();
+                // Persist and flush the entities
             return $this->redirectToRoute('front_user_invoice_index', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -65,22 +92,44 @@ class InvoiceController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: '_invoice_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Invoice $invoice, EntityManagerInterface $entityManager,QuoteRepository $quoteRepository): Response
+    public function edit(Request $request, Invoice $invoice, EntityManagerInterface $entityManager,ClientRepository $clientRepository): Response
     {
         $user = $this->getUser();
-        $quotes =  $quoteRepository->findBy(
-            ['userQuote' => $user , 'status' => 'valider'],
-            ['id' => 'DESC']
-        );
-        $form = $this->createForm(InvoiceType::class, null, ['quotes' => $quotes]);
+        $clientsInvoice = $clientRepository->findBy(['userClient' => $user]);
+        // Créer le formulaire et transmettre les clients
+        $form = $this->createForm(InvoiceType::class,$invoice, ['client' => $clientsInvoice]);
+
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->flush();
+           foreach ($invoice->getQuoteLines() as $quoteLine) {
+                    // Calculate subTotal for each QuoteLine (ht per item)
+                    $subTotal = $quoteLine->getQuantity() * $quoteLine->getUnitPrice();
+                    $quoteLine->setSubTotal($subTotal);
+                }
+                // Calculate totalAmount for the entire Invoice
+                $quoteLines = $invoice->getQuoteLines() ;
+                $totalTva = 0;
 
+                foreach ($quoteLines as $quoteLine) {
+                    // total tva = total ht * tva
+                     $totalTva += $quoteLine->getSubTotal() * $invoice->getTva();
+                }
+                $totalAmount = 0;
+
+                foreach ($quoteLines as $quoteLine) {
+                    $totalAmount += $quoteLine->getSubTotal() + $totalTva ;
+                }
+
+                // Set totalAmount for the Invoice
+                $invoice->setTotalTva($totalTva);
+                $invoice->setTotalAmount($totalAmount);
+                $invoice->setUserInvoice($user);
+                $entityManager->persist($invoice);
+                $entityManager->flush();
+                // Persist and flush the entities
             return $this->redirectToRoute('front_user_invoice_index', [], Response::HTTP_SEE_OTHER);
         }
-
         return $this->render('Front/user/invoice/edit.html.twig', [
             'invoice' => $invoice,
             'form' => $form,

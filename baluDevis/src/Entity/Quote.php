@@ -257,9 +257,9 @@ class Quote
         $quoteIdPart = substr((string) $this->getId(), -4);
 
         // Combine the date and quote ID to create the invoice name
-        $invoiceName = "Devis n° {$datePart}_{$quoteIdPart}";
+        $quoteName = "Devis n° {$datePart}_{$quoteIdPart}";
 
-        return $invoiceName;
+        return $quoteName;
     }
 }
 

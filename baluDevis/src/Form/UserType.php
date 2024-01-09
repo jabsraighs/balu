@@ -9,6 +9,7 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\IsTrue;
@@ -40,23 +41,30 @@ class UserType extends AbstractType
                 'expanded' => true, // Activez cette option pour afficher les cases à cocher plutôt qu'un menu déroulant
 
             ])
-            ->add('plainPassword',PasswordType::class,[
-                'required' => false,
+          ->add('plainPassword', RepeatedType::class, [
+                // instead of being set onto the object directly,
+                // this is read and encoded in the controller
                 'mapped' => false,
                 'attr' => ['autocomplete' => 'new-password'],
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'Entrer un mot de passe',
+                        'message' => 'Please enter a password',
                     ]),
                     new Length([
                         'min' => 6,
-                        'minMessage' => 'votre mot de passe doit avoir {{ limit }} caractère',
+                        'minMessage' => 'Your password should be at least {{ limit }} characters',
+                        // max length allowed by Symfony for security reasons
                         'max' => 4096,
-                    ])
-                ]
-            ])
+                    ]),
+                ],
+                'type' => PasswordType::class,
+                'invalid_message' => 'The password fields must match.',
+                'options' => ['attr' => ['class' => 'password-field']],
+                'required' => true,
+                'first_options'  => ['label' => 'Password'],
+                'second_options' => ['label' => 'Repeat Password']
+            ]);
 
-        ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void

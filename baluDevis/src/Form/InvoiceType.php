@@ -4,15 +4,13 @@ namespace App\Form;
 
 use App\Entity\Client;
 use App\Entity\Invoice;
-use App\Entity\Quote;
-use Doctrine\ORM\QueryBuilder;
-use App\Repository\QuoteRepository;
+use App\Form\QuoteLineType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -37,7 +35,7 @@ class InvoiceType extends AbstractType
                 'multiple' => false,
                 'expanded' => true,
             ])->add('tva',ChoiceType::class, [
-                'label' => 'status',
+                'label' => 'Tva',
                 'choices' => [
                     "0%" =>  "0" ,
                     "10%" =>  "0.10",
@@ -54,7 +52,7 @@ class InvoiceType extends AbstractType
                 'multiple' => false,
                 'expanded' => false,
              ])
-             ->add('quoteLine', CollectionType::class, [
+             ->add('quoteLines', CollectionType::class, [
                 'required' => true,
                 'entry_type' => QuoteLineType::class,
                 'label' => 'QuoteLines',

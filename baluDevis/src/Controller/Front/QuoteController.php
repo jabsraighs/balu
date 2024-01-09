@@ -25,7 +25,7 @@ class QuoteController extends AbstractController
     public function index(QuoteRepository $quoteRepository): Response
     {
         
-        $user = $this->getUser()->getId();
+        $user = $this->getUser();
        $userQuote = $quoteRepository->findBy(
     ['userQuote' => $user],
     ['id' => 'DESC'] // Order by the 'createdAt' property in descending order
@@ -102,7 +102,7 @@ class QuoteController extends AbstractController
     #[Route('/{id}/edit', name: '_quote_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Quote $quote, EntityManagerInterface $entityManager, ClientRepository $clientRepository): Response {
         $user = $this->getUser();
-         $clients = $clientRepository->findBy(['userClient' => $user]);
+        $clients = $clientRepository->findBy(['userClient' => $user]);
         // Créer le formulaire et transmettre les clients
 
         $form = $this->createForm(QuoteType::class,$quote, ['clients' => $clients]);
@@ -137,10 +137,8 @@ class QuoteController extends AbstractController
                 $quote->setUserQuote($user);
                 // Persist and flush the entities
             $entityManager->persist($quote);
-            $quoteName = $quote->generateName();
-            $quote = $quote->setName($quoteName);
-            $entityManager->flush();
 
+            $quote = $quote->setName($quote->getName());
             $entityManager->flush();
 
             return $this->redirectToRoute('front_user_quote_index', [], Response::HTTP_SEE_OTHER);
@@ -153,12 +151,11 @@ class QuoteController extends AbstractController
     }
     #[Route('/{id}/quote/invoice', name: '_quote_invoice', methods: ['GET', 'POST'])]
     public function genererFactureAuto(Request $request, Quote $quote, EntityManagerInterface $entityManager): Response{
+        //instanciation
         $invoice = new Invoice();
         $user = $this->getUser();
         $invoice = $invoice->setQuote($quote);
-        $invoiceName = $invoice->generateName($quote);
-        $invoice = $invoice->setName($invoiceName);
-
+        //set les differents attributs de invoice
         $invoice = $invoice->setUserInvoice($user);
         $invoice = $invoice->setPaymentStatus('waiting');
         $invoice = $invoice->setTva($quote->getTva());
@@ -166,8 +163,12 @@ class QuoteController extends AbstractController
         $invoice = $invoice->setTotalAmount($quote->getTotalAmount());
         $invoice = $invoice->setClient($quote->getClient());
         $entityManager->persist($invoice);
+        // necessaire pour getId of facture
+        $invoiceName = $invoice->generateInvoiceName();
+        $invoice = $invoice->setName($invoiceName);
         $entityManager->flush();
         $this->addFlash('message', 'you create the invoice');
+
         return $this->redirectToRoute('front_user_invoice_index', [], Response::HTTP_SEE_OTHER);
 
     }

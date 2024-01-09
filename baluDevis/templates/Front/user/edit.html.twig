@@ -2,10 +2,20 @@
 
 {% block title %}Edit User{% endblock %}
 
-{% block body %}
-    <h1>Edit User</h1>
 
-    {{ include('Front/user/_form.html.twig', {'button_label': 'Update'}) }}
+{% block body %}
+    {{ form_start(form) }}
+<br>
+        {{ form_row(form.email)}}
+        {{ form_row(form.roles)}}
+        {{ form_row ( form.plainPassword.first, {
+                label: 'Password'
+        }) }}
+        {{ form_row ( form.plainPassword.second, {
+                label: 'Password'
+        }) }}
+    <button type="submit" class="btn">update User </button>
+{{ form_end(form) }}
 
     <a href="{{ path('front_user_index') }}">back</a>
 

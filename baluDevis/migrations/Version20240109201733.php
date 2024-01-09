@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20240108205506 extends AbstractMigration
+final class Version20240109201733 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -27,7 +27,7 @@ final class Version20240108205506 extends AbstractMigration
         , firstname VARCHAR(255) NOT NULL, lastname VARCHAR(255) NOT NULL, address VARCHAR(255) NOT NULL, email VARCHAR(255) NOT NULL, phone VARCHAR(255) NOT NULL, PRIMARY KEY(id), CONSTRAINT FK_C7440455190BE4C5 FOREIGN KEY (user_client_id) REFERENCES "user" (id) NOT DEFERRABLE INITIALLY IMMEDIATE)');
         $this->addSql('CREATE INDEX IDX_C7440455190BE4C5 ON client (user_client_id)');
         $this->addSql('CREATE TABLE invoice (id BLOB NOT NULL --(DC2Type:uuid)
-        , quote_id BLOB NOT NULL --(DC2Type:uuid)
+        , quote_id BLOB DEFAULT NULL --(DC2Type:uuid)
         , user_invoice_id BLOB NOT NULL --(DC2Type:uuid)
         , client_id BLOB NOT NULL --(DC2Type:uuid)
         , created_at DATE NOT NULL --(DC2Type:date_immutable)
@@ -54,7 +54,7 @@ final class Version20240108205506 extends AbstractMigration
         $this->addSql('CREATE INDEX IDX_6B71CBF419EB6921 ON quote (client_id)');
         $this->addSql('CREATE INDEX IDX_6B71CBF43B0DB578 ON quote (user_quote_id)');
         $this->addSql('CREATE TABLE quote_line (id BLOB NOT NULL --(DC2Type:uuid)
-        , quote_id BLOB NOT NULL --(DC2Type:uuid)
+        , quote_id BLOB DEFAULT NULL --(DC2Type:uuid)
         , invoice_id BLOB DEFAULT NULL --(DC2Type:uuid)
         , quantity INTEGER NOT NULL, unit_price DOUBLE PRECISION NOT NULL, subtotal DOUBLE PRECISION NOT NULL, PRIMARY KEY(id), CONSTRAINT FK_43F3EB7CDB805178 FOREIGN KEY (quote_id) REFERENCES quote (id) NOT DEFERRABLE INITIALLY IMMEDIATE, CONSTRAINT FK_43F3EB7C2989F1FD FOREIGN KEY (invoice_id) REFERENCES invoice (id) NOT DEFERRABLE INITIALLY IMMEDIATE)');
         $this->addSql('CREATE INDEX IDX_43F3EB7CDB805178 ON quote_line (quote_id)');
