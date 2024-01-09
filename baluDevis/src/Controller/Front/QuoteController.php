@@ -86,24 +86,56 @@ class QuoteController extends AbstractController
     }
 
     #[Route('/{id}', name: '_quote_show', methods: ['GET'])]
-    public function show(Quote $quote): Response
+    public function show(Quote $quote,ClientRepository $clientRepository): Response
     {
+
         return $this->render('Front/user/quote/show.html.twig', [
+            
             'quote' => $quote,
+
         ]);
     }
 
     #[Route('/{id}/edit', name: '_quote_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Quote $quote, EntityManagerInterface $entityManager, ClientRepository $clientRepository): Response{
-         $user = $this->getUser();
-
-    // Récupérer les clients de l'utilisateur
-        $clients = $clientRepository->findBy(['userClient' => $user]);
-    // Créer le formulaire et transmettre les clients
-        $form = $this->createForm(QuoteType::class, null, ['clients' => $clients]);
+    public function edit(Request $request, Quote $quote, EntityManagerInterface $entityManager): Response {
+        $user = $this->getUser();
+        $quote = $quote->setClient($quote->getClient());
+        $form = $this->createForm(QuoteType::class, $quote);
         $form->handleRequest($request);
+       
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+
+                foreach ($quote->getQuoteLines() as $quoteLine) {
+                    // Calculate subTotal for each QuoteLine (ht per item)
+                    $subTotal = $quoteLine->getQuantity() * $quoteLine->getUnitPrice();
+                    $quoteLine->setSubTotal($subTotal);
+                }
+                // Calculate totalAmount for the entire Quote
+                $quoteLines = $quote->getQuoteLines() ;
+                $totalTva = 0;
+
+                foreach ($quoteLines as $quoteLine) {
+                    // total tva = total ht * tva
+                     $totalTva += $quoteLine->getSubTotal() * $quote->getTva();
+                }
+                $totalAmount = 0;
+
+                foreach ($quoteLines as $quoteLine) {
+                    $totalAmount += $quoteLine->getSubTotal() + $totalTva ;
+                }
+
+                // Set totalAmount for the Quote
+                $quote->setTotalTva($totalTva);
+                $quote->setTotalAmount($totalAmount);
+                $quote->setUserQuote($user);
+                // Persist and flush the entities
+            $entityManager->persist($quote);
+            $quoteName = $quote->generateName();
+            $quote = $quote->setName($quoteName);
+            $entityManager->flush();
+
             $entityManager->flush();
 
             return $this->redirectToRoute('front_user_quote_index', [], Response::HTTP_SEE_OTHER);
@@ -115,7 +147,7 @@ class QuoteController extends AbstractController
         ]);
     }
     #[Route('/{id}/quote/invoice', name: '_quote_invoice', methods: ['GET', 'POST'])]
-    public function genererFactureAuto(Request $request, Quote $quote, EntityManagerInterface $entityManager, ClientRepository $clientRepository): Response{
+    public function genererFactureAuto(Request $request, Quote $quote, EntityManagerInterface $entityManager): Response{
         $invoice = new Invoice();
         $user = $this->getUser();
         $invoice = $invoice->setQuote($quote);
@@ -124,7 +156,10 @@ class QuoteController extends AbstractController
 
         $invoice = $invoice->setUserInvoice($user);
         $invoice = $invoice->setPaymentStatus('waiting');
+        $invoice = $invoice->setTva($quote->getTva());
+        $invoice = $invoice->setTotalTva($quote->getTotalTva());
         $invoice = $invoice->setTotalAmount($quote->getTotalAmount());
+        $invoice = $invoice->setClient($quote->getClient());
         $entityManager->persist($invoice);
         $entityManager->flush();
         $this->addFlash('message', 'you create the invoice');

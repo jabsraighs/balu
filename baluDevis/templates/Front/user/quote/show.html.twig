@@ -19,10 +19,30 @@
             <tr>
                 <th>Status</th>
                 <td>{{ quote.status }}</td>
+                  <tr>
+              
+            <tr>
+                <th>tva</th>
+                <td>{{ quote.expiryAt ? quote.expiryAt|date('Y-m-d') : '' }}</td>
+            </tr>
+            <tr>
+                <th>total tva </th>
+                <td>{{ quote.totalTva}}</td>
             </tr>
             <tr>
                 <th>TotalAmount</th>
                 <td>{{ quote.totalAmount }}</td>
+            </tr>
+            </tr>
+            <tr>
+                <th>quote Line</th>
+                <td>{{ quote.totalAmount }}</td>
+            </tr>
+              <tr>
+                <th>client</th>
+                <td>
+                
+                </td>
             </tr>
         </tbody>
     </table>

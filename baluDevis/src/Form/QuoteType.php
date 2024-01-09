@@ -43,7 +43,7 @@ class QuoteType extends AbstractType
                 'expanded' => true,
             ])
             ->add('tva',ChoiceType::class, [
-                'label' => 'status',
+                'label' => 'tva',
                 'choices' => [
                     "0%" =>  "0" ,
                     "10%" =>  "0.10",
@@ -52,7 +52,7 @@ class QuoteType extends AbstractType
                 'multiple' => false,
                 'expanded' => true,
             ])
-                ->add('client', EntityType::class, [
+            ->add('client', EntityType::class, [
                 'label' => 'Client',
                 'class' => Client::class,
                 'choice_label' => 'email',
@@ -69,8 +69,7 @@ class QuoteType extends AbstractType
                 'allow_delete' => true,
                 'by_reference' => false, // Set to false to use the setter method for Quote::setQuoteLines
 
-            ])
-            ->add("valider",SubmitType::class);
+            ]);
     }
     public function configureOptions(OptionsResolver $resolver): void
     {
