@@ -1,9 +1,17 @@
-{% block titile %} Creer_devis {% endblock %}
+{% block titile %} Update devis {% endblock %}
 {% block body%}
+<p> Quote name </p>
+{{quote.name}}
+
         {{ form_start(form) }}
-            {{ form_widget(form.expiryAt) }}
-            {{ form_widget(form.status) }}
-            {{ form_widget(form.client) }}
+        <br>
+            {{ form_row(form.expiryAt) }}
+            {{ form_row(form.client) }}
+            {{ form_row(form.description) }}
+            {{ form_row(form.tva) }}
+            {{ form_row(form.status) }}
+            
+
 
 
 

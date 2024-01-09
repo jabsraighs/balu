@@ -68,7 +68,10 @@ class InvoiceController extends AbstractController
     public function edit(Request $request, Invoice $invoice, EntityManagerInterface $entityManager,QuoteRepository $quoteRepository): Response
     {
         $user = $this->getUser();
-        $quotes =  $quoteRepository->findBy(['userQuote' => $user , 'status' => 'valider']);
+        $quotes =  $quoteRepository->findBy(
+            ['userQuote' => $user , 'status' => 'valider'],
+            ['id' => 'DESC']
+        );
         $form = $this->createForm(InvoiceType::class, null, ['quotes' => $quotes]);
         $form->handleRequest($request);
 

@@ -26,7 +26,10 @@ class QuoteController extends AbstractController
     {
         
         $user = $this->getUser()->getId();
-        $userQuote= $quoteRepository->findBy(['userQuote' => $user]);
+       $userQuote = $quoteRepository->findBy(
+    ['userQuote' => $user],
+    ['id' => 'DESC'] // Order by the 'createdAt' property in descending order
+);
 
         return $this->render('Front/user/quote/index.html.twig', [
             'quotes' => $userQuote,
@@ -97,10 +100,12 @@ class QuoteController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: '_quote_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Quote $quote, EntityManagerInterface $entityManager): Response {
+    public function edit(Request $request, Quote $quote, EntityManagerInterface $entityManager, ClientRepository $clientRepository): Response {
         $user = $this->getUser();
-        $quote = $quote->setClient($quote->getClient());
-        $form = $this->createForm(QuoteType::class, $quote);
+         $clients = $clientRepository->findBy(['userClient' => $user]);
+        // Créer le formulaire et transmettre les clients
+
+        $form = $this->createForm(QuoteType::class,$quote, ['clients' => $clients]);
         $form->handleRequest($request);
        
 

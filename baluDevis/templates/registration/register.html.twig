@@ -15,7 +15,10 @@
     {{ form_start ( registrationForm) }}
         {{ form_row ( registrationForm.email) }}
         <br>
-        {{ form_row ( registrationForm.plainPassword, {
+        {{ form_row ( registrationForm.plainPassword.first, {
+            label: 'Password'
+        }) }}
+        {{ form_row ( registrationForm.plainPassword.second, {
             label: 'Password'
         }) }}
         <br>

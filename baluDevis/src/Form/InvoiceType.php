@@ -54,7 +54,7 @@ class InvoiceType extends AbstractType
                 'multiple' => false,
                 'expanded' => false,
              ])
-             ->add('quoteLines', CollectionType::class, [
+             ->add('quoteLine', CollectionType::class, [
                 'required' => true,
                 'entry_type' => QuoteLineType::class,
                 'label' => 'QuoteLines',
@@ -63,8 +63,8 @@ class InvoiceType extends AbstractType
                 'allow_delete' => true,
                 'by_reference' => false, // Set to false to use the setter method for Quote::setQuoteLines
 
-            ])
-            ->add("valider",SubmitType::class);
+             ]);
+            
     }
 
     public function configureOptions(OptionsResolver $resolver): void

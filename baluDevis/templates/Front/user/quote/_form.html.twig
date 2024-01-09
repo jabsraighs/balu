@@ -1,10 +1,9 @@
 {% block titile %} Creer_devis {% endblock %}
 {% block body%}
         {{ form_start(form) }}
-            {{ form_widget(form.expiryAt) }}
-            {{ form_widget(form.status) }}
-            {{ form_widget(form.client) }}
-
+            {{ form_row(form.expiryAt) }}
+            {{ form_row(form.status) }}
+            
 
 
             {# Render other fields if any #}

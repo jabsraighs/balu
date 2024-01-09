@@ -2,7 +2,7 @@
 
 namespace App\Form;
 
-use App\Entity\Client;
+use App\Entity\Client; 
 use App\Entity\Quote;
 use App\Form\QuoteLineType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -43,7 +43,7 @@ class QuoteType extends AbstractType
                 'expanded' => true,
             ])
             ->add('tva',ChoiceType::class, [
-                'label' => 'tva',
+                'label' => 'status',
                 'choices' => [
                     "0%" =>  "0" ,
                     "10%" =>  "0.10",
@@ -52,7 +52,8 @@ class QuoteType extends AbstractType
                 'multiple' => false,
                 'expanded' => true,
             ])
-            ->add('client', EntityType::class, [
+           // ->add('totalAmount')  total amount pas besoin vu que les item et leur sub total qui le determine
+                ->add('client', EntityType::class, [
                 'label' => 'Client',
                 'class' => Client::class,
                 'choice_label' => 'email',
@@ -69,7 +70,8 @@ class QuoteType extends AbstractType
                 'allow_delete' => true,
                 'by_reference' => false, // Set to false to use the setter method for Quote::setQuoteLines
 
-            ]);
+             ]);
+
     }
     public function configureOptions(OptionsResolver $resolver): void
     {
