@@ -4,7 +4,7 @@
 {% endblock %}
 
 {% block body %}
-	<div method="post" class="p-6 md:p-2 h-screen flex gap-2">
+	<div class="p-6 md:p-2 h-screen flex gap-2">
 		<div class="flex-1 bg-secondary w-full h-full rounded-xl flex-col-reverse p-4 relative overflow-hidden hidden md:flex">
 			<img class="object-cover object-center absolute top-0 left-0 h-full w-full z-0 opacity-30" src="/background.jpg"/>
 			<span class="py-2 text-white font-regular relative z-10">Connectez-vous pour gérer vos devis avec facilité et gagnez du temps pour ce qui compte vraiment – votre travail créatif. Simplifiez votre quotidien freelance dès maintenant!</span>
@@ -15,8 +15,8 @@
 				freelance en toute simplicité.</p>
 		</div>
 
-		<form class="flex-1 flex flex-col items-center gap-4" method="post">
-			<div class="size-52">
+		<form class="flex-1 flex flex-col items-center justify-center gap-4" method="post">
+			<div class="pb-4">
 				<img class="object-contain h-full w-full relative" src="/Logo.png"/>
 			</div>
 
@@ -82,4 +82,5 @@
 				<a href="{{ path('app_register') }}" class="text-secondary font-bold underline">S'inscrire</a>
 			</p>
 		</form>
-	{% endblock %}
+	</div>
+{% endblock %}
