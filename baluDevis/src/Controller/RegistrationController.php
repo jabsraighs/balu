@@ -31,7 +31,6 @@ class RegistrationController extends AbstractController{
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
-
         if ($form->isSubmitted() && $form->isValid()) {
             // encode the plain password
             $user->setPassword(
@@ -49,7 +48,7 @@ class RegistrationController extends AbstractController{
                     $user,
                     'devisbalu698@gmail.com',
                     $user->getEmail(),
-                    'Please Confirm your Email to verifie it. ',
+                    'Please Confirm your Email to verify it. ',
                     'registration/confirmation_email.html.twig',
 
             );
