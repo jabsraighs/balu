@@ -1,25 +1,46 @@
-{# templates/pdf/generate.html.twig #}
+{% block title %} Quote.pdf{% endblock %}
 
-{# Your HTML content for the PDF generation goes here #}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Generated PDF</title>
-    <style>
-        /* Define your CSS styles for the PDF here */
-        body {
-            font-family: Arial, sans-serif;
-            font-size: 12px;
-            line-height: 1.6;
-        }
-        /* Add more styles as needed */
-    </style>
-</head>
-<body>
-    <h1>Generated PDF</h1>
-    <p>This is an example PDF generated from HTML using Symfony and Dompdf.</p>
-    {# You can include dynamic data from the controller if needed #}
-</body>
-</html>
+{% block body %}
+    <h1>Quote</h1>
+
+    <table class="table">
+        <tbody>
+
+            <tr>
+                <th>CreatedAt</th>
+                <td>{{ quote.createdAt ? quote.createdAt|date('Y-m-d') : '' }}</td>
+            </tr>
+            <tr>
+                <th>ExpiryAt</th>
+                <td>{{ quote.expiryAt ? quote.expiryAt|date('Y-m-d') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Status</th>
+                <td>{{ quote.status }}</td>
+                  <tr>
+              
+            <tr>
+                <th>tva</th>
+                <td>{{ quote.tva }}</td>
+            </tr>
+            <tr>
+                <th>total tva </th>
+                <td>{{ quote.totalTva}}</td>
+            </tr>
+            <tr>
+                <th>TotalAmount</th>
+                <td>{{ quote.totalAmount }}</td>
+            </tr>
+            </tr>
+            <tr>
+                <th>quote Line</th>
+                <td>{{ quote.totalAmount }}</td>
+            </tr>
+              <tr>
+                <th>client</th>
+                <td>{{client}} </td>
+            </tr>
+        </tbody>
+    </table>
+
+{% endblock %}

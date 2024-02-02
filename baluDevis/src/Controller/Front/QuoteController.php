@@ -4,18 +4,17 @@ namespace App\Controller\Front;
 
 use App\Entity\Invoice;
 use App\Entity\Quote;
-use App\Entity\Client;
-use App\Form\ClientType;
+
 use App\Form\QuoteType;
 use App\Repository\ClientRepository;
 use App\Repository\QuoteRepository;
+
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 #[isGranted("ROLE_USER")]
 #[Route('/user/quote',name: '_user')]

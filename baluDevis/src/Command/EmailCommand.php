@@ -12,7 +12,7 @@ use App\Entity\Invoice; // Replace YourEntity with the actual entity name
 
 class SendEmailCommand extends Command
 {
-    protected static $defaultName = 'app:send-email-auto';
+    protected static $defaultName = 'command:send-auto';
     private $mailer;
     private $entityManager;
 
@@ -37,15 +37,17 @@ class SendEmailCommand extends Command
         $entities = $this->entityManager->getRepository(Invoice::class)
             ->findBy(['created_at' => $currentDate]);
 
-        // Iterate through entities and send emails
         foreach ($entities as $entity) {
-            // Construct the email
-            $email = (new Email())
-                ->from('your_email@example.com')
-                ->to('recipient@example.com')
-                ->subject('Test Email')
-                ->text('This is a test email sent from Symfony.');
+        // Get the email from the entity
+        $emailSender = $entity->getUserQuote->getEmail();
+        $emailRecipient = $entity->getClient->getEmail();
 
+        // Construct the email using the retrieved email address
+        $email = (new Email())
+            ->from($emailSender)
+            ->to($emailRecipient)
+            ->subject('Test Email /email command')
+            ->text('This is a test email sent from Symfony.');
             // Send the email using Symfony's Mailer component
             $this->mailer->send($email);
 
