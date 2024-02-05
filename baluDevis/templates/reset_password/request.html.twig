@@ -1,0 +1,66 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Register
+{% endblock %}
+
+{% block body %}
+	<div class="p-6 md:p-2 h-screen flex gap-2">
+		<div class="flex-1 bg-secondary w-full h-full rounded-xl flex-col-reverse p-4 relative overflow-hidden hidden md:flex">
+			<img class="object-cover object-center absolute top-0 left-0 h-full w-full z-0 opacity-30" src="/background.jpg"/>
+			<span class="py-2 text-white font-regular relative z-10">Connectez-vous pour gérer vos devis avec facilité et gagnez du temps pour ce qui compte vraiment – votre travail créatif. Simplifiez votre quotidien freelance dès maintenant!</span>
+
+			<p class="text-4xl uppercase font-bold text-white relative z-10">Accédez à un
+				<br>
+				monde de possibilités<br>
+				freelance en toute simplicité.</p>
+		</div>
+
+
+		{{ form_start(requestForm, {"attr": {"class": "flex-1 flex flex-col items-center justify-center gap-4"}}) }}
+
+		<div class="pb-4">
+			<img class="object-contain h-full w-full relative" src="/Logo.png"/>
+		</div>
+
+		<div class="flex flex-col items-center justify-center w-full gap-1 pb-6">
+			<h1 class="text-3xl font-bold text-primary"> Verification Du compte </h1>
+			<h2 class="text-md text-center"> 
+            Reinitialisé Votre Mot de passe
+				<br>
+				On vous enverra un email afin que vous puissiez reinitialisée votre mot de passe</h2>
+			{% for flash_error in app.flashes('reset_password_error') %}
+                <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
+            {% endfor %}
+		</div>
+
+		<div class="flex flex-col gap-2 w-full max-w-md">
+			<div class="flex flex-col gap-1 w-full">
+				<div class="relative">
+					<?xml version="1.0" encoding="utf-8"?>
+					<svg width="20px" height="20px" class="absolute left-2 top-10 fill-primary" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<path fill-rule="evenodd" clip-rule="evenodd" d="M3.75 5.25L3 6V18L3.75 18.75H20.25L21 18V6L20.25 5.25H3.75ZM4.5 7.6955V17.25H19.5V7.69525L11.9999 14.5136L4.5 7.6955ZM18.3099 6.75H5.68986L11.9999 12.4864L18.3099 6.75Z" fill="#080341"/>
+					</svg>
+					{{ form_label(requestForm.email, "Email") }}
+				</div>
+
+				{{ form_widget(requestForm.email, {"attr": {"class": "pl-8 rounded-md w-full border-primary"}}) }}
+			</div>
+
+			<button class="py-2 px-8 flex items-center justify-center bg-primary rounded-md mt-8 text-white shadow-md font-bold" type="submit"> Verifier Votre Compte </button>
+
+		</div>
+
+
+		{{ form_end(requestForm) }}
+		{# <form action={{ path('app_register') }} class="flex-1 flex flex-col items-center justify-center gap-4" method="post">
+																																																	</form> #}
+	</div>
+{% endblock %}
+
+
+
+
+
+
+
+
