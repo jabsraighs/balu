@@ -48,6 +48,7 @@ class QuoteController extends AbstractController
         $form = $this->createForm(QuoteType::class,$quote, ['clients' => $clients]);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            //service calcul quoteLine and set Quote attributes
             $calculQuote->calculate($quote,$user,$entityManager);
                 // Persist and flush the entities
             $entityManager->persist($quote);
@@ -78,7 +79,7 @@ class QuoteController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: '_quote_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Quote $quote, EntityManagerInterface $entityManager, ClientRepository $clientRepository): Response {
+    public function edit(Request $request, Quote $quote, EntityManagerInterface $entityManager, ClientRepository $clientRepository,CalculQuoteService $calculQuote): Response {
         $user = $this->getUser();
         $clients = $clientRepository->findBy(['userClient' => $user]);
         // Créer le formulaire et transmettre les clients
@@ -89,29 +90,10 @@ class QuoteController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-
-                foreach ($quote->getQuoteLines() as $quoteLine) {
-                    // Calculate subTotal for each QuoteLine (ht per item)
-                    $subTotal = $quoteLine->getQuantity() * $quoteLine->getUnitPrice();
-                    $quoteLine->setSubTotal($subTotal);
-                }
-                // Calculate totalAmount for the entire Quote
-                $quoteLines = $quote->getQuoteLines() ;
-                $totalTva = 0;
-
-                foreach ($quoteLines as $quoteLine) {
-                    // total tva = total ht * tva
-                     $totalTva += $quoteLine->getSubTotal() * $quote->getTva();
-                }
-                $totalAmount = 0;
-
-                foreach ($quoteLines as $quoteLine) {
-                    $totalAmount += $quoteLine->getSubTotal() + $totalTva ;
-                }
+                $calculQuote->calculate($quote,$user,$entityManager);
 
                 // Set totalAmount for the Quote
-                $quote->setTotalTva($totalTva);
-                $quote->setTotalAmount($totalAmount);
+                
                 $quote->setUserQuote($user);
                 // Persist and flush the entities
             $entityManager->persist($quote);
