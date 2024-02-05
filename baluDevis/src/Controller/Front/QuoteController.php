@@ -49,7 +49,6 @@ class QuoteController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $calculQuote->calculate($quote,$user,$entityManager);
-           
                 // Persist and flush the entities
             $entityManager->persist($quote);
             $quoteName = $quote->generateName();
