@@ -1,0 +1,52 @@
+
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Verification Email {% endblock %}
+
+{% block body %}
+	<div class="p-6 md:p-2 h-screen flex gap-2">
+		<div class="flex-1 bg-secondary w-full h-full rounded-xl flex-col-reverse p-4 relative overflow-hidden hidden md:flex">
+			<img class="object-cover object-center absolute top-0 left-0 h-full w-full z-0 opacity-30" src="/background.jpg"/>
+			<span class="py-2 text-white font-regular relative z-10">Connectez-vous pour gérer vos devis avec facilité et gagnez du temps pour ce qui compte vraiment – votre travail créatif. Simplifiez votre quotidien freelance dès maintenant!</span>
+
+			<p class="text-4xl uppercase font-bold text-white relative z-10">Accédez à un
+				<br>
+				monde de possibilités<br>
+				freelance en toute simplicité.</p>
+		</div>
+
+
+	<div class= "flex-1 flex flex-col items-center justify-center gap-4">
+
+
+		<div class="pb-4">
+			<img class="object-contain h-full w-full relative" src="/Logo.png"/>
+		</div>
+
+		<div class="flex flex-col items-center justify-center w-full gap-1 pb-6">
+			<h1 class="text-3xl font-bold text-primary">Reinitialisé Votre Mot de passe</h1>
+			<h2 class="text-md text-center">Entrez vos information dans le but
+				<br>
+				de pouvoir reinitialisé votre Mot de passe </h2>
+			
+		</div>
+			<p>
+				If an account matching your email exists, then an email was just sent that contains a link that you can use to reset your password.
+				This link will expire in {{ resetToken.expirationMessageKey|trans(resetToken.expirationMessageData, 'ResetPasswordBundle') }}.
+			</p>
+			<p>If you don't receive an email please check your spam folder or.</p>	
+			<a href="{{ path('app_forgot_password_request') }}"> <button class="py-2 px-8 flex items-center justify-center bg-primary rounded-md mt-8 text-white shadow-md font-bold">try again</button></a>
+
+
+	</div>
+		</div>
+{% endblock %}
+
+
+
+
+
+
+
+
