@@ -8,7 +8,7 @@ use App\Entity\Quote;
 use App\Form\QuoteType;
 use App\Repository\ClientRepository;
 use App\Repository\QuoteRepository;
-use App\Service\CalculQuoteService;
+use App\Service\CalculService;
 use App\Service\DomPdfService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -37,7 +37,7 @@ class QuoteController extends AbstractController
     }
 
     #[Route('/new', name: '_quote_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager,ClientRepository $clientRepository,CalculQuoteService $calculQuote): Response
+    public function new(Request $request, EntityManagerInterface $entityManager,ClientRepository $clientRepository,CalculService $calculService): Response
     {
         $quote = new Quote();
         $user = $this->getUser();
@@ -49,12 +49,11 @@ class QuoteController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             //service calcul quoteLine and set Quote attributes
-            $calculQuote->calculate($quote,$user,$entityManager);
+            $calculService->calculateQuote($quote,$user);
                 // Persist and flush the entities
             $entityManager->persist($quote);
             $quoteName = $quote->generateName();
             $quote = $quote->setName($quoteName);
-             dd($quote);
             $entityManager->flush();
 
             return $this->redirectToRoute('front_user_quote_index', [], Response::HTTP_SEE_OTHER);
@@ -79,7 +78,7 @@ class QuoteController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: '_quote_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Quote $quote, EntityManagerInterface $entityManager, ClientRepository $clientRepository,CalculQuoteService $calculQuote): Response {
+    public function edit(Request $request, Quote $quote, EntityManagerInterface $entityManager, ClientRepository $clientRepository,CalculService $calculService): Response {
         $user = $this->getUser();
         $clients = $clientRepository->findBy(['userClient' => $user]);
         // Créer le formulaire et transmettre les clients
@@ -90,11 +89,8 @@ class QuoteController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-                $calculQuote->calculate($quote,$user,$entityManager);
+                $calculService->calculateQuote($quote,$user,$entityManager);
 
-                // Set totalAmount for the Quote
-                
-                $quote->setUserQuote($user);
                 // Persist and flush the entities
             $entityManager->persist($quote);
 
