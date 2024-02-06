@@ -5,11 +5,10 @@ controllers_security:
 controllers_register:
     resource: ../src/Controller/RegistrationController.php
     type: attribute
-
-controllers_genererPdf:
-    resource: ../src/Controller/PdfController.php
+controllers_resetPassword:
+    resource: ../src/Controller/ResetPasswordController.php
     type: attribute
-    
+
 controllers_front:
     resource: ../src/Controller/Front
     type: attribute

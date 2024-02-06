@@ -13,20 +13,7 @@
 		{% block javascripts %}
 			{{ encore_entry_script_tags('app') }}
 		{% endblock %}
-		{%block header %}
-		{% if is_granted('ROLE_USER') or is_granted('ROLE_ADMIN') %}
-			<div id="navigation-bar">
-				<nav>
-					<ul>
-						<li><a href="#" id="logo">LOGO</a></li>
-						<li><ahref="{{path('front_accueil')}}">Home</a></li>
-						<li><ahref="{{path('app_logout')}}">Log out</a></li>
-
-					</ul>
-				</nav>
-			</div>
-		{%endif %}
-		{% endblock%}
+		
 	</head>
 	<body>
 		{% for message in app.flashes("message")%}
