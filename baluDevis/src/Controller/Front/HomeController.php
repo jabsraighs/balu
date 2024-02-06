@@ -14,22 +14,15 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 class HomeController extends AbstractController
 {
-    #[Route('/', name: '_home',methods: ['GET'])]
-
-    public function getHome(): Response
-    {
-        return $this->render('Front/home/index.html.twig', []);
-    }
-
-    #[Route('/accueil', name: '_accueil',methods: ['GET'])]
+    #[Route('/', name: 'home',methods: ['GET'])]
     #[IsGranted("ROLE_USER")]
-    public function getAccueil(UserRepository $userRepository): Response
+    public function getHome(UserRepository $userRepository): Response
     {
-          $user = $this->getUser()->getId();
+        $user = $this->getUser()->getId();
         $userInfo = $userRepository->findBy(['id' => $user]);
 
-        return $this->render('Front/home/accueil.html.twig', [
-            'users' => $userInfo,
+        return $this->render('Front/home/index.html.twig', [
+            'user' => $userInfo,
         ]);
     }
 }
