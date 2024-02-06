@@ -1,26 +1,7 @@
-{% extends 'base.html.twig' %}
-
-{% block title %}Reset your password{% endblock %}
-
-{% block body %}
-    <h1>Reset your password</h1>
-
-    {{ form_start(resetForm) }}
-        {{ form_row(resetForm.plainPassword) }}
-        <button class="btn btn-primary">Reset password</button>
-    {{ form_end(resetForm) }}
-{% endblock %}
-{% extends 'base.html.twig' %}
-
-{% block title %}Log in!
-{% endblock %}
-
-
 
 {% extends 'base.html.twig' %}
 
-{% block title %}Register
-{% endblock %}
+{% block title %}  Reset your password {% endblock %}
 
 {% block body %}
 	<div class="p-6 md:p-2 h-screen flex gap-2">
@@ -42,39 +23,57 @@
 		</div>
 
 		<div class="flex flex-col items-center justify-center w-full gap-1 pb-6">
-			<h1 class="text-3xl font-bold text-primary"> Verifiction Du compte </h1>
+			<h1 class="text-3xl font-bold text-primary">Reinitialisé le Mot de passe</h1>
 			<h2 class="text-md text-center">Entrez vos information dans le but
 				<br>
-				de pouvoir re créer votre mot de passe</h2>
-			{% for flash_error in app.flashes('verify_email_error') %}
-				<div class="alert alert-danger" role="alert">{{ flash_error }}</div>
-			{% endfor %}
+				de pouvoir créer votre compte</h2>
+		
 		</div>
 
 		<div class="flex flex-col gap-2 w-full max-w-md">
+			
+
+	
 			<div class="flex flex-col gap-1 w-full">
 				<div class="relative">
 					<?xml version="1.0" encoding="utf-8"?>
-					<svg width="20px" height="20px" class="absolute left-2 top-10 fill-primary" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-						<path fill-rule="evenodd" clip-rule="evenodd" d="M3.75 5.25L3 6V18L3.75 18.75H20.25L21 18V6L20.25 5.25H3.75ZM4.5 7.6955V17.25H19.5V7.69525L11.9999 14.5136L4.5 7.6955ZM18.3099 6.75H5.68986L11.9999 12.4864L18.3099 6.75Z" fill="#080341"/>
+					<svg class="absolute left-2 top-10" width="20px" height="20px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<path d="M7 10.0288C7.47142 10 8.05259 10 8.8 10H15.2C15.9474 10 16.5286 10 17 10.0288M7 10.0288C6.41168 10.0647 5.99429 10.1455 5.63803 10.327C5.07354 10.6146 4.6146 11.0735 4.32698 11.638C4 12.2798 4 13.1198 4 14.8V16.2C4 17.8802 4 18.7202 4.32698 19.362C4.6146 19.9265 5.07354 20.3854 5.63803 20.673C6.27976 21 7.11984 21 8.8 21H15.2C16.8802 21 17.7202 21 18.362 20.673C18.9265 20.3854 19.3854 19.9265 19.673 19.362C20 18.7202 20 17.8802 20 16.2V14.8C20 13.1198 20 12.2798 19.673 11.638C19.3854 11.0735 18.9265 10.6146 18.362 10.327C18.0057 10.1455 17.5883 10.0647 17 10.0288M7 10.0288V8C7 5.23858 9.23858 3 12 3C14.7614 3 17 5.23858 17 8V10.0288" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
 					</svg>
-					{{ form_label(resetForm.email, "Email") }}
+					{{ form_label(resetForm.plainPassword.first, "Mot de passe") }}
 				</div>
-
-				{{ form_widget(resetForm.email, {"attr": {"class": "pl-8 rounded-md w-full border-primary"}}) }}
+				{{ form_widget(resetForm.plainPassword.first, {"attr": {"class": "pl-8 rounded-md w-full border-primary"}}) }}
 			</div>
 
-			<button class="py-2 px-8 flex items-center justify-center bg-primary rounded-md mt-8 text-white shadow-md font-bold" type="submit"></button>
+			<div class="flex flex-col gap-1 w-full">
+				<div class="relative">
+					<?xml version="1.0" encoding="utf-8"?>
+					<svg class="absolute left-2 top-10" width="20px" height="20px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<path d="M7 10.0288C7.47142 10 8.05259 10 8.8 10H15.2C15.9474 10 16.5286 10 17 10.0288M7 10.0288C6.41168 10.0647 5.99429 10.1455 5.63803 10.327C5.07354 10.6146 4.6146 11.0735 4.32698 11.638C4 12.2798 4 13.1198 4 14.8V16.2C4 17.8802 4 18.7202 4.32698 19.362C4.6146 19.9265 5.07354 20.3854 5.63803 20.673C6.27976 21 7.11984 21 8.8 21H15.2C16.8802 21 17.7202 21 18.362 20.673C18.9265 20.3854 19.3854 19.9265 19.673 19.362C20 18.7202 20 17.8802 20 16.2V14.8C20 13.1198 20 12.2798 19.673 11.638C19.3854 11.0735 18.9265 10.6146 18.362 10.327C18.0057 10.1455 17.5883 10.0647 17 10.0288M7 10.0288V8C7 5.23858 9.23858 3 12 3C14.7614 3 17 5.23858 17 8V10.0288" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+					</svg>
+					{{ form_label(resetForm.plainPassword.second, "Confirmer le mot de passe") }}
+				</div>
+				{{ form_widget(resetForm.plainPassword.second, {"attr": {"class": "pl-8 rounded-md w-full border-primary"}}) }}
+			</div>
+
+
+			<div class="inline-flex items-center">
+				<label class="relative flex items-center p-3 rounded-full cursor-pointer" htmlFor="registration_form_agreeTerms">
+					<span class="absolute text-white transition-opacity opacity-0 pointer-events-none top-2/4 left-2/4 -translate-y-2/4 -translate-x-2/4 peer-checked:opacity-100">
+						<svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" viewBox="0 0 20 20" fill="currentColor" stroke="currentColor" stroke-width="1">
+							<path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+						</svg>
+					</span>
+				</label>
+				<label class="font-light text-gray-700 cursor-pointer select-none" htmlFor="registration_form_agreeTerms">
+					Accepter les termes et conditions
+				</label>
+			</div>
+
+			<button class="py-2 px-8 flex items-center justify-center bg-primary rounded-md mt-8 text-white shadow-md font-bold" type="submit">Reset Password</button>
 
 		</div>
-
-
-		{{ form_end(resetForm) }}
-		{# <form action={{ path('app_register') }} class="flex-1 flex flex-col items-center justify-center gap-4" method="post">
-																																																	</form> #}
-	</div>
-{% endblock %}
-
+{% endblock %} 
 
 
 
