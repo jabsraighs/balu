@@ -64,7 +64,7 @@ Supprimer l'ensemble de vos migrations et faire les commandes suivantes :
 docker compose exec     
 php bin/console d:d:d --force 
 php bin/console d:d:c 
-php bin/console make:migration 
+php bin/console make:migr 
 php bin/console d:m:m
 
 ## MailDev nécessaire pour le test d'inscription d'utilisateur

@@ -6,7 +6,7 @@ use App\Entity\Invoice;
 use App\Form\InvoiceType;
 use App\Repository\ClientRepository;
 use App\Repository\InvoiceRepository;
-use App\Service\CalculService;
+use App\Repository\QuoteRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -34,7 +34,7 @@ class InvoiceController extends AbstractController
     }
 
     #[Route('/new', name: '_invoice_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager , ClientRepository $clientRepository,CalculService $calculService): Response
+    public function new(Request $request, EntityManagerInterface $entityManager , ClientRepository $clientRepository): Response
     {
         $user = $this->getUser();
         $invoice = new Invoice();
@@ -45,7 +45,30 @@ class InvoiceController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-                $calculService->calculInvoice($invoice,$user);
+           foreach ($invoice->getQuoteLines() as $quoteLine) {
+                    // Calculate subTotal for each QuoteLine (ht per item)
+                    $subTotal = $quoteLine->getQuantity() * $quoteLine->getUnitPrice();
+                    $quoteLine->setSubTotal($subTotal);
+                }
+                // Calculate totalAmount for the entire Invoice
+                $quoteLines = $invoice->getQuoteLines() ;
+                $totalTva = 0;
+
+                foreach ($quoteLines as $quoteLine) {
+                    // total tva = total ht * tva
+                     $totalTva += $quoteLine->getSubTotal() * $invoice->getTva();
+                }
+                $totalAmount = 0;
+
+                foreach ($quoteLines as $quoteLine) {
+                    $totalAmount += $quoteLine->getSubTotal() + $totalTva ;
+                }
+                
+
+                // Set totalAmount for the Invoice
+                $invoice->setTotalTva($totalTva);
+                $invoice->setTotalAmount($totalAmount);
+                $invoice->setUserInvoice($user);
                 $entityManager->persist($invoice);
                 $invoiceName = $invoice->generateInvoiceName();
                 $invoice = $invoice->setName($invoiceName);
@@ -71,7 +94,7 @@ class InvoiceController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: '_invoice_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Invoice $invoice, EntityManagerInterface $entityManager,ClientRepository $clientRepository,CalculService $calculService): Response
+    public function edit(Request $request, Invoice $invoice, EntityManagerInterface $entityManager,ClientRepository $clientRepository): Response
     {
         $user = $this->getUser();
         $clientsInvoice = $clientRepository->findBy(['userClient' => $user]);
@@ -81,7 +104,29 @@ class InvoiceController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-                $calculService->calculInvoice($invoice,$user);
+           foreach ($invoice->getQuoteLines() as $quoteLine) {
+                    // Calculate subTotal for each QuoteLine (ht per item)
+                    $subTotal = $quoteLine->getQuantity() * $quoteLine->getUnitPrice();
+                    $quoteLine->setSubTotal($subTotal);
+                }
+                // Calculate totalAmount for the entire Invoice
+                $quoteLines = $invoice->getQuoteLines() ;
+                $totalTva = 0;
+
+                foreach ($quoteLines as $quoteLine) {
+                    // total tva = total ht * tva
+                     $totalTva += $quoteLine->getSubTotal() * $invoice->getTva();
+                }
+                $totalAmount = 0;
+
+                foreach ($quoteLines as $quoteLine) {
+                    $totalAmount += $quoteLine->getSubTotal() + $totalTva ;
+                }
+
+                // Set totalAmount for the Invoice
+                $invoice->setTotalTva($totalTva);
+                $invoice->setTotalAmount($totalAmount);
+                $invoice->setUserInvoice($user);
                 $entityManager->persist($invoice);
                 $entityManager->flush();
                 // Persist and flush the entities
