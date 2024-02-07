@@ -14,7 +14,14 @@ module.exports = {
                 gray: "#AAAAAA"
             },
             width: {
-                sidebar: "300px"
+                sidebar: "300px",
+                card: "328px",
+            },
+            height: {
+                card: "262px"
+            },
+            borderColor: {
+                lightBlue: "rgba(72,123,209,0.1)"
             },
             boxShadow: {
                 small: "rgba(42,49,75,0.2) 0px 2px 4px 0px"
