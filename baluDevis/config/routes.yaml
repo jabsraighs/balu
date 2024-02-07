@@ -10,6 +10,10 @@ controllers_resetPassword:
     resource: ../src/Controller/ResetPasswordController.php
     type: attribute
 
+controllers_genererPdf:
+    resource: ../src/Controller/PdfController.php
+    type: attribute
+    
 controllers_front:
     resource: ../src/Controller/Front
     type: attribute
