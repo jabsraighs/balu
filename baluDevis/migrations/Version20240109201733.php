@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20240205130455 extends AbstractMigration
+final class Version20240109201733 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -26,10 +26,6 @@ final class Version20240205130455 extends AbstractMigration
         , user_client_id BLOB NOT NULL --(DC2Type:uuid)
         , firstname VARCHAR(255) NOT NULL, lastname VARCHAR(255) NOT NULL, address VARCHAR(255) NOT NULL, email VARCHAR(255) NOT NULL, phone VARCHAR(255) NOT NULL, PRIMARY KEY(id), CONSTRAINT FK_C7440455190BE4C5 FOREIGN KEY (user_client_id) REFERENCES "user" (id) NOT DEFERRABLE INITIALLY IMMEDIATE)');
         $this->addSql('CREATE INDEX IDX_C7440455190BE4C5 ON client (user_client_id)');
-        $this->addSql('CREATE TABLE cron_job (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, name VARCHAR(191) NOT NULL, command VARCHAR(1024) NOT NULL, schedule VARCHAR(191) NOT NULL, description VARCHAR(191) NOT NULL, enabled BOOLEAN NOT NULL)');
-        $this->addSql('CREATE UNIQUE INDEX un_name ON cron_job (name)');
-        $this->addSql('CREATE TABLE cron_report (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, job_id INTEGER DEFAULT NULL, run_at DATETIME NOT NULL, run_time DOUBLE PRECISION NOT NULL, exit_code INTEGER NOT NULL, output CLOB NOT NULL, error CLOB NOT NULL, CONSTRAINT FK_B6C6A7F5BE04EA9 FOREIGN KEY (job_id) REFERENCES cron_job (id) ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE)');
-        $this->addSql('CREATE INDEX IDX_B6C6A7F5BE04EA9 ON cron_report (job_id)');
         $this->addSql('CREATE TABLE invoice (id BLOB NOT NULL --(DC2Type:uuid)
         , quote_id BLOB DEFAULT NULL --(DC2Type:uuid)
         , user_invoice_id BLOB NOT NULL --(DC2Type:uuid)
@@ -63,11 +59,6 @@ final class Version20240205130455 extends AbstractMigration
         , quantity INTEGER NOT NULL, unit_price DOUBLE PRECISION NOT NULL, subtotal DOUBLE PRECISION NOT NULL, PRIMARY KEY(id), CONSTRAINT FK_43F3EB7CDB805178 FOREIGN KEY (quote_id) REFERENCES quote (id) NOT DEFERRABLE INITIALLY IMMEDIATE, CONSTRAINT FK_43F3EB7C2989F1FD FOREIGN KEY (invoice_id) REFERENCES invoice (id) NOT DEFERRABLE INITIALLY IMMEDIATE)');
         $this->addSql('CREATE INDEX IDX_43F3EB7CDB805178 ON quote_line (quote_id)');
         $this->addSql('CREATE INDEX IDX_43F3EB7C2989F1FD ON quote_line (invoice_id)');
-        $this->addSql('CREATE TABLE reset_password_request (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, user_id BLOB NOT NULL --(DC2Type:uuid)
-        , selector VARCHAR(20) NOT NULL, hashed_token VARCHAR(100) NOT NULL, requested_at DATETIME NOT NULL --(DC2Type:datetime_immutable)
-        , expires_at DATETIME NOT NULL --(DC2Type:datetime_immutable)
-        , CONSTRAINT FK_7CE748AA76ED395 FOREIGN KEY (user_id) REFERENCES "user" (id) NOT DEFERRABLE INITIALLY IMMEDIATE)');
-        $this->addSql('CREATE INDEX IDX_7CE748AA76ED395 ON reset_password_request (user_id)');
         $this->addSql('CREATE TABLE "user" (id BLOB NOT NULL --(DC2Type:uuid)
         , email VARCHAR(180) NOT NULL, roles CLOB NOT NULL --(DC2Type:json)
         , password VARCHAR(255) NOT NULL, is_verified BOOLEAN NOT NULL, created_at DATETIME NOT NULL --(DC2Type:datetime_immutable)
@@ -87,14 +78,11 @@ final class Version20240205130455 extends AbstractMigration
         // this down() migration is auto-generated, please modify it to your needs
         $this->addSql('DROP TABLE category');
         $this->addSql('DROP TABLE client');
-        $this->addSql('DROP TABLE cron_job');
-        $this->addSql('DROP TABLE cron_report');
         $this->addSql('DROP TABLE invoice');
         $this->addSql('DROP TABLE payment');
         $this->addSql('DROP TABLE product');
         $this->addSql('DROP TABLE quote');
         $this->addSql('DROP TABLE quote_line');
-        $this->addSql('DROP TABLE reset_password_request');
         $this->addSql('DROP TABLE "user"');
         $this->addSql('DROP TABLE messenger_messages');
     }

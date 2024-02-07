@@ -46,7 +46,7 @@ class QuoteType extends AbstractType
                 'choices' => [
                     "0%" =>  "0" ,
                     "10%" =>  "0.10",
-                    "20%" => "0.20"
+                    "20" => "0.20"
                 ],
                 'multiple' => false,
                 'expanded' => true,
