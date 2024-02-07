@@ -6,6 +6,10 @@ controllers_register:
     resource: ../src/Controller/RegistrationController.php
     type: attribute
 
+controllers_resetPassword:
+    resource: ../src/Controller/ResetPasswordController.php
+    type: attribute
+
 controllers_front:
     resource: ../src/Controller/Front
     type: attribute
