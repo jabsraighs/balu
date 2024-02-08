@@ -1,9 +1,40 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello HomeController!{% endblock %}
+{% block title %}Dashboard
+{% endblock %}
 
 {% block body %}
-<body>
-    <br>
-    <h1> WELCOME To the homePage  </h1>
+	<div class="flex flex-col gap-7">
+		<div>
+			<h1 class="text-4xl text-secondary font-extrabold">Dashboard</h1>
+			<p class="text-xs text-gray">Bienvenue sur votre dashboard, Arthur!</p>
+		</div>
+
+		<div class="flex gap-3">
+			{% embed '_components/_card.html.twig' %}
+				{% block title %}Revenue
+				{% endblock %}
+				{% block total %}2500
+				{% endblock %}
+				{% block icon %}
+					<svg width="24" height="24" viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<path d="M2 12C2 7.28595 2 4.92893 3.46447 3.46447C4.92893 2 7.28595 2 12 2C16.714 2 19.0711 2 20.5355 3.46447C22 4.92893 22 7.28595 22 12C22 16.714 22 19.0711 20.5355 20.5355C19.0711 22 16.714 22 12 22C7.28595 22 4.92893 22 3.46447 20.5355C2 19.0711 2 16.714 2 12Z" stroke="#AAAAAA" stroke-width="2"/>
+						<path d="M7 18V9" stroke="#AAAAAA" stroke-width="2" stroke-linecap="round"/>
+						<path d="M12 18V6" stroke="#AAAAAA" stroke-width="2" stroke-linecap="round"/>
+						<path d="M17 18V13" stroke="#AAAAAA" stroke-width="2" stroke-linecap="round"/>
+					</svg>
+				{% endblock %}
+			{% endembed %}
+		</div>
+
+		<div class="flex flex-col gap-7">
+			<h2 class="text-xl font-semibold text-secondary">Factures récentes</h2>
+			<div class="flex flex-col gap-3">
+				{% embed '_components/_invoice_item.html.twig' %}{% endembed %}
+				{% embed '_components/_invoice_item.html.twig' %}{% endembed %}
+				{% embed '_components/_invoice_item.html.twig' %}{% endembed %}
+				{% embed '_components/_invoice_item.html.twig' %}{% endembed %}
+			</div>
+		</div>
+	</div>
 {% endblock %}
