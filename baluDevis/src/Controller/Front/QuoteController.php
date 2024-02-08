@@ -9,6 +9,8 @@ use App\Form\ClientType;
 use App\Form\QuoteType;
 use App\Repository\ClientRepository;
 use App\Repository\QuoteRepository;
+use App\Service\CalculService;
+use App\Service\DomPdfService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,8 +26,7 @@ class QuoteController extends AbstractController
     #[Route('/', name: '_quote_index', methods: ['GET'])]
     public function index(QuoteRepository $quoteRepository): Response
     {
-        
-        $user = $this->getUser();
+       $user = $this->getUser();
        $userQuote = $quoteRepository->findBy(
     ['userQuote' => $user],
     ['id' => 'DESC'] // Order by the 'createdAt' property in descending order
@@ -37,7 +38,7 @@ class QuoteController extends AbstractController
     }
 
     #[Route('/new', name: '_quote_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager,ClientRepository $clientRepository): Response
+    public function new(Request $request, EntityManagerInterface $entityManager,ClientRepository $clientRepository,CalculService $calculService): Response
     {
         $quote = new Quote();
         $user = $this->getUser();
@@ -48,9 +49,8 @@ class QuoteController extends AbstractController
         $form = $this->createForm(QuoteType::class,$quote, ['clients' => $clients]);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            dd($quote);
             //service calcul quoteLine and set Quote attributes
-            $calculService->calculateQuote($quote,$user);
+            $calculService->calculQuote($quote,$user);
                 // Persist and flush the entities
             $entityManager->persist($quote);
             $quoteName = $quote->generateName();
@@ -79,7 +79,7 @@ class QuoteController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: '_quote_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Quote $quote, EntityManagerInterface $entityManager, ClientRepository $clientRepository): Response {
+    public function edit(Request $request, Quote $quote, EntityManagerInterface $entityManager, ClientRepository $clientRepository,CalculService $calculService): Response {
         $user = $this->getUser();
         $clients = $clientRepository->findBy(['userClient' => $user]);
         // Créer le formulaire et transmettre les clients
@@ -90,33 +90,9 @@ class QuoteController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-
-                foreach ($quote->getQuoteLines() as $quoteLine) {
-                    // Calculate subTotal for each QuoteLine (ht per item)
-                    $subTotal = $quoteLine->getQuantity() * $quoteLine->getUnitPrice();
-                    $quoteLine->setSubTotal($subTotal);
-                }
-                // Calculate totalAmount for the entire Quote
-                $quoteLines = $quote->getQuoteLines() ;
-                $totalTva = 0;
-
-                foreach ($quoteLines as $quoteLine) {
-                    // total tva = total ht * tva
-                     $totalTva += $quoteLine->getSubTotal() * $quote->getTva();
-                }
-                $totalAmount = 0;
-
-                foreach ($quoteLines as $quoteLine) {
-                    $totalAmount += $quoteLine->getSubTotal() + $totalTva ;
-                }
-
-                // Set totalAmount for the Quote
-                $quote->setTotalTva($totalTva);
-                $quote->setTotalAmount($totalAmount);
-                $quote->setUserQuote($user);
+            $calculService->calculQuote($quote,$user);
                 // Persist and flush the entities
             $entityManager->persist($quote);
-
             $quote = $quote->setName($quote->getName());
             $entityManager->flush();
 
@@ -161,5 +137,25 @@ class QuoteController extends AbstractController
         }
 
         return $this->redirectToRoute('front_user_quote_index', [], Response::HTTP_SEE_OTHER);
+    }
+    #[Route('/generate/pdf/{id}', name: '_quote_generate_pdf')]
+    public function generatePdf(DomPdfService $dompdfService,Quote $quote): Response
+    {
+        $client = $quote->getClient()->getEmail();
+        $htmlContent = $this->renderView('Front/user/quote/generatePdf.html.twig', [
+            // Pass any necessary data to the HTML template here
+            'quote' => $quote,
+            'client' => $client
+        ]);
+
+        // Generate PDF from HTML content
+        $pdfContent = $dompdfService->generatePdfFromHtml($htmlContent);
+        // Create a response with the PDF content
+        $response = new Response($pdfContent);
+        // Set headers for PDF content
+        $response->headers->set('Content-Type', 'application/pdf');
+        $response->headers->set('Content-Disposition', 'inline; filename="generated.pdf"');
+
+        return $response;
     }
 }
