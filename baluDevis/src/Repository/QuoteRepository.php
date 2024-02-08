@@ -29,6 +29,11 @@ class QuoteRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+    public function findBySearch(Quote $quotes): {
+        $quote = $this->createQueryBuilder('q')
+            
+
+    }
 
 //    /**
 //     * @return Quote[] Returns an array of Quote objects
