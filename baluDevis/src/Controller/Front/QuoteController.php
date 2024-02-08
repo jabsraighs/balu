@@ -4,8 +4,7 @@ namespace App\Controller\Front;
 
 use App\Entity\Invoice;
 use App\Entity\Quote;
-use App\Entity\Client;
-use App\Form\ClientType;
+use App\Form\QuoteFilterType;
 use App\Form\QuoteType;
 use App\Repository\ClientRepository;
 use App\Repository\QuoteRepository;
@@ -17,22 +16,32 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 #[isGranted("ROLE_USER")]
 #[Route('/user/quote',name: '_user')]
 class QuoteController extends AbstractController
 {
-    #[Route('/', name: '_quote_index', methods: ['GET'])]
-    public function index(QuoteRepository $quoteRepository): Response
+    #[Route('/', name: '_quote_index', methods: ['GET','POST'])]
+    public function index(QuoteRepository $quoteRepository,Request $request,ClientRepository $clientRepository): Response
     {
-       $user = $this->getUser();
-       $userQuote = $quoteRepository->findBy(
-    ['userQuote' => $user],
-    ['id' => 'DESC'] // Order by the 'createdAt' property in descending order
-);
+        $user = $this->getUser();
+        $quotes = new quote();
+        // Récupérer les clients de l'utilisateur
+        $clients = $clientRepository->findBy(['userClient' => $user]);
+        // Créer le formulaire et transmettre les clients
+        $form = $this->createForm(QuoteFilterType::class,$quotes, ['clients' => $clients]);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            dd($quotes);
+        }
+        $user = $this->getUser();
+        $userQuote = $quoteRepository->findBy(
+        ['userQuote' => $user],
+        ['id' => 'DESC'] // Order by the 'createdAt' property in descending order
+        );
 
         return $this->render('Front/user/quote/index.html.twig', [
+            'form' => $form,
             'quotes' => $userQuote,
         ]);
     }

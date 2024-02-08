@@ -63,7 +63,6 @@ class Invoice
         $this->payments = new ArrayCollection();
         $this->quoteLines = new ArrayCollection();
         $this->quote = null;
-        
 
     }
 
