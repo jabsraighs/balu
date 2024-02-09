@@ -2,6 +2,9 @@
 module.exports = {
 	content: ["./assets/**/*.js", "./templates/**/*.html.twig"],
 	theme: {
+		screens: {
+			"2md": "960px",
+		},
 		extend: {
 			backgroundColor: {
 				secondary: "#2A314B",
@@ -32,7 +35,7 @@ module.exports = {
             },
             padding: {
                 side: "300px"
-            }
+            },
 		}
 	},
 	plugins: [require("@tailwindcss/forms")]
