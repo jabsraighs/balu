@@ -29,6 +29,39 @@ class QuoteRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+    public function findSearch(Quote $quote, User $user) {
+            $query = $this
+                ->createQueryBuilder('q')
+                ->select('q')
+                ->leftJoin('q.client', 'c')
+                ->leftJoin('q.userQuote', 'u'); // Assuming 'userQuote' is the relationship with the user entity
+
+            if (!empty($quote->getStatus())) {
+                $query = $query
+                    ->andWhere('q.status = :status')
+                    ->setParameter('status', $quote->getStatus());
+            }
+
+            if (!empty($quote->getCreatedAt())) {
+                $query = $query
+                    ->andWhere('q.createdAt >= :createdAt')
+                    ->setParameter('createdAt', $quote->getCreatedAt());
+            }
+
+            if (!empty($quote->getExpiryAt())) {
+                $query = $query
+                    ->andWhere('q.expiryAt <= :expiryAt')
+                    ->setParameter('expiryAt', $quote->getExpiryAt());
+            }
+
+            if ($user !== null) {
+                $query = $query
+                    ->andWhere('q.userQuote = :user')
+                    ->setParameter('user', $user);
+            }
+
+            return $query;
+        }
 
 //    /**
 //     * @return Quote[] Returns an array of Quote objects
