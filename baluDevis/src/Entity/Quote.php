@@ -18,13 +18,13 @@ class Quote
     #[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
     private ?Uuid $id = null;
 
-    #[ORM\Column(type: Types::DATE_IMMUTABLE)]
+    #[ORM\Column(nullable: true,type: Types::DATE_IMMUTABLE)]
     private ?\DateTimeImmutable $createdAt = null;
 
-    #[ORM\Column(type: Types::DATE_IMMUTABLE)]
+    #[ORM\Column(nullable:true,type: Types::DATE_IMMUTABLE)]
     private ?\DateTimeImmutable $expiryAt = null;
 
-    #[ORM\Column(length: 50)]
+    #[ORM\Column(nullable:true,length: 50)]
     private ?string $status = null;
 
     #[ORM\Column]
