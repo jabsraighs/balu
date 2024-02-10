@@ -29,11 +29,11 @@ class QuoteController extends AbstractController
         // Récupérer les clients de l'utilisateur
         $clients = $clientRepository->findBy(['userClient' => $user]);
         // Créer le formulaire et transmettre les clients
-        // $form = $this->createForm(QuoteFilterType::class,$quotes, ['clients' => $clients]);
-        // $form->handleRequest($request);
-        // if ($form->isSubmitted() && $form->isValid()) {
-        //     dd($quotes);
-        // }
+        $form = $this->createForm(QuoteFilterType::class,$quotes, ['clients' => $clients]);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            dd($quotes);
+        }
         $user = $this->getUser();
         $userQuote = $quoteRepository->findBy(
         ['userQuote' => $user],
@@ -41,7 +41,7 @@ class QuoteController extends AbstractController
         );
 
         return $this->render('Front/user/quote/index.html.twig', [
-            // 'form' => $form,
+             'form' => $form,
             'quotes' => $userQuote,
         ]);
     }
