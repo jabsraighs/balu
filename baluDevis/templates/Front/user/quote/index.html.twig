@@ -7,23 +7,22 @@
     <div class="w-full">
             <h1 class="text-4xl font-bold"> Quotes </h1>
             <div class="flex gap-x-3 w-full">
-                <div class="flex flex-col">
+                {# <div class="flex flex-col">
                     <label> Start Date </label>
                    {{ form(form.createdAt, {"attr": {"class": "rounded-md" ,"type":"date"}}) }}
-                </div>
-                <div class="flex flex-col">
+                </div> #}
+                {# <div class="flex flex-col">
                     <label> End Date </label>
                    {{ form(form.expiryAt, {"attr": {"class": "rounded-md" ,"type":"date"}}) }}
-                </div>
-
+                </div> #}
                  <div class="flex flex-col">
                     <label> Status </label>
                     {{ form(form.status, {"attr": {"class": "rounded-md","value":""}}) }}
                 </div>
-                <div class="flex flex-col">
+                {# <div class="flex flex-col">
                     <label> Clients </label>
                     {{ form(form.client, {"attr": {"class": "rounded-md" ,"value":""}}) }}
-                </div>
+                </div> #}
                 <div class="bg-blue-300 p-4 rounded-md">
                     <button type="submit">
                         <svg class="w-[1rem] h-[1rem]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
@@ -34,6 +33,7 @@
                 </div>
             </div>
             {{form_end(form)}}
+            
             <div>
                 <table class="table">
                     <thead>
@@ -47,21 +47,42 @@
                         </tr>
                     </thead>
                     <tbody>
-                    {% for quote in quotes %}
-                        <tr>
-                            <td> {{quote.name}} </td>
-                            <td>{{ quote.createdAt? quote.createdAt|date('Y-m-d') : '' }}</td>
-                            <td>{{ quote.expiryAt ? quote.expiryAt|date('Y-m-d') : '' }}</td>
-                            <td>{{ quote.status }}</td>
-                            <td>{{ quote.totalAmount }}</td>
-                            <td>
-                                <a href="{{ path('front_user_quote_show', {'id': quote.id}) }}">show</a>
-                                <a href="{{ path('front_user_quote_edit', {'id': quote.id}) }}">edit</a>
-                                <a href="{{ path('front_user_quote_invoice', {'id': quote.id}) }}"> crée facture  </a>
-                                <a href="{{ path('front_user_quote_generate_pdf', {'id': quote.id}) }}"> generer Pdf </a>
-                            </td>
-                        </tr>
-                    {% endfor %}
+                    {{dump()}}
+                        {% if quotes|length > 0 %}
+                            {% for quote in quotes %}
+                                <tr>
+                                    <td>{{ quote.name }}</td>
+                                    <td>{{ quote.createdAt ? quote.createdAt|date('Y-m-d') : '' }}</td>
+                                    <td>{{ quote.expiryAt ? quote.expiryAt|date('Y-m-d') : '' }}</td>
+                                    <td>{{ quote.status }}</td>
+                                    <td>{{ quote.totalAmount }}</td>
+                                    <td>
+                                        <a href="{{ path('front_user_quote_show', {'id': quote.id}) }}">show</a>
+                                        <a href="{{ path('front_user_quote_edit', {'id': quote.id}) }}">edit</a>
+                                        <a href="{{ path('front_user_quote_invoice', {'id': quote.id}) }}">crée facture</a>
+                                        <a href="{{ path('front_user_quote_generate_pdf', {'id': quote.id}) }}">generer Pdf</a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        {% elseif quotes|length > 0 %}
+                            {% for quoteSearchs in quotesSearch %}
+                                <tr>
+                                    <td>{{ quoteSearchs.name }}</td>
+                                    <td>{{ quoteSearchs.createdAt ? quoteSearchs.createdAt|date('Y-m-d') : '' }}</td>
+                                    <td>{{ quoteSearchs.expiryAt ? quotSearchs.expiryAt|date('Y-m-d') : '' }}</td>
+                                    <td>{{ quoteSearchs.status }}</td>
+                                    <td>{{ quoteSearchs.totalAmount }}</td>
+                                    <td>
+                                        <a href="{{ path('front_user_quote_show', {'id': quote.id}) }}">show</a>
+                                        <a href="{{ path('front_user_quote_edit', {'id': quote.id}) }}">edit</a>
+                                        <a href="{{ path('front_user_quote_invoice', {'id': quote.id}) }}">crée facture</a>
+                                        <a href="{{ path('front_user_quote_generate_pdf', {'id': quote.id}) }}">generer Pdf</a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr><td colspan="6">Pas de Devis Trouve</td></tr>
+                        {% endif %}
                     </tbody>
                 </table>
             </div>

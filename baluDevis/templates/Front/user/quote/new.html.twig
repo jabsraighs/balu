@@ -2,7 +2,7 @@
 {% block body%}
 <p> Quote name </p>
 
-{# {{quote.name}}
+{{quote.name}}
 
         {{ form_start(form) }}
         <br>
@@ -16,16 +16,16 @@
 
 
 
-             Render other fields if any 
+             {# Render other fields if any  #}
             <div id="quoteItem" data-prototype="{{form_row(form.quoteLines.vars.prototype)|e('html_attr')}}">
                  {{ form_row(form.quoteLines) }}
                 <span></span>
             </div>
         <button type="submit"> create Quote </button>
-        {{ form_end(form) }} #}
+        {{ form_end(form) }} 
 
 {%endblock %}
-<div class="p-6 md:p-2 h-screen flex gap-2">
+{# <div class="p-6 md:p-2 h-screen flex gap-2">
 		<div class="flex-1 bg-secondary w-full h-full rounded-xl flex-col-reverse p-4 relative overflow-hidden hidden md:flex">
 			<img class="object-cover object-center absolute top-0 left-0 h-full w-full z-0 opacity-30" src="/background.jpg"/>
 			<span class="py-2 text-white font-regular relative z-10">Connectez-vous pour gérer vos devis avec facilité et gagnez du temps pour ce qui compte vraiment – votre travail créatif. Simplifiez votre quotidien freelance dès maintenant!</span>
@@ -93,7 +93,7 @@
 
 			<button class="py-2 px-8 flex items-center justify-center bg-primary rounded-md mt-8 text-white shadow-md font-bold" type="submit">Reset Password</button>
 
-		</div>
+		</div> #}
 {% block javascripts %}
     <script>
     // Add new quote line form on button click

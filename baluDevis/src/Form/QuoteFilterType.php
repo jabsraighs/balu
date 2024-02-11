@@ -22,39 +22,41 @@ class QuoteFilterType extends AbstractType
     {
         $clients = $options['clients'];
         $builder
-            ->add('createdAt',DateType::class,[
-                'label' => 'createdAt',
-                'widget' => 'single_text',
-                'input' => 'datetime_immutable',
-                'required' => false
-            ])
-            ->add('expiryAt',DateType::class,[
-                'label' => 'expiryAt',
-                'widget' => 'single_text',
-                'input' => 'datetime_immutable',
-                'required' => false
-            ])
+            // ->add('createdAt',DateType::class,[
+            //     'required' => false,
+            //     'label' => 'createdAt',
+            //     'widget' => 'single_text',
+            //     'input' => 'datetime_immutable'
+            // ])
+        //     ->add('expiryAt',DateType::class,[
+        //         'required' => false,
+        //         'label' => 'createdAt',
+        //         'widget' => 'single_text',
+        //         'input' => 'datetime_immutable'
+                
+        //     ])
             ->add('status',ChoiceType::class, [
+                'required' => false,
                 'label' => 'status',
                 'choices' => [
-                    "in progress" =>  "in Progress" ,
-                    "validate" =>  "valider",
-                    "decline" => "decline"
+                    "en cours" =>  "en cours" ,
+                    "valider" =>  "valider",
+                    "refuser" => "refuser"
                 ],
                 'multiple' => false,
                 'expanded' => true,
-                'required' => false
-            ])
-           // ->add('totalAmount')  total amount pas besoin vu que les item et leur sub total qui le determine
-                ->add('client', EntityType::class, [
-                'label' => 'Client',
-                'class' => Client::class,
-                'choice_label' => 'email',
-                'choices' => $clients,
-                'multiple' => false,
-                'expanded' => false,
-                'required' => false
-             ]);
+            
+          ]);
+        //    // ->add('totalAmount')  total amount pas besoin vu que les item et leur sub total qui le determine
+        //     ->add('client', EntityType::class, [
+        //         'required' => false,
+        //         'label' => 'Client',
+        //         'class' => Client::class,
+        //         'choice_label' => 'email',
+        //         'choices' => $clients,
+        //         'multiple' => false,
+        //         'expanded' => false
+        //      ]);
 
     }
     public function configureOptions(OptionsResolver $resolver): void
@@ -62,6 +64,7 @@ class QuoteFilterType extends AbstractType
         $resolver->setDefaults([
             'data_class' => Quote::class,
             'clients' => [],
+            
         ]);
     }
 }
