@@ -10,7 +10,7 @@ use Symfony\Component\Mime\Email;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\Invoice; // Replace YourEntity with the actual entity name
 
-class SendEmailCommand extends Command
+class EmailCommand extends Command
 {
     protected static $defaultName = 'app:send-email-auto';
     private $mailer;

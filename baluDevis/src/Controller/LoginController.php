@@ -14,9 +14,9 @@ class LoginController extends AbstractController
     #[Route(path: '/login', name: 'app_login',methods: ['GET', 'POST'])]
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
-        // if ($this->getUser()) {
-        //     return $this->redirectToRoute('target_path');
-        // }
+        if ($this->getUser()) {
+            return $this->redirectToRoute('front_home');
+        }
 
         // get the login error if there is one
         $error = $authenticationUtils->getLastAuthenticationError();
