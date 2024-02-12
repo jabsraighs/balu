@@ -26,7 +26,7 @@
 
 {%endblock %}
 <div class="p-6 md:p-2 h-screen flex gap-2">
-		<div class="flex-1 bg-secondary w-full h-full rounded-xl flex-col-reverse p-4 relative overflow-hidden hidden md:flex">
+		<div class="flex-1 bg-secondary-500 w-full h-full rounded-xl flex-col-reverse p-4 relative overflow-hidden hidden md:flex">
 			<img class="object-cover object-center absolute top-0 left-0 h-full w-full z-0 opacity-30" src="/background.jpg"/>
 			<span class="py-2 text-white font-regular relative z-10">Connectez-vous pour gérer vos devis avec facilité et gagnez du temps pour ce qui compte vraiment – votre travail créatif. Simplifiez votre quotidien freelance dès maintenant!</span>
 
@@ -44,7 +44,7 @@
 		</div>
 
 		<div class="flex flex-col items-center justify-center w-full gap-1 pb-6">
-			<h1 class="text-3xl font-bold text-primary">Reinitialisé le Mot de passe</h1>
+			<h1 class="text-3xl font-bold text-primary-500">Reinitialisé le Mot de passe</h1>
 			<h2 class="text-md text-center">Entrez vos information dans le but
 				<br>
 				de pouvoir créer votre compte</h2>
@@ -63,7 +63,7 @@
 					</svg>
 					{{ form_label(resetForm.plainPassword.first, "Mot de passe") }}
 				</div>
-				{{ form_widget(resetForm.plainPassword.first, {"attr": {"class": "pl-8 rounded-md w-full border-primary"}}) }}
+				{{ form_widget(resetForm.plainPassword.first, {"attr": {"class": "pl-8 rounded-md w-full border-primary-500"}}) }}
 			</div>
 
 			<div class="flex flex-col gap-1 w-full">
@@ -74,7 +74,7 @@
 					</svg>
 					{{ form_label(resetForm.plainPassword.second, "Confirmer le mot de passe") }}
 				</div>
-				{{ form_widget(resetForm.plainPassword.second, {"attr": {"class": "pl-8 rounded-md w-full border-primary"}}) }}
+				{{ form_widget(resetForm.plainPassword.second, {"attr": {"class": "pl-8 rounded-md w-full border-primary-500"}}) }}
 			</div>
 
 
@@ -91,7 +91,7 @@
 				</label>
 			</div>
 
-			<button class="py-2 px-8 flex items-center justify-center bg-primary rounded-md mt-8 text-white shadow-md font-bold" type="submit">Reset Password</button>
+			<button class="py-2 px-8 flex items-center justify-center bg-primary-500 rounded-md mt-8 text-white shadow-md font-bold" type="submit">Reset Password</button>
 
 		</div>
 {% block javascripts %}

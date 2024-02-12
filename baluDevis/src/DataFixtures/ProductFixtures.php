@@ -20,16 +20,39 @@ class ProductFixtures extends Fixture implements DependentFixtureInterface {
         // $manager->persist($product);
         $faker = \Faker\Factory::create('fr-Fr'); // Fix the namespace here
         //$date = new \DateTimeImmutable();
-        $productsName = ["SitesWeb","Applications Web","Boutiques en ligne" ,"Applications mobiles","Applications de bureau","Applications cross-platform"];
+        $productsName = [
+            "SitesWeb",
+            "Applications Web",
+            "Boutiques en ligne",
+            "Applications mobiles",
+            "Applications de bureau",
+            "Applications cross-platform",
+            "Cloud Services",
+            "Data Analytics",
+            "Cybersecurity Tools",
+            "CRM Software",
+            "ERP Solutions",
+            "Social Media Tools",
+            "SEO Services",
+            "Email Marketing Software",
+            "Content Management Systems",
+            "E-commerce Solutions",
+            "Project Management Tools",
+            "Video Conferencing Software",
+            "Graphic Design Tools",
+            "Web Hosting Services"
+        ];
 
         $categories = $manager->getRepository(Category::class)->findAll();
+        $users = $manager->getRepository(User::class)->findAll();
 
-        for ($i = 0; $i < 10; $i++) {
+        for ($i = 0; $i < 100; $i++) {
             $product = new Product();
             $product->setName($productsName[array_rand($productsName)]);
             $product->setDescription($faker->paragraph);
             $product->setPrice($faker->randomFloat(2, 10, 1000));
             $product->setCategory($categories[array_rand($categories)]);
+            $product->setUser($users[array_rand($users)]);
 
             $manager->persist($product);
         }
@@ -40,6 +63,7 @@ class ProductFixtures extends Fixture implements DependentFixtureInterface {
     {
         return [
             CategoryFixtures::class,
+            UserFixtures::class,
         ];
     }
 }

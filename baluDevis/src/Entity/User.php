@@ -49,12 +49,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'userInvoice', targetEntity: Invoice::class)]
     private Collection $invoices;
 
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Product::class)]
+    private Collection $products;
+
     public function __construct(){
 
         $this->createdAt = new \DateTimeImmutable();
         $this->clients = new ArrayCollection();
         $this->quotes = new ArrayCollection();
         $this->invoices = new ArrayCollection();
+        $this->products = new ArrayCollection();
     }
     public function __toString(){
         return $this->getEmail(); // Replace with the appropriate property or method representing the string value.
@@ -243,6 +247,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($invoice->getUserInvoice() === $this) {
                 $invoice->setUserInvoice(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Product>
+     */
+    public function getProducts(): Collection
+    {
+        return $this->products;
+    }
+
+    public function addProduct(Product $product): static
+    {
+        if (!$this->products->contains($product)) {
+            $this->products->add($product);
+            $product->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProduct(Product $product): static
+    {
+        if ($this->products->removeElement($product)) {
+            // set the owning side to null (unless already changed)
+            if ($product->getUser() === $this) {
+                $product->setUser(null);
             }
         }
 
