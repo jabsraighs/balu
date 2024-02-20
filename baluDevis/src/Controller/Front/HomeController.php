@@ -18,11 +18,7 @@ class HomeController extends AbstractController
     #[IsGranted("ROLE_USER")]
     public function getAccueil(UserRepository $userRepository): Response
     {
-          $user = $this->getUser()->getId();
-        $userInfo = $userRepository->findBy(['id' => $user]);
-
-        return $this->render('Front/home/accueil.html.twig', [
-            'users' => $userInfo,
+        return $this->render('Front/home/index.html.twig', [
         ]);
     }
 }
