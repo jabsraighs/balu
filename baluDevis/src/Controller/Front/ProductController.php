@@ -32,13 +32,15 @@ class ProductController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $connectedUser = $this->getUser();
+            $product->setUser($connectedUser);
             $entityManager->persist($product);
             $entityManager->flush();
 
-            return $this->redirectToRoute('_user_product_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('front_user_product_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->render('product/new.html.twig', [
+        return $this->render('Front/user/product/new.html.twig', [
             'product' => $product,
             'form' => $form,
         ]);
@@ -47,7 +49,7 @@ class ProductController extends AbstractController
     #[Route('/{id}', name: '_user_product_show', methods: ['GET'])]
     public function show(Product $product): Response
     {
-        return $this->render('product/show.html.twig', [
+        return $this->render('Front/user/product/show.html.twig', [
             'product' => $product,
         ]);
     }
@@ -64,7 +66,7 @@ class ProductController extends AbstractController
             return $this->redirectToRoute('_user_product_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->render('product/edit.html.twig', [
+        return $this->render('Front/user/product/edit.html.twig', [
             'product' => $product,
             'form' => $form,
         ]);

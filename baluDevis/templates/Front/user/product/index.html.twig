@@ -21,7 +21,6 @@
                         <th scope="col" class="px-6 py-3 font-bold">Nom</th>
                         <th scope="col" class="px-6 py-3 font-bold">Categorie</th>
                         <th scope="col" class="px-6 py-3 font-bold">Prix</th>
-                        <th scope="col" class="px-6 py-3 font-bold">Description</th>
                         <th scope="col" class="px-6 py-3 font-bold">Actions</th>
                     </tr>
                 </thead>
@@ -31,7 +30,6 @@
                         <th scope="row" class="px-6 py-4 font-medium text-secondary-900 whitespace-nowrap">{{ product.name }}</td>
                         <td class="px-6 py-4 text-secondary-300">{{ product.category }}</td>
                         <td class="px-6 py-4 text-secondary-300 w-10p">{{ product.price }} €</td>
-                        <td class="px-6 py-4 text-secondary-300">{{ product.description }}</td>
                         <td class="px-6 py-4 text-secondary-300 flex items-center gap-2">
                         <div class="inline-flex rounded-md shadow-sm items-center w-full h-full">
                             <a href="{{ path('front_user_product_show', {'id': product.id}) }}" aria-current="page" class="px-4 py-2 text-sm font-medium text-primary-700 bg-white border border-gray-200 rounded-s-lg hover:bg-gray-100 focus:z-10 focus:ring-2 ">

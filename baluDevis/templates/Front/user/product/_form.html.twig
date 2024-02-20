@@ -1,4 +1,42 @@
-{{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button class="btn">{{ button_label|default('Save') }}</button>
-{{ form_end(form) }}
+<div class="flex items-center justify-center">
+	<div class="bg-white border border-primaryLight mt-4 px-8 py-4 rounded-3xl w-full max-w-lg">
+		{{ form_start(form, {"attr": {"class": "flex-1 flex flex-col items-center justify-center gap-4"}}) }}
+		{% do form.user.setRendered %}
+		<div class="flex flex-col gap-2 w-full">
+			<div class="flex flex-col gap-1 w-full">
+				<div class="relative">
+					{{ form_label(form.name, "Nom") }}
+				</div>
+
+				{{ form_widget(form.name, {"attr": {"class": "pl-2 rounded-md w-full border-primary-500"}}) }}
+			</div>
+
+			<div class="flex flex-col gap-1 w-full">
+				<div class="relative">
+					{{ form_label(form.description, "Description") }}
+				</div>
+
+				{{ form_widget(form.description, {"attr": {"class": "p-2 rounded-md w-full border-primary-500"}}) }}
+			</div>
+
+			<div class="flex flex-col gap-1 w-full">
+				<div class="relative">
+					{{ form_label(form.price, "Prix") }}
+				</div>
+
+				{{ form_widget(form.price, {"attr": {"class": "pl-2 rounded-md w-full border-primary-500"}}) }}
+			</div>
+
+			<div class="flex flex-col gap-1 w-full">
+				<div class="relative">
+					{{ form_label(form.category, "Catégorie") }}
+				</div>
+
+				{{ form_widget(form.category, {"attr": {"class": "pl-2 rounded-md w-full border-primary-500"}}) }}
+			</div>
+		</div>
+
+		<button class="py-2 px-8 flex items-center justify-center bg-primary-500 rounded-md mt-8 text-white shadow-md font-bold" type="submit">{{ button_label|default('Créer') }}</button>
+		{{ form_end(form) }}
+	</div>
+</div>
