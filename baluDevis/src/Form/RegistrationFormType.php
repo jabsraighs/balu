@@ -23,7 +23,7 @@ class RegistrationFormType extends AbstractType
                 "required" => true,
                 "label" => "Email",
                 'attr' => ["id" => "email", "placeholder" => "votremail@example.com"],
-                "label_attr" => ["class" => "font-bold text-primary"],
+                "label_attr" => ["class" => "font-bold text-primary-500"],
             ])
             ->add('plainPassword', RepeatedType::class, [
                 // instead of being set onto the object directly,
@@ -43,7 +43,7 @@ class RegistrationFormType extends AbstractType
                 ],
                 'type' => PasswordType::class,
                 'invalid_message' => 'The password fields must match.',
-                'options' => ['attr' => ['class' => 'password-field'], 'label_attr' => ['class' => 'font-bold text-primary']],
+                'options' => ['attr' => ['class' => 'password-field'], 'label_attr' => ['class' => 'font-bold text-primary-500']],
                 'required' => true,
                 'first_options'  => ['label' => 'Mot de passe'],
                 'second_options' => ['label' => 'Confirmer le mot de passe']

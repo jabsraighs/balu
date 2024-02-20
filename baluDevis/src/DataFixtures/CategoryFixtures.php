@@ -11,7 +11,18 @@ class CategoryFixtures extends Fixture
 {
     public function load(ObjectManager $manager): void {
 
-        $categories = ['vitrine','e-commerce','application mobile','application web','site communautaire','blog'];
+        $categories = [
+            "Consultation",
+            "Conception",
+            "Rédaction et Traduction",
+            "Formation et Enseignement",
+            "Développement et Programmation",
+            "Marketing et Publicité",
+            "Comptabilité et Finance",
+            "Consultation en Ressources Humaines",
+            "Photographie et Vidéo",
+            "Formation et Coaching"
+        ];
 
         for($i = 0 ; $i < count($categories) ; $i++) {
             $object= (new Category())

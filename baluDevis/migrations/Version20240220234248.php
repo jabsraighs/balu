@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20240210203000 extends AbstractMigration
+final class Version20240220234248 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -47,8 +47,10 @@ final class Version20240210203000 extends AbstractMigration
         $this->addSql('CREATE INDEX IDX_6D28840D2989F1FD ON payment (invoice_id)');
         $this->addSql('CREATE TABLE product (id BLOB NOT NULL --(DC2Type:uuid)
         , category_id BLOB NOT NULL --(DC2Type:uuid)
-        , name VARCHAR(255) NOT NULL, description CLOB NOT NULL, price DOUBLE PRECISION NOT NULL, PRIMARY KEY(id), CONSTRAINT FK_D34A04AD12469DE2 FOREIGN KEY (category_id) REFERENCES category (id) NOT DEFERRABLE INITIALLY IMMEDIATE)');
+        , user_id BLOB NOT NULL --(DC2Type:uuid)
+        , name VARCHAR(255) NOT NULL, description CLOB NOT NULL, price DOUBLE PRECISION NOT NULL, PRIMARY KEY(id), CONSTRAINT FK_D34A04AD12469DE2 FOREIGN KEY (category_id) REFERENCES category (id) NOT DEFERRABLE INITIALLY IMMEDIATE, CONSTRAINT FK_D34A04ADA76ED395 FOREIGN KEY (user_id) REFERENCES "user" (id) NOT DEFERRABLE INITIALLY IMMEDIATE)');
         $this->addSql('CREATE INDEX IDX_D34A04AD12469DE2 ON product (category_id)');
+        $this->addSql('CREATE INDEX IDX_D34A04ADA76ED395 ON product (user_id)');
         $this->addSql('CREATE TABLE quote (id BLOB NOT NULL --(DC2Type:uuid)
         , client_id BLOB DEFAULT NULL --(DC2Type:uuid)
         , user_quote_id BLOB NOT NULL --(DC2Type:uuid)
