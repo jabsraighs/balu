@@ -27,13 +27,12 @@
                     <button type="submit">
                         <svg class="w-[1rem] h-[1rem]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
-                        </svg> 
+                        </svg>
                     </button>
 
                 </div>
             </div>
             {{form_end(form)}}
-            
             <div>
                 <table class="table">
                     <thead>
@@ -48,7 +47,6 @@
                     </thead>
                     <tbody>
                     {{dump()}}
-                        {% if quotes|length > 0 %}
                             {% for quote in quotes %}
                                 <tr>
                                     <td>{{ quote.name }}</td>
@@ -64,25 +62,6 @@
                                     </td>
                                 </tr>
                             {% endfor %}
-                        {% elseif quotes|length > 0 %}
-                            {% for quoteSearchs in quotesSearch %}
-                                <tr>
-                                    <td>{{ quoteSearchs.name }}</td>
-                                    <td>{{ quoteSearchs.createdAt ? quoteSearchs.createdAt|date('Y-m-d') : '' }}</td>
-                                    <td>{{ quoteSearchs.expiryAt ? quotSearchs.expiryAt|date('Y-m-d') : '' }}</td>
-                                    <td>{{ quoteSearchs.status }}</td>
-                                    <td>{{ quoteSearchs.totalAmount }}</td>
-                                    <td>
-                                        <a href="{{ path('front_user_quote_show', {'id': quote.id}) }}">show</a>
-                                        <a href="{{ path('front_user_quote_edit', {'id': quote.id}) }}">edit</a>
-                                        <a href="{{ path('front_user_quote_invoice', {'id': quote.id}) }}">crée facture</a>
-                                        <a href="{{ path('front_user_quote_generate_pdf', {'id': quote.id}) }}">generer Pdf</a>
-                                    </td>
-                                </tr>
-                            {% endfor %}
-                        {% else %}
-                            <tr><td colspan="6">Pas de Devis Trouve</td></tr>
-                        {% endif %}
                     </tbody>
                 </table>
             </div>
