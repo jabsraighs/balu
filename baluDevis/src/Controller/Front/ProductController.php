@@ -61,9 +61,11 @@ class ProductController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $connectedUser = $this->getUser();
+            $product->setUser($connectedUser);
             $entityManager->flush();
 
-            return $this->redirectToRoute('_user_product_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('front_user_product_index', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('Front/user/product/edit.html.twig', [
@@ -80,6 +82,6 @@ class ProductController extends AbstractController
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('_user_product_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('front_user_product_index', [], Response::HTTP_SEE_OTHER);
     }
 }

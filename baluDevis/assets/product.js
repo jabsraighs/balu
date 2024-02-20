@@ -14,7 +14,7 @@ window.addEventListener("DOMContentLoaded", () => {
                 row.classList.add('opacity-0');
                 setTimeout(() => {
                     row.style.display = 'none';
-                }, 100);
+                }, 300);
             }
         });
     });
