@@ -29,6 +29,27 @@ class QuoteRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+    public function findSearch(Quote $quote, User $user) {
+        $query = $this
+            ->createQueryBuilder('q')
+            ->select('q')
+            ->leftJoin('q.client', 'c')
+            ->leftJoin('q.userQuote', 'u')
+            ->where('q.userQuote = :user')
+            ->setParameter('user', $user);
+
+        // Check if the status parameter is set in the form submission
+        if ($quote->getStatus()) {
+            // Assuming you want to filter quotes by their status
+            $query = $query
+                ->andWhere('q.status = :status')
+                ->setParameter('status', $quote->getStatus());
+        }
+
+        // Add more conditions for other filters if needed
+
+        return $query->getQuery()->getResult();
+    }
 
 //    /**
 //     * @return Quote[] Returns an array of Quote objects

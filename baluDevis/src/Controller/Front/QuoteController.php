@@ -22,29 +22,36 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 class QuoteController extends AbstractController
 {
     #[Route('/', name: '_quote_index', methods: ['GET','POST'])]
-    public function index(QuoteRepository $quoteRepository,Request $request,ClientRepository $clientRepository): Response
-    {
+    public function index(  QuoteRepository $quoteRepository,  Request $request,  ClientRepository $clientRepository ): Response {
         $user = $this->getUser();
-        $quotes = new quote();
-        // Récupérer les clients de l'utilisateur
+        // Initialize quote and retrieve user's clients
+        $quotes = new Quote();
         $clients = $clientRepository->findBy(['userClient' => $user]);
-        // Créer le formulaire et transmettre les clients
-        // $form = $this->createForm(QuoteFilterType::class,$quotes, ['clients' => $clients]);
-        // $form->handleRequest($request);
-        // if ($form->isSubmitted() && $form->isValid()) {
-        //     dd($quotes);
-        // }
-        $user = $this->getUser();
-        $userQuote = $quoteRepository->findBy(
-        ['userQuote' => $user],
-        ['id' => 'DESC'] // Order by the 'createdAt' property in descending order
+
+        // Create form and pass clients to it
+        $form = $this->createForm(QuoteFilterType::class, $quotes, ['clients' => $clients]);
+        $form->handleRequest($request);
+
+        // Handle form submission and validation
+        if ($form->isSubmitted() && $form->isValid()) {
+            // Apply findSearch method to filter quotes
+            $quotes = $quoteRepository->findSearch($quotes, $user);
+        }
+
+        // Retrieve quotes associated with the user
+        $userQuotes = $quoteRepository->findBy(
+            ['userQuote' => $user],
+            ['id' => 'DESC'] // Order by the 'createdAt' property in descending order
         );
 
+        // Render the template with form and quotes data
         return $this->render('Front/user/quote/index.html.twig', [
-            // 'form' => $form,
-            'quotes' => $userQuote,
+            'form' => $form->createView(),
+            'quotes' => $userQuotes,
+            'quotesSearch' => $quotes,
         ]);
     }
+
 
     #[Route('/new', name: '_quote_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager,ClientRepository $clientRepository,CalculService $calculService): Response

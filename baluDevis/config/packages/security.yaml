@@ -23,6 +23,9 @@ security:
             entry_point: App\Login\UserAuthenticator
             logout:
                 path: app_logout
+                # where to redirect after logout
+                target: app_login
+
             remember_me:
                 secret: '%kernel.secret%'
                 lifetime: 604800
@@ -32,9 +35,8 @@ security:
 
     access_control:
         - { path: ^/admin, roles: ROLE_ADMIN }
-        - { path: ^/login, roles: PUBLIC_ACCESS }
-        - { path: ^/register, roles: PUBLIC_ACCESS }
         - { path: ^/, roles: PUBLIC_ACCESS }
+        - { path: ^/register, roles: PUBLIC_ACCESS }
         - { path: ^/reset-password, roles: PUBLIC_ACCESS }
         - { path: ^/accueil, roles: ROLE_USER}
 
