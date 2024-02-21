@@ -1,74 +1,29 @@
-{% block titile %} Update devis {% endblock %}
-{% block body%}
-<p> Quote name </p>
-{{quote.name}}
+{% extends 'base.html.twig' %}
 
-        {{ form_start(form) }}
-        <br>
-            {{ form_row(form.expiryAt) }}
-            {{ form_row(form.client) }}
-            {{ form_row(form.description) }}
-            {{ form_row(form.tva) }}
-            {{ form_row(form.status) }}
-            
+{% block title %}Modifier {{quote.name}}{% endblock %}
 
+{% block body %}
+	<div class="flex gap-2 items-center">
+		<a href="{{ path('front_user_quote_index') }}">
+			<svg height="35px" width="35px" version="1.1" class="fill-secondary-500 hover:opacity-60 transition-opacity" id="_x32_" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewbox="0 0 512 512" xml:space="preserve">
+				<g>
+					<path class="st0" d="M154.52,265.848l90.964,69.014c2.329,1.766,4.674,2.702,6.78,2.702c2.148,0,4.022-0.974,5.276-2.741
+													c1.199-1.688,1.807-3.99,1.807-6.844v-26.424c0-6.952,5.656-12.608,12.607-12.608h75.036c8.705,0,15.788-7.085,15.788-15.788
+													v-34.313c0-8.703-7.083-15.788-15.788-15.788h-75.036c-6.951,0-12.607-5.656-12.607-12.608v-26.425
+													c0-7.065-3.659-9.584-7.082-9.584c-2.106,0-4.451,0.936-6.78,2.702l-90.964,69.014c-3.416,2.59-5.297,6.087-5.297,9.849
+													C149.223,259.762,151.103,263.259,154.52,265.848z"/>
+					<path class="st0" d="M256,0C114.842,0,0.002,114.84,0.002,256S114.842,512,256,512c141.158,0,255.998-114.84,255.998-256
+											S397.158,0,256,0z M256,66.785c104.334,0,189.216,84.879,189.216,189.215S360.334,445.215,256,445.215S66.783,360.336,66.783,256
+											S151.667,66.785,256,66.785z"/>
+				</g>
+			</svg>
+		</a>
+		{% embed '_components/_page_title.html.twig' %}
+			{% block title %}Modifier le Devis
+			{% endblock %}
+		{% endembed %}
+	</div>
 
+    {{ include('Front/user/quote/_form.html.twig', {'button_label': 'Mettre à jour'}) }}
 
-
-            {# Render other fields if any #}
-            <div id="quoteItem" data-prototype="{{form_row(form.quoteLines.vars.prototype)|e('html_attr')}}">
-                 {{ form_row(form.quoteLines) }}
-                <span></span>
-            </div>
-        <button type="submit">update </button>
-        {{ form_end(form) }}
-        
-         {{ include('Front/user/quote/_delete_form.html.twig') }}
-{%endblock %}
-
-{% block javascripts %}
-    <script>
-    // Add new quote line form on button click
-    let collection , buttonAdd , span
-    window.onload = () => {
-        collection = document.querySelector("#quoteItem");
-        span = collection.querySelector("span");
-        
-        buttonAdd = document.createElement("button");
-        buttonAdd.className = "add-quoteLine btn ";
-        buttonAdd.innerText = "add quote item" ;
-
-        let newButton = span.append(buttonAdd);
-        collection.dataset.index = collection.querySelectorAll("input").length;
-
-
-        buttonAdd.addEventListener("click" , function() {
-            addButton(collection, newButton);
-        })
-    }
-    
-    function addButton(collection , newButton) {
-        let prototype = collection.dataset.prototype;
-        let index = collection.dataset.index;
-        prototype = prototype.replace(/__name__/g, index);
-        let content = document.createElement("html");
-        content.innerHTML = prototype;
-        let newForm = content.querySelector("div");
-        let deleteButton = document.createElement("button");
-        deleteButton.type = "button";
-        deleteButton.className =  "supp-quoteLine btn red secondary" ; 
-        deleteButton.id = "delete-quote-item" + index;
-        deleteButton.innerText = "delete quote item" ;
-        newForm.append(deleteButton);
-        collection.dataset.index++;
-        let buttoAdd = collection.querySelector(".add-quoteLine btn secondary");
-        span.insertBefore(newForm,buttonAdd);
-
-        deleteButton.addEventListener("click",function() {
-            this.previousElementSibling.parentElement.remove();
-        })
-    }
-</script>
 {% endblock %}
-   
-

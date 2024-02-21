@@ -1,142 +1,84 @@
-{% block titile %} Update devis {% endblock %}
-{% block body%}
-<p> Quote name </p>
 
-{{quote.name}}
+ {% extends 'base.html.twig' %}
 
-        {{ form_start(form) }}
-        <br>
-            {{ form_row(form.expiryAt) }}
-            {{ form_row(form.client) }}
-            {{ form_row(form.description) }}
-            {{ form_row(form.tva) }}
-            {{ form_row(form.status) }}
-            
-
-
-
-
-             {# Render other fields if any  #}
-            <div id="quoteItem" data-prototype="{{form_row(form.quoteLines.vars.prototype)|e('html_attr')}}">
-                 {{ form_row(form.quoteLines) }}
-                <span></span>
-            </div>
-        <button type="submit"> create Quote </button>
-        {{ form_end(form) }} 
-
-{%endblock %}
-{# <div class="p-6 md:p-2 h-screen flex gap-2">
-		<div class="flex-1 bg-secondary w-full h-full rounded-xl flex-col-reverse p-4 relative overflow-hidden hidden md:flex">
-			<img class="object-cover object-center absolute top-0 left-0 h-full w-full z-0 opacity-30" src="/background.jpg"/>
-			<span class="py-2 text-white font-regular relative z-10">Connectez-vous pour gérer vos devis avec facilité et gagnez du temps pour ce qui compte vraiment – votre travail créatif. Simplifiez votre quotidien freelance dès maintenant!</span>
-
-			<p class="text-4xl uppercase font-bold text-white relative z-10">Accédez à un
-				<br>
-				monde de possibilités<br>
-				freelance en toute simplicité.</p>
-		</div>
-
-
-		{{ form_start(resetForm, {"attr": {"class": "flex-1 flex flex-col items-center justify-center gap-4"}}) }}
-
-		<div class="pb-4">
-			<img class="object-contain h-full w-full relative" src="/Logo.png"/>
-		</div>
-
-		<div class="flex flex-col items-center justify-center w-full gap-1 pb-6">
-			<h1 class="text-3xl font-bold text-primary-500">Reinitialisé le Mot de passe</h1>
-			<h2 class="text-md text-center">Entrez vos information dans le but
-				<br>
-				de pouvoir créer votre compte</h2>
-		
-		</div>
-
-		<div class="flex flex-col gap-2 w-full max-w-md">
-			
-
-	
-			<div class="flex flex-col gap-1 w-full">
-				<div class="relative">
-					<?xml version="1.0" encoding="utf-8"?>
-					<svg class="absolute left-2 top-10" width="20px" height="20px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-						<path d="M7 10.0288C7.47142 10 8.05259 10 8.8 10H15.2C15.9474 10 16.5286 10 17 10.0288M7 10.0288C6.41168 10.0647 5.99429 10.1455 5.63803 10.327C5.07354 10.6146 4.6146 11.0735 4.32698 11.638C4 12.2798 4 13.1198 4 14.8V16.2C4 17.8802 4 18.7202 4.32698 19.362C4.6146 19.9265 5.07354 20.3854 5.63803 20.673C6.27976 21 7.11984 21 8.8 21H15.2C16.8802 21 17.7202 21 18.362 20.673C18.9265 20.3854 19.3854 19.9265 19.673 19.362C20 18.7202 20 17.8802 20 16.2V14.8C20 13.1198 20 12.2798 19.673 11.638C19.3854 11.0735 18.9265 10.6146 18.362 10.327C18.0057 10.1455 17.5883 10.0647 17 10.0288M7 10.0288V8C7 5.23858 9.23858 3 12 3C14.7614 3 17 5.23858 17 8V10.0288" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-					</svg>
-					{{ form_label(resetForm.plainPassword.first, "Mot de passe") }}
-				</div>
-				{{ form_widget(resetForm.plainPassword.first, {"attr": {"class": "pl-8 rounded-md w-full border-primary-500"}}) }}
-			</div>
-
-			<div class="flex flex-col gap-1 w-full">
-				<div class="relative">
-					<?xml version="1.0" encoding="utf-8"?>
-					<svg class="absolute left-2 top-10" width="20px" height="20px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-						<path d="M7 10.0288C7.47142 10 8.05259 10 8.8 10H15.2C15.9474 10 16.5286 10 17 10.0288M7 10.0288C6.41168 10.0647 5.99429 10.1455 5.63803 10.327C5.07354 10.6146 4.6146 11.0735 4.32698 11.638C4 12.2798 4 13.1198 4 14.8V16.2C4 17.8802 4 18.7202 4.32698 19.362C4.6146 19.9265 5.07354 20.3854 5.63803 20.673C6.27976 21 7.11984 21 8.8 21H15.2C16.8802 21 17.7202 21 18.362 20.673C18.9265 20.3854 19.3854 19.9265 19.673 19.362C20 18.7202 20 17.8802 20 16.2V14.8C20 13.1198 20 12.2798 19.673 11.638C19.3854 11.0735 18.9265 10.6146 18.362 10.327C18.0057 10.1455 17.5883 10.0647 17 10.0288M7 10.0288V8C7 5.23858 9.23858 3 12 3C14.7614 3 17 5.23858 17 8V10.0288" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-					</svg>
-					{{ form_label(resetForm.plainPassword.second, "Confirmer le mot de passe") }}
-				</div>
-				{{ form_widget(resetForm.plainPassword.second, {"attr": {"class": "pl-8 rounded-md w-full border-primary-500"}}) }}
-			</div>
-
-
-			<div class="inline-flex items-center">
-				<label class="relative flex items-center p-3 rounded-full cursor-pointer" htmlFor="registration_form_agreeTerms">
-					<span class="absolute text-white transition-opacity opacity-0 pointer-events-none top-2/4 left-2/4 -translate-y-2/4 -translate-x-2/4 peer-checked:opacity-100">
-						<svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" viewBox="0 0 20 20" fill="currentColor" stroke="currentColor" stroke-width="1">
-							<path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-						</svg>
-					</span>
-				</label>
-				<label class="font-light text-gray-700 cursor-pointer select-none" htmlFor="registration_form_agreeTerms">
-					Accepter les termes et conditions
-				</label>
-			</div>
-
-			<button class="py-2 px-8 flex items-center justify-center bg-primary-500 rounded-md mt-8 text-white shadow-md font-bold" type="submit">Reset Password</button>
-
-		</div> #}
-{% block javascripts %}
-    <script>
-    // Add new quote line form on button click
-    let collection , buttonAdd , span
-    window.onload = () => {
-        collection = document.querySelector("#quoteItem");
-        span = collection.querySelector("span");
-        
-        buttonAdd = document.createElement("button");
-        buttonAdd.className = "add-quoteLine btn ";
-        buttonAdd.innerText = "add quote item" ;
-
-        let newButton = span.append(buttonAdd);
-        collection.dataset.index = collection.querySelectorAll("input").length;
-
-
-        buttonAdd.addEventListener("click" , function() {
-            addButton(collection, newButton);
-        })
-    }
-    
-    function addButton(collection , newButton) {
-        let prototype = collection.dataset.prototype;
-        let index = collection.dataset.index;
-        prototype = prototype.replace(/__name__/g, index);
-        let content = document.createElement("html");
-        content.innerHTML = prototype;
-        let newForm = content.querySelector("div");
-        let deleteButton = document.createElement("button");
-        deleteButton.type = "button";
-        deleteButton.className =  "supp-quoteLine btn red secondary" ; 
-        deleteButton.id = "delete-quote-item" + index;
-        deleteButton.innerText = "delete quote item" ;
-        newForm.append(deleteButton);
-        collection.dataset.index++;
-        let buttoAdd = collection.querySelector(".add-quoteLine btn secondary");
-        span.insertBefore(newForm,buttonAdd);
-
-        deleteButton.addEventListener("click",function() {
-            this.previousElementSibling.parentElement.remove();
-        })
-    }
-</script>
+{% block title %}Nouveau Devis
 {% endblock %}
-   
+
+{% block body %}
+	<div class="flex gap-2 items-center">
+		<a href="{{ path('front_user_quote_index') }}">
+			<svg height="35px" width="35px" version="1.1" class="fill-secondary-500 hover:opacity-60 transition-opacity" id="_x32_" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewbox="0 0 512 512" xml:space="preserve">
+				<g>
+					<path class="st0" d="M154.52,265.848l90.964,69.014c2.329,1.766,4.674,2.702,6.78,2.702c2.148,0,4.022-0.974,5.276-2.741
+													c1.199-1.688,1.807-3.99,1.807-6.844v-26.424c0-6.952,5.656-12.608,12.607-12.608h75.036c8.705,0,15.788-7.085,15.788-15.788
+													v-34.313c0-8.703-7.083-15.788-15.788-15.788h-75.036c-6.951,0-12.607-5.656-12.607-12.608v-26.425
+													c0-7.065-3.659-9.584-7.082-9.584c-2.106,0-4.451,0.936-6.78,2.702l-90.964,69.014c-3.416,2.59-5.297,6.087-5.297,9.849
+													C149.223,259.762,151.103,263.259,154.52,265.848z"/>
+					<path class="st0" d="M256,0C114.842,0,0.002,114.84,0.002,256S114.842,512,256,512c141.158,0,255.998-114.84,255.998-256
+											S397.158,0,256,0z M256,66.785c104.334,0,189.216,84.879,189.216,189.215S360.334,445.215,256,445.215S66.783,360.336,66.783,256
+											S151.667,66.785,256,66.785z"/>
+				</g>
+			</svg>
+		</a>
+		{% embed '_components/_page_title.html.twig' %}
+			{% block title %}Nouveau Produit
+			{% endblock %}
+		{% endembed %}
+	</div>
+
+	{{ include('Front/user/quote/_form.html.twig') }}
+
+{% endblock %}
+
+  {# <div class="flex items-center justify-center">
+	<div class="bg-white border border-primaryLight mt-4 px-8 py-4 rounded-3xl w-full max-w-lg">
+		{{ form_start(form, {"attr": {"class": "flex-1 flex flex-col items-center justify-center gap-4"}}) }}
+		{% do form.client.setRendered %}
+		<div class="flex flex-col gap-2 w-full">
+			<div class="flex flex-col gap-1 w-full">
+				<div class="relative">
+					{{ form_label(form.description, "Description") }}
+				</div>
+
+				{{ form_widget(form.description, {"attr": {"class": "p-2 rounded-md w-full border-primary-500"}}) }}
+			</div>
+
+			<div class="flex flex-col gap-1 w-full">
+				<div class="relative">
+					{{ form_label(form.expiryAt, "expiry At") }}
+				</div>
+
+				{{ form_widget(form.expiryAt, {"attr": {"class": "pl-2 rounded-md w-full border-primary-500"}}) }}
+			</div>
+
+			<div class="flex flex-col gap-1 w-full">
+				<div class="relative">
+					{{ form_label(form.status, "Catégorie") }}
+				</div>
+
+				{{ form_widget(form.status, {"attr": {"class": "pl-2 rounded-md w-full border-primary-500"}}) }}
+			</div>
+            <div class="flex flex-col gap-1 w-full">
+				<div class="relative">
+					{{ form_label(form.tva, "tva") }}
+				</div>
+
+				{{ form_widget(form.tva, {"attr": {"class": "pl-2 rounded-md w-full border-primary-500"}}) }}
+			</div>
+            <div class="flex flex-col gap-1 w-full">
+				<div class="relative" id="quoteItem" data-prototype="{{form_row(form.quoteLines.vars.prototype)|e('html_attr')}}">
+					{{ form_label(form.quoteLines, "quote Line") }}
+                    <span></span>
+				</div>
+
+				{{ form_widget(form.quoteLines, {"attr": {"class": "pl-2 rounded-md w-full border-primary-500"}}) }}
+			</div>
+		</div>
+
+		<button class="py-2 px-8 flex items-center justify-center bg-primary-500 rounded-md mt-8 text-white shadow-md font-bold" type="submit">{{ button_label|default('Créer') }}</button>
+		{{ form_end(form) }}
+	</div>
+</div> #}
+
+
 
