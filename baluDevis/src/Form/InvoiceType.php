@@ -21,25 +21,25 @@ class InvoiceType extends AbstractType
         $client = $options['client'];
         $builder
             ->add('dueDate', DateType::class,[
-                'label' => 'dueDate',
+                'label' => 'Date de payement',
                 'widget' => 'single_text',
                 'input' => 'datetime_immutable'
             ])
             ->add('paymentStatus',ChoiceType::class, [
-                'label' => 'payment Status',
+                'label' => 'Status du Paiement',
                 'choices' => [
-                    "waiting " =>  "waiting" ,
-                    "paid" =>  "paid",
-                    "unpaid" => "unpaid"
+                    "en cours  " =>  "en cours" ,
+                    "payer" =>  "payer",
+                    "refus" => "refus de payer"
                 ],
                 'multiple' => false,
                 'expanded' => true,
             ])->add('tva',ChoiceType::class, [
-                'label' => 'Tva',
+                'label' => 'Taux de Tva',
                 'choices' => [
                     "0%" =>  "0" ,
                     "10%" =>  "0.10",
-                    "20" => "0.20"
+                    "20%" => "0.20"
                 ],
                 'multiple' => false,
                 'expanded' => true,
