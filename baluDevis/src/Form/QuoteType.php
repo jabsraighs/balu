@@ -23,18 +23,18 @@ class QuoteType extends AbstractType
         $clients = $options['clients'];
         $builder
             ->add('description',TextType::class,[
-                'label' => 'description',
+                'label' => 'Description',
                 'required' => true
             ])
             ->add('expiryAt',DateType::class,[
-                'label' => 'expiryAt',
+                'label' => "Date d'expiration",
                 'widget' => 'single_text',
                 'input' => 'datetime_immutable'
             ])
             ->add('status',ChoiceType::class, [
-                'label' => 'status',
+                'label' => 'Status',
                 'choices' => [
-                    "in progress" =>  "in Progress" ,
+                    "in progress" =>  "en cours" ,
                     "validate" =>  "valider",
                     "decline" => "decline"
                 ],
@@ -42,11 +42,11 @@ class QuoteType extends AbstractType
                 'expanded' => true,
             ])
             ->add('tva',ChoiceType::class, [
-                'label' => 'status',
+                'label' => 'Taux Tva',
                 'choices' => [
                     "0%" =>  "0" ,
                     "10%" =>  "0.10",
-                    "20" => "0.20"
+                    "20%" => "0.20"
                 ],
                 'multiple' => false,
                 'expanded' => true,

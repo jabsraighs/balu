@@ -37,18 +37,20 @@ class QuoteRepository extends ServiceEntityRepository
             ->leftJoin('q.userQuote', 'u')
             ->where('q.userQuote = :user')
             ->setParameter('user', $user);
-
         // Check if the status parameter is set in the form submission
-        if ($quote->getStatus()) {
+        if (!empty($quote->getStatus())) {
             // Assuming you want to filter quotes by their status
-            $query = $query
-                ->andWhere('q.status = :status')
+            $query = $this
+                ->createQueryBuilder('q')
+                ->andWhere('q.status LIKE :status')
                 ->setParameter('status', $quote->getStatus());
         }
 
         // Add more conditions for other filters if needed
 
-        return $query->getQuery()->getResult();
+        $query = $query->getQuery();
+        $result = $query->getResult();
+        return $result;
     }
 
 //    /**

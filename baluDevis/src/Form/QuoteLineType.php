@@ -21,10 +21,10 @@ class QuoteLineType extends AbstractType
     {
         $builder
             ->add('quantity', TextType::class,[
-                'label' => 'quantity'
+                'label' => 'quantité'
             ])
             ->add('unitPrice', TextType::class,[
-                'label' => 'unitPice'
+                'label' => 'Prix unitaire'
             ]);
             //->add('subtotal',TextType::class,[
                  // Adjust this divisor based on your currency ])

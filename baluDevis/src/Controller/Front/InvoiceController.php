@@ -8,6 +8,7 @@ use App\Repository\ClientRepository;
 use App\Repository\InvoiceRepository;
 use App\Repository\QuoteRepository;
 use App\Service\CalculService;
+use App\Service\DomPdfService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -103,5 +104,25 @@ class InvoiceController extends AbstractController
         }
 
         return $this->redirectToRoute('front_user_invoice_index', [], Response::HTTP_SEE_OTHER);
+    }
+      #[Route('/generate/pdf/{id}', name: '_invoice_generate_pdf')]
+    public function generatePdf(DomPdfService $dompdfService,Invoice $invoice): Response
+    {
+        $client = $invoice->getClient()->getEmail();
+        $htmlContent = $this->renderView('Front/user/invoice/generatePdf.html.twig', [
+            // Pass any necessary data to the HTML template here
+            'invoice' => $invoice,
+            'client' => $client
+        ]);
+
+        // Generate PDF from HTML content
+        $pdfContent = $dompdfService->generatePdfFromHtml($htmlContent);
+        // Create a response with the PDF content
+        $response = new Response($pdfContent);
+        // Set headers for PDF content
+        $response->headers->set('Content-Type', 'application/pdf');
+        $response->headers->set('Content-Disposition', 'inline; filename="generated.pdf"');
+
+        return $response;
     }
 }
