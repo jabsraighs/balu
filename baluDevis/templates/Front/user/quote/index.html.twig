@@ -37,7 +37,7 @@
                 </thead>
                 <tbody>
                 {% for quote in quotes %}
-                    <tr class="product-row bg-white border-b transition-opacity duration-300 ease-in-out">
+                    <tr class="quote-row bg-white border-b transition-opacity duration-300 ease-in-out">
                         <th scope="row" class="px-6 py-4 font-medium text-secondary-900 whitespace-nowrap">{{ quote.name }}</td>
                         
                         <td class="px-6 py-4 text-secondary-300">{{ quote.createdAt ? quote.createdAt|date('Y-m-d') : '' }}</td>
