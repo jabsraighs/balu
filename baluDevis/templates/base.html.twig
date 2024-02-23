@@ -19,9 +19,8 @@
 
 	{% set currentRoute = app.request.pathinfo %}
 	{% set notLoggedPaths = [path("app_login"), path("app_register"), path("app_verify_email"), path("app_Resend_email")] %}
-
+	{% if (is_granted('ROLE_USER') or is_granted('ROLE_ADMIN')) and app.user.isVerified == true %}
 	<body class="bg-background relative">
-		{% if is_granted('ROLE_USER') or is_granted('ROLE_ADMIN') %}
 			<div id="overlay" class="transition-all absolute top-0 lef-0 h-screen w-full bg-black opacity-40 z-10 hidden"> </div>
 			<aside id="sidebar" class="h-screen transition-all flex gap-2 w-sidebar bg-white shadow-small flex-col absolute -left-full top-0 z-30 2md:fixed 2md:left-0">
 				<div class="flex items-center flex-row-reverse">
@@ -125,6 +124,10 @@
 					</a>
 				</nav>
 			</aside>
+		 {% else %}
+
+			
+				
 		{%endif %}
 		{% for message in app.flashes("message")%}
 			<div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -133,7 +136,7 @@
 			</div>
 
 		{%endfor%}
-			{% if is_granted('ROLE_USER') %}
+			{% if (is_granted('ROLE_USER') or is_granted('ROLE_ADMIN')) and app.user.isVerified == true  %}
 				<header class="w-full bg-white h-14 relative z-0 flex flex-row-reverse justify-between items-center">
 					<div class="flex gap-4 items-center flex-row-reverse">
 						<div class="mr-8 flex items-center gap-3">
