@@ -1,44 +1,40 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Client index{% endblock %}
+{% import '_components/_table.html.twig' as table %}
+
+{% set headerRows = [['Nom', 'Prénom','Email', 'Numéro de téléphone', 'Actions']] %}
+{% set keys = ['firstname', 'lastname','email', 'phone'] %}
+{% set links = [
+	{'routeName': 'front_user_client_show', type: 'show'},
+	{'routeName': 'front_user_client_edit', type: 'edit'},
+	{'routeName': 'front_user_client_delete', type: 'delete'},
+] %}
+
+{% block title %}Clients{% endblock %}
 
 {% block body %}
-    <h1>Client index</h1>
+	<div class="flex flex-col gap-7">
+		<div class="w-full flex items-center justify-between">
+			<h1 class="text-4xl text-secondary-500 font-extrabold">Clients</h1>
+			<a href="{{path('front_user_client_new')}}" class="bg-primary-300 hover:bg-primary-400 text-white font-bold py-2 px-4 rounded inline-flex items-center transition-colors ease-linear">
+				<svg class="fill-white w-4 h-4 mr-2 stroke-white" viewbox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+					<path class="stroke-white" d="M6.41034 12.6765H12.4103M12.4103 12.6765H18.4103M12.4103 12.6765V18.6765M12.4103 12.6765V6.67651" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+				</svg>
 
-    <table class="table">
-        <thead>
-            <tr>
+				<span>Ajouter un nouvel utilisateur</span>
+			</a>
+		</div>
+		<div>
+			<div class="relative">
+				<div class="absolute inset-y-0 left-0 rtl:inset-r-0 rtl:right-0 flex items-center ps-3 pointer-events-none">
+					<svg class="w-5 h-5 text-gray-500 dark:text-gray-400" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+						<path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"></path>
+					</svg>
+				</div>
+				<input type="text" id="table-search" class="block p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 " placeholder="Rechercher les produits">
+			</div>
+		</div>
+		{{ table.renderTable(clients, headerRows, keys, links) }}
+	</div>
 
-                <th>Firstname</th>
-                <th>Lastname</th>
-                <th>Address</th>
-                <th>Email</th>
-                <th>Phone</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for client in clients %}
-            <tr>
-                <td>{{ client.firstname }}</td>
-                <td>{{ client.lastname }}</td>
-                <td>{{ client.address }}</td>
-                <td>{{ client.email }} </td>
-                <td>{{ client.phone }}</td>
-
-                <td>
-                    <a href="{{ path('front_user_client_show', {'id': client.id}) }}">show</a>
-                    <a href="{{ path('front_user_client_edit', {'id': client.id}) }}">edit</a>
-                    <a href="{{ path('front_user_client_delete', {'id': client.id}) }}">delete</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="7">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-
-    <a href="{{ path('front_user_client_new') }}"> Create new Client </a>
 {% endblock %}
