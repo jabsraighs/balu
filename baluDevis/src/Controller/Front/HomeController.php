@@ -10,8 +10,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 
-#[route('/')]
-
+#[IsGranted("ROLE_USER")]
 class HomeController extends AbstractController
 {
     #[Route('/accueil', name: '_accueil',methods: ['GET'])]
