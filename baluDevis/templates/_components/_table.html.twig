@@ -16,7 +16,7 @@
 						<tr class="product-row bg-white border-b transition-opacity duration-300 ease-in-out">
 							{% for key in keys %}
 								{% if loop.first %}
-									<th scope="row" class="px-6 py-4 font-medium text-secondary-900 whitespace-nowrap">{{  attribute(product, key)  }}</th>
+									<th scope="row" class="px-6 py-4 font-medium text-secondary-900 whitespace-nowrap">{{  attribute(item, key)  }}</th>
 
 								{% else %}
 									<td class="px-6 py-4 text-secondary-300">{{ attribute(item, key) }}</td>
