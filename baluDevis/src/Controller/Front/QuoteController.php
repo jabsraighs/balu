@@ -36,6 +36,10 @@ class QuoteController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             // Apply findSearch method to filter quotes
             $quotes = $quoteRepository->findSearch($quotes, $user);
+            return $this->render('Front/user/quote/index.html.twig', [
+                'form' => $form,
+                'quotes' => $quotes,
+            ]);
         }
 
         // Retrieve quotes associated with the user
@@ -48,7 +52,6 @@ class QuoteController extends AbstractController
         return $this->render('Front/user/quote/index.html.twig', [
             'form' => $form->createView(),
             'quotes' => $userQuotes,
-            'quotesSearch' => $quotes,
         ]);
     }
 

@@ -109,7 +109,7 @@ public function verifyUserEmail(VerifEmailService $verifEmailService, Request $r
             $this->addFlash('error', 'Une erreur s\'est produite lors de l\'envoi de l\'email de vérification.');
         }
 
-        return $this->redirectToRoute('front_accueil');
+        return $this->redirectToRoute('app_logout');
     }
 
 }
