@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}accueil suite à une connexion{% endblock %}
+
+{% block body %}
+    {% if is_granted('ROLE_USER') and app.user.isVerified == true %}
+        <br>
+        <h1> Welcome To the Accueil Page  </h1>
+              <h1>User index</h1>
+
+          <table class="table">
+              <thead>
+                  <tr>
+                      <th>actions</th>
+                  </tr>
+              </thead>
+              <tbody>
+              {% for user in users %}
+                  <tr>
+                      <td>
+                          <a href="{{ path('front_user_show', {'id': user.id}) }}">show profil </a>
+                          <a href="{{ path('front_user_update', {'id': user.id}) }}">update profile</a>
+                          <a href="{{ path('front_user_client_index', {'id': user.id}) }}"> show clients </a>
+                      </td>
+                      </td>
+                  </tr>
+              {% else %}
+                  <tr>
+                      <td colspan="5">no records found</td>
+                  </tr>
+              {% endfor %}
+              <h1> Devis </h1>
+                <a href="{{ path('front_user_quote_index') }}"> show Devis </a>
+              <h1>Facture </h1>
+              <a href="{{ path('front_user_invoice_index') }}"> show Facture </a>
+              <a href="{{ path('app_logout') }}"> Logout </a>
+              </tbody>
+          </table>
+          
+    {% else %}
+      <h1> please confirm your email</h1>
+      <a href="{{path('app_Resend_email')}}"> resend confirmation link to verifie email </a>
+    {% endif %}
+{% endblock %}

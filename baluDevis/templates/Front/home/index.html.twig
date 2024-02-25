@@ -1,0 +1,72 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Dashboard
+{% endblock %}
+
+{% block body %}
+ {% if is_granted('ROLE_USER') and app.user.isVerified == true %}
+	<div class="flex flex-col gap-7">
+		<div>
+			<h1 class="text-4xl text-secondary-500 font-extrabold">Tableau de bord</h1>
+			<p class="text-xs text-gray-500"> Bienvenue sur votre tableau de bord </p>
+		</div>
+
+		<div class="flex gap-3">
+			{% embed '_components/_card.html.twig' %}
+				{% block title %}Revenue
+				{% endblock %}
+				{% block total %}2500
+				{% endblock %}
+				{% block icon %}
+					<svg width="24" height="24" viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<path d="M2 12C2 7.28595 2 4.92893 3.46447 3.46447C4.92893 2 7.28595 2 12 2C16.714 2 19.0711 2 20.5355 3.46447C22 4.92893 22 7.28595 22 12C22 16.714 22 19.0711 20.5355 20.5355C19.0711 22 16.714 22 12 22C7.28595 22 4.92893 22 3.46447 20.5355C2 19.0711 2 16.714 2 12Z" stroke="#AAAAAA" stroke-width="2"/>
+						<path d="M7 18V9" stroke="#AAAAAA" stroke-width="2" stroke-linecap="round"/>
+						<path d="M12 18V6" stroke="#AAAAAA" stroke-width="2" stroke-linecap="round"/>
+						<path d="M17 18V13" stroke="#AAAAAA" stroke-width="2" stroke-linecap="round"/>
+					</svg>
+				{% endblock %}
+			{% endembed %}
+		</div>
+
+		<div class="flex flex-col gap-7">
+			<h2 class="text-xl font-semibold text-secondary-500">Factures récentes</h2>
+			<div class="flex flex-col gap-3">
+				{% embed '_components/_invoice_item.html.twig' %}{% endembed %}
+				{% embed '_components/_invoice_item.html.twig' %}{% endembed %}
+				{% embed '_components/_invoice_item.html.twig' %}{% endembed %}
+				{% embed '_components/_invoice_item.html.twig' %}{% endembed %}
+			</div>
+		</div>
+	</div>
+  {% else %}
+  <div class="flex flex-col gap-7">
+		<div class="flex">
+			<p class="text-xs text-gray-500"> Bienvenue sur Vous devez verifier Votre compte afin de pouvoir accéder au site </p>
+
+				<a href={{path("app_Resend_email")}} class="h-16 w-full flex items-center justify-center relative gap-4 cursor-pointer hover:opacity-70">
+						<div class="flex items-center gap-3 w-40">
+
+							<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 568.557 568.557" xml:space="preserve" fill="#000000">
+							<g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+							<g id="SVGRepo_iconCarrier"> <rect x="28.822" y="161.736" style="fill:#333333;" width="511.424" height="350.56"></rect>
+							 <g> <g> <polygon style="fill:#FFFFFF;" points="284.262,388.521 3.782,217.112 16.278,196.616 284.198,360.361 552.118,195.368 564.71,215.8 "
+							 ></polygon> <rect x="-45.389" y="412.098" transform="matrix(-0.6225 0.7826 -0.7826 -0.6225 493.7142 610.0538)" style="fill:#FFFFFF;" width="290.236" height="24"></rect> <rect x="456.868" y="278.999" transform="matrix(-0.7829 0.6222 -0.6222 -0.7829 1099.8141 464.4384)" style="fill:#FFFFFF;" width="24.001" height="290.249"></rect> </g> 
+							 </g> <g> <rect x="276.246" y="110.008" style="fill:#0BA4E0;" width="16" height="161.6">
+							 </rect> <polygon style="fill:#0BA4E0;" points="349.078,116.424 284.246,23.352 219.414,116.424 "></polygon> </g> </g>
+							 </svg>
+							<p class="text-delete-500"> renvoie du lien de verification du compte </p>
+						</div>
+				</a>
+				<a href={{path("app_logout")}} class="h-16 w-full flex items-center justify-center relative gap-4 cursor-pointer hover:opacity-70">
+						<div class="flex items-center gap-3 w-40">
+
+							<svg width="24" height="25" viewbox="0 0 24 25" fill="none" class="text-delete-500" xmlns="http://www.w3.org/2000/svg">
+								<path d="M15 12.4998H2M2 12.4998L5.5 9.49976M2 12.4998L5.5 15.4998" stroke="#CD2020" stroke-opacity="0.8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+								<path d="M9.00195 7.49976C9.01406 5.32473 9.11051 4.14682 9.87889 3.37844C10.7576 2.49976 12.1718 2.49976 15.0002 2.49976H16.0002C18.8286 2.49976 20.2429 2.49976 21.1215 3.37844C22.0002 4.25712 22.0002 5.67133 22.0002 8.49976V16.4998C22.0002 19.3282 22.0002 20.7424 21.1215 21.6211C20.3531 22.3895 19.1752 22.486 17 22.4981M9.00195 17.4998C9.01406 19.6748 9.11051 20.8527 9.87889 21.6211C10.5202 22.2624 11.4467 22.4357 13 22.4825" stroke="#CD2020" stroke-opacity="0.8" stroke-width="2" stroke-linecap="round"/>
+							</svg>
+							<p class="text-delete-500">Se déconnecter</p>
+						</div>
+					</a>
+		</div>
+{%endif%}
+{% endblock %}

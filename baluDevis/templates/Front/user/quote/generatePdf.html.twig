@@ -1,0 +1,53 @@
+{% block body %}
+  <h1>Quote</h1>
+
+
+ <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+    <table class="w-full text-sm text-left rtl:text-right text-blue-100 dark:text-blue-100">
+        <thead class="text-xs text-white uppercase bg-blue-600 dark:text-white">
+            <tr>
+                <th scope="col" class="px-6 py-3 rounded-s-lg">
+                    Numeros Devis
+                </th>
+                <th scope="col" class="pxfront_user_-6 py-3">
+                    Description
+                </th>
+                <th scope="col" class="px-6 py-3 rounded-e-lg">
+                    Price
+                </th>
+                 <th scope="col" class="px-6 py-3 rounded-s-lg">
+                    Total Tva
+                </th>
+                <th scope="col" class="pxfront_user_-6 py-3">
+                    status
+                </th>
+                <th scope="col" class="px-6 py-3 rounded-e-lg">
+                   client
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="bg-white dark:bg-gfront_user_ray-800">
+                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                    {{ quote.name }}
+                </th>
+                <td class="px-6 py-4">
+                   {{ quote.Description }}
+                </td>
+                <td class="px-6 py-4">
+                    {{quote.totalAmount}}
+                </td>
+                <td class="px-6 py-4">
+                    {{quote.totalTva}}
+                </td>
+                <td class="px-6 py-4">
+                    {{quote.status}}
+                </td>
+                <td class="px-6 py-4">
+                    {{client}}
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+{% endblock %}

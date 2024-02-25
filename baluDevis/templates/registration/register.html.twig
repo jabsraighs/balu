@@ -1,0 +1,116 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Register
+{% endblock %}
+
+{% block body %}
+	<div class="p-6 md:p-2 h-screen flex gap-2">
+		<div class="flex-1 bg-secondary-500 w-full h-full rounded-xl flex-col-reverse p-4 relative overflow-hidden hidden md:flex">
+			<img class="object-cover object-center absolute top-0 left-0 h-full w-full z-0 opacity-30" src="/background.jpg"/>
+			<span class="py-2 text-white font-regular relative z-10">Connectez-vous pour gérer vos devis avec facilité et gagnez du temps pour ce qui compte vraiment – votre travail créatif. Simplifiez votre quotidien freelance dès maintenant!</span>
+
+			<p class="text-4xl uppercase font-bold text-white relative z-10">Accédez à un
+				<br>
+				monde de possibilités<br>
+				freelance en toute simplicité.</p>
+		</div>
+
+
+		{{ form_start(registrationForm, {"attr": {"class": "flex-1 flex flex-col items-center justify-center gap-4"}}) }}
+		{% do registrationForm.agreeTerms.setRendered %}
+
+		<div class="pb-4">
+			<img class="object-contain h-full w-full relative" src="/Logo.png"/>
+		</div>
+
+		<div class="flex flex-col items-center justify-center w-full gap-1 pb-6">
+			<h1 class="text-3xl font-bold text-primary-500">S'inscrire</h1>
+			<h2 class="text-md text-center">Entrez vos information dans le but
+				<br>
+				de pouvoir créer votre compte</h2>
+			{% for flash_error in app.flashes('verify_email_error') %}
+				<div class="alert alert-danger" role="alert">{{ flash_error }}</div>
+			{% endfor %}
+		</div>
+
+		<div class="flex flex-col gap-2 w-full max-w-md">
+			<div class="flex flex-col gap-1 w-full">
+				<div class="relative">
+					<?xml version="1.0" encoding="utf-8"?>
+					<svg width="20px" height="20px" class="absolute left-2 top-10 fill-primary-500" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<path fill-rule="evenodd" clip-rule="evenodd" d="M3.75 5.25L3 6V18L3.75 18.75H20.25L21 18V6L20.25 5.25H3.75ZM4.5 7.6955V17.25H19.5V7.69525L11.9999 14.5136L4.5 7.6955ZM18.3099 6.75H5.68986L11.9999 12.4864L18.3099 6.75Z" fill="#080341"/>
+					</svg>
+					{{ form_label(registrationForm.email, "Email") }}
+				</div>
+
+				{{ form_widget(registrationForm.email, {"attr": {"class": "pl-8 rounded-md w-full border-primary-500"}}) }}
+			</div>
+
+			<div class="flex flex-col gap-1 w-full">
+				<div class="relative">
+					<?xml version="1.0" encoding="utf-8"?>
+					<svg class="absolute left-2 top-10" width="20px" height="20px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<path d="M7 10.0288C7.47142 10 8.05259 10 8.8 10H15.2C15.9474 10 16.5286 10 17 10.0288M7 10.0288C6.41168 10.0647 5.99429 10.1455 5.63803 10.327C5.07354 10.6146 4.6146 11.0735 4.32698 11.638C4 12.2798 4 13.1198 4 14.8V16.2C4 17.8802 4 18.7202 4.32698 19.362C4.6146 19.9265 5.07354 20.3854 5.63803 20.673C6.27976 21 7.11984 21 8.8 21H15.2C16.8802 21 17.7202 21 18.362 20.673C18.9265 20.3854 19.3854 19.9265 19.673 19.362C20 18.7202 20 17.8802 20 16.2V14.8C20 13.1198 20 12.2798 19.673 11.638C19.3854 11.0735 18.9265 10.6146 18.362 10.327C18.0057 10.1455 17.5883 10.0647 17 10.0288M7 10.0288V8C7 5.23858 9.23858 3 12 3C14.7614 3 17 5.23858 17 8V10.0288" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+					</svg>
+					{{ form_label(registrationForm.plainPassword.first, "Mot de passe") }}
+				</div>
+				{{ form_widget(registrationForm.plainPassword.first, {"attr": {"class": "pl-8 rounded-md w-full border-primary-500"}}) }}
+			</div>
+
+			<div class="flex flex-col gap-1 w-full">
+				<div class="relative">
+					<?xml version="1.0" encoding="utf-8"?>
+					<svg class="absolute left-2 top-10" width="20px" height="20px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<path d="M7 10.0288C7.47142 10 8.05259 10 8.8 10H15.2C15.9474 10 16.5286 10 17 10.0288M7 10.0288C6.41168 10.0647 5.99429 10.1455 5.63803 10.327C5.07354 10.6146 4.6146 11.0735 4.32698 11.638C4 12.2798 4 13.1198 4 14.8V16.2C4 17.8802 4 18.7202 4.32698 19.362C4.6146 19.9265 5.07354 20.3854 5.63803 20.673C6.27976 21 7.11984 21 8.8 21H15.2C16.8802 21 17.7202 21 18.362 20.673C18.9265 20.3854 19.3854 19.9265 19.673 19.362C20 18.7202 20 17.8802 20 16.2V14.8C20 13.1198 20 12.2798 19.673 11.638C19.3854 11.0735 18.9265 10.6146 18.362 10.327C18.0057 10.1455 17.5883 10.0647 17 10.0288M7 10.0288V8C7 5.23858 9.23858 3 12 3C14.7614 3 17 5.23858 17 8V10.0288" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+					</svg>
+					{{ form_label(registrationForm.plainPassword.second, "Confirmer le mot de passe") }}
+				</div>
+				{{ form_widget(registrationForm.plainPassword.second, {"attr": {"class": "pl-8 rounded-md w-full border-primary-500"}}) }}
+			</div>
+
+
+			<div class="inline-flex items-center">
+				<label class="relative flex items-center p-3 rounded-full cursor-pointer" htmlFor="registration_form_agreeTerms">
+					<input type="checkbox" id="registration_form_agreeTerms" name="registration_form[agreeTerms]" value="1" {{ registrationForm.agreeTerms.vars.checked ? 'checked' : '' }} class="before:content[''] peer relative h-5 w-5 cursor-pointer appearance-none rounded-md border border-blue-gray-200 transition-all before:absolute before:top-2/4 before:left-2/4 before:block before:h-12 before:w-12 before:-translate-y-2/4 before:-translate-x-2/4 before:rounded-full before:bg-blue-gray-500 before:opacity-0 before:transition-opacity checked:border-gray-900 checked:bg-gray-900 checked:before:bg-gray-900 hover:before:opacity-10"/>
+					<span class="absolute text-white transition-opacity opacity-0 pointer-events-none top-2/4 left-2/4 -translate-y-2/4 -translate-x-2/4 peer-checked:opacity-100">
+						<svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" viewBox="0 0 20 20" fill="currentColor" stroke="currentColor" stroke-width="1">
+							<path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+						</svg>
+					</span>
+				</label>
+				<label class="font-light text-gray-700 cursor-pointer select-none" htmlFor="registration_form_agreeTerms">
+					Accepter les termes et conditions
+				</label>
+			</div>
+
+			<button class="py-2 px-8 flex items-center justify-center bg-primary-500 rounded-md mt-8 text-white shadow-md font-bold" type="submit">Créer le compte</button>
+
+
+			<p class="text-secondary-500 mt-4 text-center">
+				Vous avez déjà un compte ?
+				<a href="{{ path('app_login') }}" class="text-secondary-500 font-bold underline">Connectez-vous ici</a>
+			</p>
+
+
+		</div>
+
+
+		{{ form_end(registrationForm) }}
+		{# <form action={{ path('app_register') }} class="flex-1 flex flex-col items-center justify-center gap-4" method="post">
+												
+																																																
+																																																
+												
+																																																				<input type="hidden" name="registration_form[_token]" id="registration_form__token" value=" {{ csrf_token('registrationForm._token') }} "></input>
+																																																
+																																																				<button class="py-2 px-8 flex items-center justify-center bg-primary-500 rounded-md mt-8 text-white shadow-md font-bold" type="submit">Créer le compte</button>
+																																																
+																																																			</div>
+																																																
+																																																			<p class="text-secondary-500 mt-4">
+																																																				Si vous avez déjà un compte ?
+																																																				<a href="{{ path('app_login') }}" class="text-secondary-500 font-bold underline">Connectez-vous ici</a>
+																																																			</p>
+																																																		</form> #}
+	</div>
+{% endblock %}
