@@ -9,8 +9,12 @@ runtime:
         - sodium
         - iconv
         - ctype
-
-
+relationship:
+    database: postgresql:15
+crons:
+    snapshot:
+        spec: 0 5 * * *
+        cmd: php bin\console App:send-email-auto 
 #variables:
 #    php:
 #        # uncomment on PHP 7.4+
