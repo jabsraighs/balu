@@ -1,6 +1,9 @@
 name: app
-
-type: php:8.2
+dependecies:
+    nodejs:
+        yarn: "*"
+    php:
+        composer/composer: '^2.0'
 
 runtime:
     extensions:
@@ -15,14 +18,17 @@ relationships:
     postgresdatabase: "dbpostgres:postgresql"
         
 
-#variables:
-#    php:
-#        # uncomment on PHP 7.4+
-#        #opcache.preload: config/preload.php
 
+type: php:8.1
 build:
     flavor: none
 
+relationships:
+    database: 'postgres:user'
+
+variables:
+    php:
+        
 disk: 512
 
 web:
