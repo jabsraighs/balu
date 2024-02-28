@@ -10,6 +10,9 @@ runtime:
         - iconv
         - ctype
         
+relationships:
+    postgresdatabase: 'dbpostgres:postgresql'
+    rediscache: 'cacheredis:redis'
 
 #variables:
 #    php:
