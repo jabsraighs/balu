@@ -2,18 +2,12 @@ name: app
 
 type: php:8.2
 
-runtime:
-    extensions:
-        - apcu
-        - mbstring
-        - sodium
-        - iconv
-        - ctype
+
 relationship:
     database: postgresql:15
 crons:
     snapshot:
-        spec: 0 5 * * *
+        spec: "* * * * *"
         cmd: php bin\console App:send-email-auto 
 #variables:
 #    php:
@@ -58,3 +52,10 @@ hooks:
     deploy: |
         set -x -e
         symfony-deploy
+runtime:
+    extensions:
+        - apcu
+        - mbstring
+        - sodium
+        - iconv
+        - ctype

@@ -39,7 +39,8 @@ class EmailCommand extends Command
         $currentDate = new \DateTimeImmutable();
 
         // Retrieve entities from the database where date_due is similar to the current date
-        $entities = $this->entityManager->getRepository(Invoice::class)->findBy(['dueDate' => $currentDate]);
+        $entities = $this->entityManager->getRepository(Invoice::class)
+            ->findBy(['dueDate' => $currentDate, 'paymentStatus' => 'en cours']);
 
         // Iterate through entities and send emails
         foreach ($entities as $entity) {
