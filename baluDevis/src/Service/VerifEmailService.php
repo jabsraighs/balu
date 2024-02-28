@@ -24,11 +24,5 @@ class VerifEmailService{
         $this->entityManager->persist($user);
         $this->entityManager->flush();
     }
-    public function resetPassword(Request $request, User $user): void
-{
-    // 1. Perform password reset logic here
-
-    // 2. Redirect to the reset password page
-    return redirect()->route('reset.password.page'); // Assuming 'reset.password.page' is the route name for the reset password page.
-}
+    
 }

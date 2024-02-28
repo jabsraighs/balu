@@ -1,18 +1,23 @@
 <?php 
-// src/Command/SendEmailCommand.php
 namespace App\Command;
 
+use App\Entity\Invoice;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 use Doctrine\ORM\EntityManagerInterface;
-use App\Entity\Invoice; // Replace YourEntity with the actual entity name
+use Symfony\Component\Console\Attribute\AsCommand;
 
+#[AsCommand(
+    name: 'app:auto',
+    description: 'Envoie email au status valider.',
+    hidden: false,
+    aliases: ['app:auto'])]
 class EmailCommand extends Command
 {
-    protected static $defaultName = 'app:send-email-auto';
+    protected static $defaultName = 'app:auto';
     private $mailer;
     private $entityManager;
 
@@ -31,25 +36,28 @@ class EmailCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         // Get current date
-        $currentDate = new \DateTime();
+        $currentDate = new \DateTimeImmutable();
 
         // Retrieve entities from the database where date_due is similar to the current date
-        $entities = $this->entityManager->getRepository(Invoice::class)
-            ->findBy(['created_at' => $currentDate]);
+        $entities = $this->entityManager->getRepository(Invoice::class)->findBy(['dueDate' => $currentDate]);
 
         // Iterate through entities and send emails
         foreach ($entities as $entity) {
+            $from = $entity->getUserInvoice()->getEmail();
+            $clientEmail = $entity->getClient();
+            $to = $clientEmail->getEmail();
+            
             // Construct the email
             $email = (new Email())
-                ->from('your_email@example.com')
-                ->to('recipient@example.com')
+                ->from($from)
+                ->to($to)
                 ->subject('Test Email')
                 ->text('This is a test email sent from Symfony.');
 
             // Send the email using Symfony's Mailer component
             $this->mailer->send($email);
 
-            $output->writeln('Email sent successfully to ' . $entity->getEmail());
+            $output->writeln('Email sent successfully to ' . $to);
         }
 
         return Command::SUCCESS;
