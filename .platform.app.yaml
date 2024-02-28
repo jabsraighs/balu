@@ -9,7 +9,7 @@ runtime:
         - sodium
         - iconv
         - ctype
-relationship:
+relationships:
     database: postgresql:15
 crons:
     snapshot:
