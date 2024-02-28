@@ -23,11 +23,9 @@ type: php:8.1
 build:
     flavor: none
 
-relationships:
-    database: 'postgres:user'
+relationships :
+    database : 'postgres:user'
 
-variables:
-    php:
         
 disk: 512
 
