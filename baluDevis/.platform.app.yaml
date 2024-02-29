@@ -60,8 +60,7 @@ web:
                     allow: true
                 '^/build/':
                     allow: true
-                '^/(css|js|fonts?)/.*\.(css|js|otf|eot|ttf|svg|woff)':
-                    allow: true
+                
 
 # The size of the persistent disk of the application (in MB).
 disk: 1024
