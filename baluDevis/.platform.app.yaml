@@ -12,7 +12,7 @@ runtime:
         - pdo_pgsql
 
 relationships:
-    postgresdatabase: "dbpostgres:postgresql"
+    dbpostgres: "dbpostgres:postgresql"
         
 
 #variables:
