@@ -9,6 +9,10 @@ runtime:
         - sodium
         - iconv
         - ctype
+        - pdo_pgsql
+
+relationships:
+    postgresdatabase: "dbpostgres:postgresql"
         
 
 #variables:
@@ -57,3 +61,5 @@ hooks:
         set -x -e
 
         symfony-deploy
+        # Run fixtures script
+        php bin/console doctrine:fixtures:load --no-interaction
