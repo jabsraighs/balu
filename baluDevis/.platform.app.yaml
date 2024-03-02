@@ -62,5 +62,8 @@ hooks:
 
         symfony-deploy
         # Run fixtures script
-        composer require --dev doctrine/doctrine-fixtures-bundle
-        php bin/console doctrine:fixtures:load --no-interaction
+        symfony console d:d:d --force 
+        symfony console d:d:c 
+        symfony console make:migr 
+        symfony console d:m:m
+        symfony console doctrine:fixtures:load --no-interaction
