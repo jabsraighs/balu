@@ -62,8 +62,6 @@ hooks:
 
         symfony-deploy
         # Run fixtures script
-        symfony console d:d:d --force 
-        symfony console d:d:c 
-        symfony console make:migr 
+        symfony console make:migration
         symfony console d:m:m
         symfony console doctrine:fixtures:load --no-interaction
