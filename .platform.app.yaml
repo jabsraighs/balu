@@ -17,6 +17,7 @@ runtime:
 #        # uncomment on PHP 7.4+
 #        #opcache.preload: config/preload.php
 
+
 build:
     flavor: none
 
@@ -44,6 +45,7 @@ workers:
 
 mounts:
     "/var": { source: local, source_path: var }
+    "/config_db": {source: local, source_path: config}
     
 
 hooks:
@@ -56,10 +58,7 @@ hooks:
 
 
     deploy: |
+        bash export-config.sh
         set -x -e
-        # Run fixtures script
         php bin/console d:m:m
-        php bin/console doctrine:fixtures:load --no-interaction
-        
-
         symfony-deploy
