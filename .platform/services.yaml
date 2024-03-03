@@ -1,5 +1,5 @@
 db:
-    type: postgresql:16
+    type: postgresql:15
     disk: 256
     
 cacheredis:

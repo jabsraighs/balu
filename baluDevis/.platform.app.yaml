@@ -61,7 +61,6 @@ hooks:
         set -x -e
 
         # Run fixtures script
-        php bin/console d:d:c
         symfony console d:d:c
         symfony console make:migration
         symfony console d:m:m
