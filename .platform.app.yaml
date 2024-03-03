@@ -1,32 +1,22 @@
 name: app
-dependecies:
-    nodejs:
-        yarn: "*"
-    php:
-        composer/composer: '^2.0'
 
-runtime:
-    extensions:
-        - apcu
-        - mbstring
-        - sodium
-        - iconv
-        - ctype
-        - pdo_pgsql
-
-relationships:
-    postgresdatabase: "dbpostgres:postgresql"
-        
+type: php:8.2
 
 
-type: php:8.1
+relationship:
+    database: postgresql:15
+crons:
+    snapshot:
+        spec: "* * * * *"
+        cmd: php bin\console App:send-email-auto 
+#variables:
+#    php:
+#        # uncomment on PHP 7.4+
+#        #opcache.preload: config/preload.php
+
 build:
     flavor: none
 
-relationships :
-    database : 'postgres:user'
-
-        
 disk: 512
 
 web:
@@ -51,19 +41,21 @@ workers:
 
 mounts:
     "/var": { source: local, source_path: var }
-    
+
 
 hooks:
     build: |
         set -x -e
-
         curl -fs https://get.symfony.com/cloud/configurator | bash
         
         NODE_VERSION=18 symfony-build
-
     deploy: |
         set -x -e
-
         symfony-deploy
-        # Run fixtures script
-        php bin/console doctrine:fixtures:load --no-interaction
+runtime:
+    extensions:
+        - apcu
+        - mbstring
+        - sodium
+        - iconv
+        - ctype

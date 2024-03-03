@@ -15,17 +15,11 @@ use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Regex;
 
-class RegistrationFormType extends AbstractType
+class ForgetPasswordFormType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('email', EmailType::class, [
-                "required" => true,
-                "label" => "Email",
-                'attr' => ["id" => "email", "placeholder" => "votremail@example.com"],
-                "label_attr" => ["class" => "font-bold text-primary-500"],
-            ])
                 ->add('plainPassword', RepeatedType::class, [
                     // instead of being set onto the object directly,
                     // this is read and encoded in the controller

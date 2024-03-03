@@ -24,4 +24,5 @@ class VerifEmailService{
         $this->entityManager->persist($user);
         $this->entityManager->flush();
     }
+    
 }

@@ -66,8 +66,8 @@ class RegistrationController extends AbstractController{
     }
 
    #[Route('/verify/email/', name: 'app_verify_email', methods: ['GET'])]
-public function verifyUserEmail(VerifEmailService $verifEmailService, Request $request, TranslatorInterface $translator): Response
-{
+    public function verifyUserEmail(VerifEmailService $verifEmailService, Request $request, TranslatorInterface $translator): Response
+    {
     $user = $this->getUser();
     $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
@@ -77,13 +77,13 @@ public function verifyUserEmail(VerifEmailService $verifEmailService, Request $r
     } catch (VerifyEmailExceptionInterface $exception) {
         $this->addFlash('verify_email_error', $translator->trans($exception->getReason(), [], 'VerifyEmailBundle'));
 
-        return $this->redirectToRoute('front_accueil');
+        return $this->redirectToRoute('app_login');
     }
 
     // Redirect or do something else after successful verification
     // For example, you can add a flash message and redirect to a success page.
     $this->addFlash('success', 'Email verified successfully!');
-    return $this->redirectToRoute('front_accueil');
+    return $this->redirectToRoute('app_login');
 }
     #[Route('/resend/email', name: 'app_Resend_email',methods: ['GET','POST'])]
     public function reSendEmail(SendEmailService $mailService): Response {
