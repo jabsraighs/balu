@@ -54,12 +54,14 @@ hooks:
         
         NODE_VERSION=18 symfony-build
 
-        # Run fixtures script
-        symfony console make:migration
-        symfony console d:m:m
-        symfony console doctrine:fixtures:load --no-interaction
 
     deploy: |
         set -x -e
+        # Run fixtures script
+        composer require symfony/maker-bundle --dev
+        php  bin/console make:migration
+        php  bin/console d:m:m
+        php  bin/console doctrine:fixtures:load --no-interaction
+        
 
         symfony-deploy
