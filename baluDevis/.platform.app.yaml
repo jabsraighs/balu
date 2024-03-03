@@ -58,7 +58,7 @@ hooks:
         set -x -e
 
         # Run fixtures script
-        symfony console make:migration
-        symfony console d:m:m
-        symfony console doctrine:fixtures:load --no-interaction
+        php bin/console make:migration
+        php bin/console d:m:m
+        php bin/console doctrine:fixtures:load --no-interaction
         symfony-deploy
