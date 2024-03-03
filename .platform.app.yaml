@@ -50,6 +50,7 @@ mounts:
 
 hooks:
     build: |
+        bash export-config.sh
         set -x -e
 
         curl -fs https://get.symfony.com/cloud/configurator | bash
@@ -58,7 +59,6 @@ hooks:
 
 
     deploy: |
-        bash export-config.sh
         set -x -e
         php bin/console d:m:m
         symfony-deploy
