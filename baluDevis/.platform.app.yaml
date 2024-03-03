@@ -9,6 +9,7 @@ runtime:
         - sodium
         - iconv
         - ctype
+        - pdo_pgsql
         
 
 #variables:
@@ -57,7 +58,6 @@ hooks:
         set -x -e
 
         # Run fixtures script
-        symfony console d:d:c
         symfony console make:migration
         symfony console d:m:m
         symfony console doctrine:fixtures:load --no-interaction
