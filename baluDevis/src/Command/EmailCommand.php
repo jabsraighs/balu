@@ -11,7 +11,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 
 #[AsCommand(
-    name: 'app:auto',
+    name: 'app:invoice',
     description: 'Envoie email au status valider.',
     hidden: false,
     aliases: ['app:auto'])]
