@@ -9,10 +9,6 @@ runtime:
         - sodium
         - iconv
         - ctype
-        - pdo_pgsql
-
-relationships:
-    dbpostgres: "db:postgresql"
         
 
 #variables:

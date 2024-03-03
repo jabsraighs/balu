@@ -1,6 +1,0 @@
-db:
-    type: postgresql:15
-    disk: 256
-    
-cacheredis:
-    type: redis:7.2
