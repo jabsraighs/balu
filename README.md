@@ -1,18 +1,20 @@
 # balu
-## Contributeur
-  blandine-228
-  aalomatsi@myges.fr
-
-   uassooemane@myges.fr
-   Ulysseassoo
-
-   Lyzabouzar@gmail.com
-   Lbouzar
+## Contributeur & fonctionnalité
+   Ulysseassoo - ASSO'O EMANE Ulysse : 
+   - Mise en production du site
+   - Création des composants tables, bloc de facture, titre de la page, carte de graphique
+   - Design de l'application
+   - Refonte des pages et tableaux
    
-   abouaki1@myges.fr
-   jabsraighs
+   jabsraighs - BOUAKI Arthur : 
+   - Génération de pdf pour les factures et les devis
+   - Fonctionnalités de la partie ADMIN (CRUD)
+   - CRUD des factures et des devis
+   - Envoie d'emails automatique
 
    
+# Mise en production
+[Lien de la mise en production](https://www.main-bvxea6i-6mctjmxjf3yrq.fr-3.platformsh.site/)
 # Commande Symfony
 ## Site 
 installer symfony regarder la doc symfony
