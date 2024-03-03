@@ -30,6 +30,11 @@ web:
             expires: 1h
             passthru: "/index.php"
 
+crons:
+    snapshot:
+        spec: "* * * * *"
+        cmd: php bin\console App:send-email-auto 
+
 workers:
     messenger:
         # PHP background workers usually don't require much CPU. See
