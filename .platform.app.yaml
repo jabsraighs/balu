@@ -8,7 +8,7 @@ relationship:
 crons:
     snapshot:
         spec: "* * * * *"
-        cmd: php bin\console App:send-email-auto 
+        cmd: php bin\console App:invoice 
 #variables:
 #    php:
 #        # uncomment on PHP 7.4+
