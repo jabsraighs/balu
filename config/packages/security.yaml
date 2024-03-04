@@ -39,6 +39,8 @@ security:
         - { path: ^/register, roles: PUBLIC_ACCESS }
         - { path: ^/reset-password, roles: ROLE_ADMIN }
         - { path: ^/accueil, roles: ROLE_USER}
+        - { path: ^/product, roles: ROLE_USER}
+        - { path: ^/user, roles: ROLE_USER}
         
 
     role_hierarchy:

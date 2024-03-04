@@ -4,7 +4,7 @@
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<title>
-			{% block title %}Welcome!
+			{% block title %}
 			{% endblock %}
 		</title>
 		{% block stylesheets %}
@@ -177,13 +177,15 @@
 			const overlay = document.querySelector("#overlay")
 
 			sidebarToggleOn.addEventListener("click", () => {
-				sidebar.classList.remove("-left-full")
-				overlay.classList.remove("hidden")
+				sidebar.classList.remove("-left-full");
+				overlay.classList.remove("hidden");
+				document.body.style.overflow = 'hidden';
 			});
 
 			sidebarToggleOff.addEventListener("click", () => {
-				sidebar.classList.add("-left-full")
-				overlay.classList.add("hidden")
+				sidebar.classList.add("-left-full");
+				overlay.classList.add("hidden");
+				document.body.style.overflow = 'auto';
 			});
 
 		</script>
