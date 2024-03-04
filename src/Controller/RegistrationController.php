@@ -43,6 +43,7 @@ class RegistrationController extends AbstractController{
                     $form->get('plainPassword')->getData()
                 )
             );
+
             $entityManager->persist($user);
             $entityManager->flush();
             $this->addFlash('message', 'Your account has been created Please Confirm your Email to verifie it..');
@@ -59,9 +60,13 @@ class RegistrationController extends AbstractController{
             // do anything else you need here, like send an email
             return $this->redirectToRoute('app_login');
         }
+        else {
+            $errors = $form->getErrors();
+        }
 
         return $this->render('registration/register.html.twig', [
             'registrationForm' => $form->createView(),
+            'errors' => $errors, 
         ]);
     }
 
