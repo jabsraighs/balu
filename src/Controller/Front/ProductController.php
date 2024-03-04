@@ -7,6 +7,7 @@ use App\Form\ProductType;
 use App\Repository\ProductRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -47,8 +48,15 @@ class ProductController extends AbstractController
     }
 
     #[Route('/{id}', name: '_user_product_show', methods: ['GET'])]
-    public function show(Product $product): Response
+    public function show(Product $product, Security $security): Response
     {
+        $user = $this->getUser();
+
+        
+        if ($product->getUser()->getId() !== $user->getId()) {
+            return $this->redirectToRoute('front_user_product_index', [], Response::HTTP_SEE_OTHER);
+        }
+
         return $this->render('Front/user/product/show.html.twig', [
             'product' => $product,
         ]);
