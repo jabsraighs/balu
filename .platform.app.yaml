@@ -66,4 +66,5 @@ hooks:
     deploy: |
         set -x -e
         php bin/console d:m:m
+        php bin/console cache:clear
         symfony-deploy
