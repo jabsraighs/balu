@@ -2,11 +2,11 @@
 
 namespace App\Service;
 
+use App\Entity\User;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Mailer\MailerInterface;
-use App\Enity\User;
-use App\Entity\User as EntityUser;
 
+use Symfony\Component\Security\Core\User\UserInterface;
 use SymfonyCasts\Bundle\VerifyEmail\VerifyEmailHelperInterface;
 
 class SendEmailService {
@@ -20,7 +20,7 @@ class SendEmailService {
 
     }
 
-    public function send(string $verifyEmailRouteName,EntityUser $user,String $from, String $to, String $subject, String $template ): void {
+    public function send(string $verifyEmailRouteName,User $user,String $from, String $to, String $subject, String $template ): void {
          $signatureComponents = $this->verifyEmailHelper->generateSignature(
             $verifyEmailRouteName,
             $user->getId(),
