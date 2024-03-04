@@ -11,13 +11,13 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 
 #[AsCommand(
-    name: 'app:auto',
+    name: 'app:invoice',
     description: 'Envoie email au status valider.',
     hidden: false,
-    aliases: ['app:auto'])]
+    aliases: ['app:invoice'])]
 class EmailCommand extends Command
 {
-    protected static $defaultName = 'app:auto';
+    protected static $defaultName = 'app:invoice';
     private $mailer;
     private $entityManager;
 

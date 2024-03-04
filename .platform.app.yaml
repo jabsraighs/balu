@@ -33,7 +33,7 @@ web:
 crons:
     snapshot:
         spec: "* * * * *"
-        cmd: php bin\console App:send-email-auto 
+        cmd: php bin\console app:invoice 
 
 workers:
     messenger:
