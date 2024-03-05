@@ -33,6 +33,9 @@ class Product
     #[ORM\JoinColumn(nullable: false)]
     private ?user $user = null;
 
+    #[ORM\Column(length: 10)]
+    private ?string $unit = null;
+
     public function getId(): ?Uuid
     {
         return $this->id;
@@ -94,6 +97,18 @@ class Product
     public function setUser(?user $user): static
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    public function getUnit(): ?string
+    {
+        return $this->unit;
+    }
+
+    public function setUnit(string $unit): static
+    {
+        $this->unit = $unit;
 
         return $this;
     }

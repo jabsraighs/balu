@@ -52,6 +52,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Product::class)]
     private Collection $products;
 
+    #[ORM\OneToOne(mappedBy: 'user', cascade: ['persist', 'remove'])]
+    private ?UserInformation $userInformation = null;
+
+    #[ORM\ManyToOne(inversedBy: 'user')]
+    private ?Company $company = null;
+
     public function __construct(){
 
         $this->createdAt = new \DateTimeImmutable();
@@ -279,6 +285,35 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $product->setUser(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getUserInformation(): ?UserInformation
+    {
+        return $this->userInformation;
+    }
+
+    public function setUserInformation(UserInformation $userInformation): static
+    {
+        // set the owning side of the relation if necessary
+        if ($userInformation->getUser() !== $this) {
+            $userInformation->setUser($this);
+        }
+
+        $this->userInformation = $userInformation;
+
+        return $this;
+    }
+
+    public function getCompany(): ?Company
+    {
+        return $this->company;
+    }
+
+    public function setCompany(?Company $company): static
+    {
+        $this->company = $company;
 
         return $this;
     }

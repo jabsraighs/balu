@@ -31,6 +31,9 @@ class QuoteLine
     #[ORM\ManyToOne(inversedBy: 'quoteLines')]
     private ?Invoice $invoice = null;
 
+    #[ORM\Column(length: 10)]
+    private ?string $unit = null;
+
     public function getId(): ?Uuid
     {
         return $this->id;
@@ -92,6 +95,18 @@ class QuoteLine
     public function setInvoice(?Invoice $invoice): static
     {
         $this->invoice = $invoice;
+
+        return $this;
+    }
+
+    public function getUnit(): ?string
+    {
+        return $this->unit;
+    }
+
+    public function setUnit(string $unit): static
+    {
+        $this->unit = $unit;
 
         return $this;
     }
