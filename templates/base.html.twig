@@ -4,8 +4,7 @@
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<title>
-			{% block title %}
-			{% endblock %}
+			{% block title %}{% endblock %}
 		</title>
 		{% block stylesheets %}
 			{{ encore_entry_link_tags('app') }}
@@ -21,16 +20,16 @@
 	{% set currentRoute = app.request.pathinfo %}
 	{% set notLoggedPaths = [path("app_login"), path("app_register"), path("app_verify_email"), path("app_Resend_email")] %}
 	{% if (is_granted('ROLE_USER') or is_granted('ROLE_ADMIN')) %}
-	<body class="bg-background relative">
-			<div id="overlay" class="transition-all absolute top-0 lef-0 h-screen w-full bg-black opacity-40 z-10 hidden"> </div>
+		<body class="bg-background relative">
+			<div id="overlay" class="transition-all absolute top-0 lef-0 h-screen w-full bg-black opacity-40 z-10 hidden"></div>
 			<aside id="sidebar" class="h-screen transition-all flex gap-2 w-sidebar bg-white shadow-small flex-col absolute -left-full top-0 z-30 2md:fixed 2md:left-0">
 				<div class="flex items-center flex-row-reverse">
-				<div id="sidebar-toggle-off" class="rotate-180 2md:hidden text-secondary-500 cursor-pointer">
-						<svg  width="60" height="60" viewbox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+					<div id="sidebar-toggle-off" class="rotate-180 2md:hidden text-secondary-500 cursor-pointer">
+						<svg width="60" height="60" viewbox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
 							<path d="M22.5 37.5L30 30L22.5 22.5" stroke="#AAAAAA" stroke-width="0.9375"/>
 							<path d="M30 37.5L37.5 30L30 22.5" stroke="#AAAAAA" stroke-width="0.9375"/>
 						</svg>
-				</div>
+					</div>
 				</div>
 				<div class="flex items-center justify-center">
 					<img class="object-contain h-40 w-40 relative" src="/Logo.png"/>
@@ -39,7 +38,7 @@
 				<nav class="flex flex-col justify-between h-full">
 					<div>
 						<a href="{{path("front_accueil")}}" class="h-16 w-full flex items-center justify-center relative gap-4 cursor-pointer">
-							<span class="h-full absolute top-0 left-0 w-1 {{ currentRoute is same as(path("front_accueil")) ? 'bg-primary-500' : '' }}"></span>
+							<span class="h-full absolute top-0 left-0 w-1 {{ currentRoute is same as(path(" front_accueil")) ? 'bg-primary-500' : '' }}"></span>
 							<div class="flex items-center w-40 gap-3">
 								<svg width="25" height="24" viewbox="0 0 25 24" fill="none" class="text-secondary-500" xmlns="http://www.w3.org/2000/svg">
 									<path d="M22.5 22H2.5" stroke="#2A314B" stroke-width="2" stroke-linecap="round"/>
@@ -56,7 +55,7 @@
 						</a>
 
 						<a href="{{path("front_user_client_index")}}" class="h-16 w-full flex items-center justify-center relative gap-4 cursor-pointer hover:opacity-70">
-							<span class="h-full absolute top-0 left-0 w-1 {{ currentRoute is same as(path("front_user_client_index")) ? 'bg-primary-500' : '' }}"></span>
+							<span class="h-full absolute top-0 left-0 w-1 {{ currentRoute is same as(path(" front_user_client_index")) ? 'bg-primary-500' : '' }}"></span>
 
 							<div class="flex items-center w-40 gap-3">
 
@@ -70,11 +69,11 @@
 						</a>
 
 						<a href="{{path("front_user_product_index")}}" class="h-16 w-full flex items-center justify-center relative gap-4 cursor-pointer hover:opacity-70">
-							<span class="h-full absolute top-0 left-0 w-1 {{ currentRoute is same as(path("front_user_product_index")) ? 'bg-primary-500' : '' }}"></span>
+							<span class="h-full absolute top-0 left-0 w-1 {{ currentRoute is same as(path(" front_user_product_index")) ? 'bg-primary-500' : '' }}"></span>
 
 							<div class="flex items-center w-40 gap-3">
 
-								<svg width="25" height="25" viewBox="0 0 25 25"class="text-secondary-500"  fill="none" xmlns="http://www.w3.org/2000/svg">
+								<svg width="25" height="25" viewbox="0 0 25 25" class="text-secondary-500" fill="none" xmlns="http://www.w3.org/2000/svg">
 									<path fill-rule="evenodd" clip-rule="evenodd" d="M12.6908 2.4502L21.6908 7.64635V18.0387L12.6908 23.2348L3.6908 18.0387V7.64635L12.6908 2.4502ZM9.69075 12.1495L9.6908 19.1934L11.6908 20.3482V13.3042L9.69075 12.1495ZM5.6908 9.8402V16.884L7.69078 18.0387V10.9949L5.6908 9.8402ZM16.6279 7.03265L10.7414 10.4468L12.6908 11.5723L18.5908 8.16596L16.6279 7.03265ZM12.6908 4.7596L6.7908 8.16596L8.74369 9.29343L14.6302 5.87929L12.6908 4.7596Z" fill="#2A314B"/>
 								</svg>
 
@@ -84,7 +83,7 @@
 						</a>
 
 						<a href="{{path("front_user_invoice_index")}}" class="h-16 w-full flex items-center justify-center relative gap-4 cursor-pointer hover:opacity-70">
-							<span class="h-full absolute top-0 left-0 w-1 {{ currentRoute is same as(path("front_user_invoice_index")) ? 'bg-primary-500' : '' }}"></span>
+							<span class="h-full absolute top-0 left-0 w-1 {{ currentRoute is same as(path(" front_user_invoice_index")) ? 'bg-primary-500' : '' }}"></span>
 							<div class="flex items-center gap-3 w-40">
 
 								<svg width="24" height="24" viewbox="0 0 24 24" fill="none" class="text-secondary-500" xmlns="http://www.w3.org/2000/svg">
@@ -98,7 +97,7 @@
 						</a>
 
 						<a href="{{path("front_user_quote_index")}}" class="h-16 w-full flex items-center justify-center relative gap-4 cursor-pointer hover:opacity-70">
-							<span class="h-full absolute top-0 left-0 w-1 {{ currentRoute is same as(path("front_user_quote_index")) ? 'bg-primary-500' : '' }}"></span>
+							<span class="h-full absolute top-0 left-0 w-1 {{ currentRoute is same as(path(" front_user_quote_index")) ? 'bg-primary-500' : '' }}"></span>
 							<div class="flex items-center gap-3 w-40">
 
 								<svg width="25" height="24" viewbox="0 0 25 24" class="text-secondary-500" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -125,68 +124,73 @@
 					</a>
 				</nav>
 			</aside>
-		 {% else %}
+			{% else %}
 
-			
-				
-		{%endif %}
+
+		{% endif %}
 		{% for message in app.flashes("message")%}
-			<div class="alert alert-success alert-dismissible fade show" role="alert">
-				{{message}}
-				<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="close"></button>
+			<div class="fixed top-2 md:top-5 md:right-5 w-screen flex  justify-center md:justify-end" >
+				<div id="toast-top-right" class="fixed flex items-center w-full max-w-xs md:max-w-xs p-4 space-x-4 text-white backdrop-blur-sm bg-secondary/90 border rounded-lg shadow  " role="alert">
+					<div class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-green-200 bg-green-800 rounded-lg">
+						<svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewbox="0 0 20 20">
+							<path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z"/>
+						</svg>
+						<span class="sr-only">Check icon</span>
+					</div>
+					<div class="text-sm font-normal">{{ message }}</div>
+				</div>
 			</div>
 
-		{%endfor%}
-			{% if (is_granted('ROLE_USER') or is_granted('ROLE_ADMIN')) and app.user.isVerified == true  %}
-				<header class="w-full bg-white h-14 relative z-0 flex flex-row-reverse justify-between items-center">
-					<div class="flex gap-4 items-center flex-row-reverse">
-						<div class="mr-8 flex items-center gap-3">
-							<div class="flex items-baseline h-full justify-center flex-col gap-0">
-								<p>Jean Arthur</p>
-								<p class="text-xs text-gray-500">{{ app.user.email }}</p>
-							</div>
+		{% endfor %}
+		{% if (is_granted('ROLE_USER') or is_granted('ROLE_ADMIN')) and app.user.isVerified == true  %}
+			<header class="w-full bg-white h-14 relative z-0 flex flex-row-reverse justify-between items-center">
+				<div class="flex gap-4 items-center flex-row-reverse">
+					<div class="mr-8 flex items-center gap-3">
+						<div class="flex items-baseline h-full justify-center flex-col gap-0">
+							<p>Jean Arthur</p>
+							<p class="text-xs text-gray-500">{{ app.user.email }}</p>
 						</div>
-						<svg width="24" height="24" viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-							<path d="M18.7491 9.70957V9.00497C18.7491 5.13623 15.7274 2 12 2C8.27256 2 5.25087 5.13623 5.25087 9.00497V9.70957C5.25087 10.5552 5.00972 11.3818 4.5578 12.0854L3.45036 13.8095C2.43882 15.3843 3.21105 17.5249 4.97036 18.0229C9.57274 19.3257 14.4273 19.3257 19.0296 18.0229C20.789 17.5249 21.5612 15.3843 20.5496 13.8095L19.4422 12.0854C18.9903 11.3818 18.7491 10.5552 18.7491 9.70957Z" stroke="#AAAAAA" stroke-width="2"/>
-							<path d="M7.5 19C8.15503 20.7478 9.92246 22 12 22C14.0775 22 15.845 20.7478 16.5 19" stroke="#AAAAAA" stroke-width="2" stroke-linecap="round"/>
-							<circle cx="19" cy="5" r="3.5" fill="#CA20CD" stroke="white"/>
-						</svg>
 					</div>
-					<div class="pl-2 2md:pl-side cursor-pointer 2md:hidden" id="sidebar-toggle">
-						<svg width="60" height="60" viewbox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
-							<path d="M22.5 37.5L30 30L22.5 22.5" stroke="#AAAAAA" stroke-width="0.9375"/>
-							<path d="M30 37.5L37.5 30L30 22.5" stroke="#AAAAAA" stroke-width="0.9375"/>
-						</svg>
-					</div>
-				</header>
-			{%endif %}
-			<div class="h-full w-full {{ currentRoute not in notLoggedPaths ? '2md:pl-side' : '' }}">
-				<div class="w-full h-full {{ currentRoute not in notLoggedPaths ? 'p-8 pt-10 2md:p-10' : '' }}"> {% block body %}{% endblock %}
-					</div>
+					<svg width="24" height="24" viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<path d="M18.7491 9.70957V9.00497C18.7491 5.13623 15.7274 2 12 2C8.27256 2 5.25087 5.13623 5.25087 9.00497V9.70957C5.25087 10.5552 5.00972 11.3818 4.5578 12.0854L3.45036 13.8095C2.43882 15.3843 3.21105 17.5249 4.97036 18.0229C9.57274 19.3257 14.4273 19.3257 19.0296 18.0229C20.789 17.5249 21.5612 15.3843 20.5496 13.8095L19.4422 12.0854C18.9903 11.3818 18.7491 10.5552 18.7491 9.70957Z" stroke="#AAAAAA" stroke-width="2"/>
+						<path d="M7.5 19C8.15503 20.7478 9.92246 22 12 22C14.0775 22 15.845 20.7478 16.5 19" stroke="#AAAAAA" stroke-width="2" stroke-linecap="round"/>
+						<circle cx="19" cy="5" r="3.5" fill="#CA20CD" stroke="white"/>
+					</svg>
 				</div>
-			</body>
-
-
-			{% block footer%}{% endblock %}
+				<div class="pl-2 2md:pl-side cursor-pointer 2md:hidden" id="sidebar-toggle">
+					<svg width="60" height="60" viewbox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<path d="M22.5 37.5L30 30L22.5 22.5" stroke="#AAAAAA" stroke-width="0.9375"/>
+						<path d="M30 37.5L37.5 30L30 22.5" stroke="#AAAAAA" stroke-width="0.9375"/>
+					</svg>
+				</div>
+			</header>
+		{%endif %}
+		<div class="h-full w-full {{ currentRoute not in notLoggedPaths ? '2md:pl-side' : '' }}">
+			<div class="w-full h-full {{ currentRoute not in notLoggedPaths ? 'p-8 pt-10 2md:p-10' : '' }}"> {% block body %}{% endblock %}
+				</div>
+			</div>
 		</body>
 
-		<script>
-			const sidebar = document.querySelector("#sidebar");
-			const sidebarToggleOn = document.querySelector("#sidebar-toggle");
-			const sidebarToggleOff = document.querySelector("#sidebar-toggle-off");
-			const overlay = document.querySelector("#overlay")
 
-			sidebarToggleOn.addEventListener("click", () => {
-				sidebar.classList.remove("-left-full");
-				overlay.classList.remove("hidden");
-				document.body.style.overflow = 'hidden';
-			});
-
-			sidebarToggleOff.addEventListener("click", () => {
-				sidebar.classList.add("-left-full");
-				overlay.classList.add("hidden");
-				document.body.style.overflow = 'auto';
-			});
-
-		</script>
+		{% block footer%}{% endblock %}
 	</html>
+</body>
+
+<script>
+	const sidebar = document.querySelector("#sidebar");
+const sidebarToggleOn = document.querySelector("#sidebar-toggle");
+const sidebarToggleOff = document.querySelector("#sidebar-toggle-off");
+const overlay = document.querySelector("#overlay")
+
+sidebarToggleOn.addEventListener("click", () => {
+sidebar.classList.remove("-left-full");
+overlay.classList.remove("hidden");
+document.body.style.overflow = 'hidden';
+});
+
+sidebarToggleOff.addEventListener("click", () => {
+sidebar.classList.add("-left-full");
+overlay.classList.add("hidden");
+document.body.style.overflow = 'auto';
+});
+</script></html>

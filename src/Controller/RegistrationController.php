@@ -45,7 +45,7 @@ class RegistrationController extends AbstractController{
             );
             $entityManager->persist($user);
             $entityManager->flush();
-            $this->addFlash('message', 'Your account has been created Please Confirm your Email to verifie it..');
+            $this->addFlash('message', 'Your account has been created ! <br>Please Confirm your email to verify it...');
             // generate a signed url and email it to the user
             $mailService->send(
                     'app_verify_email',
@@ -65,7 +65,7 @@ class RegistrationController extends AbstractController{
         ]);
     }
 
-   #[Route('/verify/email/', name: 'app_verify_email', methods: ['GET'])]
+   #[Route('/verify/email', name: 'app_verify_email', methods: ['GET'])]
     public function verifyUserEmail(VerifEmailService $verifEmailService, Request $request, TranslatorInterface $translator): Response
     {
     $user = $this->getUser();
@@ -84,7 +84,7 @@ class RegistrationController extends AbstractController{
     // For example, you can add a flash message and redirect to a success page.
     $this->addFlash('success', 'Email verified successfully!');
     return $this->redirectToRoute('app_login');
-}
+    }
     #[Route('/resend/email', name: 'app_Resend_email',methods: ['GET','POST'])]
     public function reSendEmail(SendEmailService $mailService): Response {
 

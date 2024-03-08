@@ -30,7 +30,7 @@ class RegistrationFormType extends AbstractType
                     // instead of being set onto the object directly,
                     // this is read and encoded in the controller
                     'mapped' => false,
-                    'attr' => ['autocomplete' => 'new-password'],
+                    'attr' => ['autocomplete' => 'new-password', "placeholder" => "•••••••••"],
                     'constraints' => [
                         new NotBlank([
                             'message' => 'Please enter a password',
@@ -48,7 +48,7 @@ class RegistrationFormType extends AbstractType
                     ],
                     'type' => PasswordType::class,
                     'invalid_message' => 'The password fields must match.',
-                    'options' => ['attr' => ['class' => 'password-field'], 'label_attr' => ['class' => 'font-bold text-primary-500']],
+                    'options' => ['attr' => ['class' => 'password-field', "placeholder" => "•••••••••"], 'label_attr' => ['class' => 'font-bold text-primary-500']],
                     'required' => true,
                     'first_options'  => ['label' => 'Mot de passe'],
                     'second_options' => ['label' => 'Confirmer le mot de passe']

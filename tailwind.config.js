@@ -92,6 +92,9 @@ module.exports = {
             padding: {
                 side: "300px"
             },
+			maxWidth: {
+				"2xs": "19rem",
+			}
 		}
 	},
 	plugins: [require("@tailwindcss/forms")]
