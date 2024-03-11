@@ -7,7 +7,5 @@
 
     {{ include('Back/admin/user/client/_form.html.twig', {'button_label': 'Update'}) }}
 
-    <a href="{{ path('back_admin_user_client_index') }}">back to list</a>
-
-    {{ include('Back/admin/user/client/_delete_form.html.twig') }}
+    {{ include('Front/user/client/_delete_form.html.twig') }}
 {% endblock %}

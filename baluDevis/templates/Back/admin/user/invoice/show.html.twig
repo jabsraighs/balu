@@ -8,10 +8,6 @@
     <table class="table">
         <tbody>
             <tr>
-                <th>Id</th>
-                <td>{{ invoice.id }}</td>
-            </tr>
-            <tr>
                 <th>CreatedAt</th>
                 <td>{{ invoice.createdAt ? invoice.createdAt|date('Y-m-d') : '' }}</td>
             </tr>
@@ -24,15 +20,23 @@
                 <td>{{ invoice.paymentStatus }}</td>
             </tr>
             <tr>
-                <th>TotalAmount</th>
+                <th>Total Tva</th>
+                <td>{{ invoice.totalTva }}</td>
+            </tr>
+            <tr>
+                <th> client </th>
+                <td>{{ client }}</td>
+            </tr>
+            <tr>
+                <th> TotalAmount </th>
                 <td>{{ invoice.totalAmount }}</td>
             </tr>
         </tbody>
     </table>
 
-    <a href="{{ path('back_admin_user_invoice_index') }}">back to list</a>
+    <a href="{{ path('front_user_invoice_index') }}">back to list</a>
 
-    <a href="{{ path('back_admin_user_invoice_edit', {'id': invoice.id}) }}">edit</a>
+    <a href="{{ path('front_user_invoice_edit', {'id': invoice.id}) }}">edit</a>
 
-    {{ include('Back/admin/user/invoice/_delete_form.html.twig') }}
+    {{ include('Front/user/invoice/_delete_form.html.twig') }}
 {% endblock %}

@@ -1,0 +1,68 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Produits{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+	{{ encore_entry_script_tags('product') }}
+{% endblock %}
+
+{% block body %}
+	<div class="flex flex-col gap-7">
+		<div class="w-full flex items-center justify-between">
+			<h1 class="text-4xl text-secondary-500 font-extrabold">Produits</h1>
+            <a href="{{path('front_user_product_new')}}" class="bg-primary-300 hover:bg-primary-400 text-white font-bold py-2 px-4 rounded inline-flex items-center transition-colors ease-linear">
+                <svg class="fill-white w-4 h-4 mr-2 stroke-white"  viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path class="stroke-white" d="M6.41034 12.6765H12.4103M12.4103 12.6765H18.4103M12.4103 12.6765V18.6765M12.4103 12.6765V6.67651" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+
+                <span>Ajouter un nouveau produit</span>
+            </a>
+		</div>
+        <div>
+            <div class="relative">
+                <div class="absolute inset-y-0 left-0 rtl:inset-r-0 rtl:right-0 flex items-center ps-3 pointer-events-none">
+                    <svg class="w-5 h-5 text-gray-500 dark:text-gray-400" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"></path></svg>
+                </div>
+                <input type="text" id="table-search" class="block p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 " placeholder="Rechercher les produits">
+            </div>
+        </div>
+        <div class="relative overflow-x-auto rounded-3xl border  border-primaryLight shadow-sm">
+            <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                <thead class="text-xs text-gray-700 uppercase bg-white border-b">
+                    <tr>
+                        <th scope="col" class="px-6 py-3 font-bold">Nom</th>
+                        <th scope="col" class="px-6 py-3 font-bold">Categorie</th>
+                        <th scope="col" class="px-6 py-3 font-bold">Prix</th>
+                        <th scope="col" class="px-6 py-3 font-bold">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for product in products %}
+                    <tr class="product-row bg-white border-b transition-opacity duration-300 ease-in-out">
+                        <th scope="row" class="px-6 py-4 font-medium text-secondary-900 whitespace-nowrap">{{ product.name }}</th>
+                        <td class="px-6 py-4 text-secondary-300">{{ product.category }}</td>
+                        <td class="px-6 py-4 text-secondary-300 w-10p">{{ product.price }} €</td>
+                        <td class="px-6 py-4 text-secondary-300 flex items-center gap-2">
+                        <div class="inline-flex rounded-md shadow-sm items-center w-full h-full">
+                            <a href="{{ path('back_admin_user_product_show', {'id': product.id}) }}" aria-current="page" class="px-4 py-2 text-sm font-medium text-primary-700 bg-white border border-gray-200 rounded-s-lg hover:bg-gray-100 focus:z-10 focus:ring-2 ">
+                                Détails
+                            </a>
+                            <a href="{{ path('back_admin_user_product_edit', {'id': product.id}) }}" class="px-4 py-2 text-sm font-medium text-white bg-secondary border-t border-b border-gray-200 hover:opacity-90 focus:z-10 focus:ring-2">
+                                Editer
+                            </a>
+                             {{ include('back/admin/user/product/_delete_form.html.twig') }}
+                        </div>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr class="bg-white border-b">
+                        <td colspan="5">Pas de produits.</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+{% endblock %}
