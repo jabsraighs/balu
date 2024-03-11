@@ -164,7 +164,7 @@
 					</svg>
 				</div>
 			</header>
-		{%endif %}
+		{% endif %}
 		<div class="h-full w-full {{ currentRoute not in notLoggedPaths ? '2md:pl-side' : '' }}">
 			<div class="w-full h-full {{ currentRoute not in notLoggedPaths ? 'p-8 pt-10 2md:p-10' : '' }}"> {% block body %}{% endblock %}
 				</div>

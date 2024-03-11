@@ -1,0 +1,94 @@
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>
+			{% block title %}Onboarding
+			{% endblock %}
+		</title>
+		{% block stylesheets %}
+			{{ encore_entry_link_tags('app') }}
+		{% endblock %}
+
+		{% block javascripts %}
+			{{ encore_entry_script_tags('app') }}
+			{{ encore_entry_script_tags('onboarding') }}
+		{% endblock %}
+		{%block header %}
+		{% endblock%}
+	</head>
+
+	<body>
+		<main class="min-h-screen w-full relative bg-background flex-col justify-start px-10 max-md:px-4">
+			<nav class="w-full flex justify-between items-center py-4 mb-4">
+				<div class="flex items-center justify-center">
+					<img class="object-contain w-36 relative" src="/Logo.png"/>
+				</div>
+
+				<a href={{path("app_logout")}} class=" w-fit flex items-center justify-center relative gap-4 cursor-pointer hover:opacity-70">
+					<div class="flex items-center gap-3 w-fit">
+
+						<p class="text-secondary-600 opacity-80">Se déconnecter</p>
+					</div>
+				</a>
+			</nav>
+			<div class="mx-auto max-w-3xl">
+
+
+				<div class="flex w-full gap-2 mb-6">
+					<div class="w-full flex-1 bg-gray-200 rounded-full h-1">
+						<div class="bg-blue-600 h-1 rounded-full" style="width: 100%"></div>
+					</div>
+					<div class="w-full flex-1 bg-gray-200 rounded-full h-1">
+						<div class="bg-blue-600 h-1 rounded-full" style="width: 0%"></div>
+					</div>
+				</div>
+
+
+				<h1 class="text-2xl text-primary-500">Informations du profil</h1>
+				<p class="text-md text-primary-800 opacity-80 mt-3">Bienvenue ! Veuillez tout d'abord compléter les informations à propos de vous.</p>
+				<section class="mt-9 px-4">
+					{{ form_start(form, {"attr": {"class": "flex-1 flex flex-col items-center justify-center gap-4"}}) }}
+					<div class="flex flex-col gap-2 w-full">
+						<div class="flex flex-col gap-1 w-full">
+							<div class="relative">
+								{{ form_label(form.lastname, "Nom") }}
+							</div>
+
+							{{ form_widget(form.lastname, {"attr": {"class": "pl-2 rounded-md w-full border-primary-500"}}) }}
+						</div>
+
+						<div class="flex flex-col gap-1 w-full">
+							<div class="relative">
+								{{ form_label(form.firstname, "Prénom") }}
+							</div>
+
+							{{ form_widget(form.firstname, {"attr": {"class": "pl-2 rounded-md w-full border-primary-500"}}) }}
+						</div>
+
+						<div class="flex flex-col gap-1 w-full">
+							<div class="relative">
+								{{ form_label(form.email, "Email") }}
+							</div>
+
+							{{ form_widget(form.email, {"attr": {"class": "pl-2 rounded-md w-full border-primary-500"}}) }}
+						</div>
+
+						<div class="flex flex-col gap-1 w-full">
+							<div class="relative">
+								{{ form_label(form.phone, "Numéro de téléphone") }}
+							</div>
+
+							{{ form_widget(form.phone, {"attr": {"class": "pl-2 mb-0 rounded-md w-full border-primary-500"}}) }}
+							<p id="helper-text-explanation" class="mt-2 text-sm text-secondary-300 ">Ecrivez votre numéro de téléphone dans le bon format.</p>
+						</div>
+					</div>
+
+					<button class="py-2 px-8 flex w-full items-center justify-center bg-primary-500 rounded-md mt-8 text-white shadow-md font-bold" type="submit">{{ button_label|default('Suivant') }}</button>
+					{{ form_end(form) }}
+				</section>
+			</div>
+		</main>
+	</body>
+
+</html>
