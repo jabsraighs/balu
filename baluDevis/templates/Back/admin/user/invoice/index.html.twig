@@ -34,17 +34,23 @@
                 {% for invoice in invoices %}
                     <tr class="invoice-row bg-white border-b transition-opacity duration-300 ease-in-out">
                         <th scope="row" class="px-6 py-4 font-medium text-secondary-900 whitespace-nowrap">{{ invoice.name }}</td>
-
+                        
                         <td class="px-6 py-4 text-secondary-300">{{ invoice.createdAt ? invoice.createdAt|date('Y-m-d') : '' }}</td>
                         <td class="px-6 py-4 text-secondary-300">{{ invoice.dueDate ? invoice.dueDate|date('Y-m-d') : '' }}</td>
                         <td class="px-6 py-4 text-secondary-300">{{ invoice.paymentStatus}}</td>
                         <td class="px-6 py-4 text-secondary-300 w-10p">{{ invoice.totalAmount }} €</td>
                         <td class="px-6 py-4 text-secondary-300 flex items-center gap-2">
                         <div class="inline-flex rounded-md shadow-sm items-center w-full h-full">
-                            <a href="{{ path('back_admin_user_invoice_show', {'id': invoice.id}) }}" aria-current="page" class="px-4 py-2 text-sm font-medium text-primary-700 bg-white border border-gray-200 rounded-s-lg hover:bg-gray-100 focus:z-10 focus:ring-2 ">
+                            <a href="{{ path('front_user_invoice_show', {'id': invoice.id}) }}" aria-current="page" class="px-4 py-2 text-sm font-medium text-primary-700 bg-white border border-gray-200 rounded-s-lg hover:bg-gray-100 focus:z-10 focus:ring-2 ">
                                 Détails
                             </a>
-                             {{ include('Back/admin/user/invoice/_delete_form.html.twig') }}
+                            <a href="{{ path('front_user_invoice_edit', {'id': invoice.id}) }}" class="px-4 py-2 text-sm font-medium text-white bg-secondary border-t border-b border-gray-200 hover:opacity-90 focus:z-10 focus:ring-2">
+                                Editer
+                            </a>
+                            <a href="{{ path('front_user_invoice_generate_pdf', {'id': invoice.id}) }}" class="px-4 py-2 text-sm font-medium text-white bg-secondary border-t border-b border-gray-200 hover:opacity-90 focus:z-10 focus:ring-2">
+                                generer le pdf
+                            </a>
+                             {{ include('Front/user/invoice/_delete_form.html.twig') }}
                         </div>
                         </td>
                     </tr>

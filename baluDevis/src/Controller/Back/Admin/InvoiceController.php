@@ -54,6 +54,23 @@ class InvoiceController extends AbstractController
         ]);
     }
 
+    #[Route('/{id}/edit', name: '_invoice_edit', methods: ['GET', 'POST'])]
+    public function edit(Request $request, Invoice $invoice, EntityManagerInterface $entityManager): Response
+    {
+        $form = $this->createForm(InvoiceType::class, $invoice);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->flush();
+
+            return $this->redirectToRoute('back_admin_user_invoice_index', [], Response::HTTP_SEE_OTHER);
+        }
+
+        return $this->render('Back/Admin/user/invoice/edit.html.twig', [
+            'invoice' => $invoice,
+            'form' => $form,
+        ]);
+    }
 
     #[Route('/{id}', name: '_invoice_delete', methods: ['POST'])]
     public function delete(Request $request, Invoice $invoice, EntityManagerInterface $entityManager): Response
