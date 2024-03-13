@@ -1,12 +1,12 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Uilisateur {% endblock %}
+{% block title %}Utilisateur {% endblock %}
 
 {% block body %}
  
     <div class="flex flex-col gap-7">
 		<div class="w-full flex items-center justify-between">
-			<h1 class="text-4xl text-secondary-500 font-extrabold">Tous les utilisateurs</h1>
+			<h1 class="text-4xl text-secondary-500 font-extrabold">Utilisateur</h1>
    
             </a>
 		</div>
@@ -22,27 +22,29 @@
             <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                 <thead class="text-xs text-gray-700 uppercase bg-white border-b">
                     <tr>
+                        <th scope="col" class="px-6 py-3 font-bold">id</th>
                         <th scope="col" class="px-6 py-3 font-bold">Email</th>
-                        <th scope="col" class="px-6 py-3 font-bold">Roles </th> 
                         <th scope="col" class="px-6 py-3 font-bold">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                 {% for user in users %}
                     <tr class="invoice-row bg-white border-b transition-opacity duration-300 ease-in-out">
-                        <th scope="row" class="px-6 py-4 font-medium text-secondary-900 whitespace-nowrap">{{ user.email }}</td>
+                        <th scope="row" class="px-6 py-4 font-medium text-secondary-900 whitespace-nowrap">{{ user.id}}</td>
+                        
+                        <td class="px-6 py-4 text-secondary-300">{{ user.email }}</td>
                         <td class="px-6 py-4 text-secondary-300 flex items-center gap-2">
                         <div class="inline-flex rounded-md shadow-sm items-center w-full h-full">
-                            <a href="{{ path('back_admin_user_show', {'id': user.id}) }}" aria-current="page" class="px-4 py-2 text-sm font-medium text-primary-700 bg-white border border-gray-200 rounded-s-lg hover:bg-gray-100 focus:z-10 focus:ring-2 ">
-                                Détails
+                            <a href="{{ path('back_admin_user_edit', {'id': user.id}) }}" class="px-4 py-2 text-sm font-medium text-white bg-secondary border-t border-b border-gray-200 hover:opacity-90 focus:z-10 focus:ring-2">
+                                Editer
                             </a>
-                             {{ include('Back/admin/user/edit.html.twig') }}
+                             {{ include('Back/admin/user/_delete_form.html.twig') }}
                         </div>
                         </td>
                     </tr>
                 {% else %}
                     <tr class="bg-white border-b">
-                        <td colspan="5">Pas d'utilisateurs.</td>
+                        <td colspan="5">Pas d'utilisateurs'.</td>
                     </tr>
                 {% endfor %}
                 </tbody>
