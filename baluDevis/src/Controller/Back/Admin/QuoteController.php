@@ -80,23 +80,6 @@ class QuoteController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/edit', name: '_quote_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Quote $quote, EntityManagerInterface $entityManager): Response
-    {
-        $form = $this->createForm(QuoteType::class, $quote);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->flush();
-
-            return $this->redirectToRoute('back_admin_user_quote_index', [], Response::HTTP_SEE_OTHER);
-        }
-
-        return $this->render('Back/admin/user/quote/edit.html.twig', [
-            'quote' => $quote,
-            'form' => $form,
-        ]);
-    }
 
     #[Route('/{id}', name: '_quote_delete', methods: ['POST'])]
     public function delete(Request $request, Quote $quote, EntityManagerInterface $entityManager): Response
