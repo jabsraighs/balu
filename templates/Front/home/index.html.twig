@@ -13,9 +13,9 @@
 
 		<div class="flex gap-3">
 			{% embed '_components/_card.html.twig' %}
-				{% block title %}Revenue
+				{% block title %}Revenue du mois
 				{% endblock %}
-				{% block total %}2500
+				{% block total %}{{ monthlyRevenue }}
 				{% endblock %}
 				{% block icon %}
 					<svg width="24" height="24" viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

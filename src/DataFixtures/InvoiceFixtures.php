@@ -25,11 +25,15 @@ class InvoiceFixtures extends Fixture implements DependentFixtureInterface {
         $clients = $manager->getRepository(Client::class)->findAll();
         $tva = [0,10,20];
 
-            for ($i = 0; $i < 100; $i++) {
+            for ($i = 0; $i < 1000; $i++) {
                 $quantity = $faker->numberBetween(1, 100);
-                $createdAt = $faker->dateTimeThisDecade();
                 $name = "Facture numero".$i ;
-                $expiredAt = $faker->dateTimeInInterval($createdAt, '+1 year');
+                $createdAt = $faker->dateTimeThisMonth(); // Default to today's date
+                if ($i % 2 == 0) {
+                    // Set createdAt to 1 month later for every other invoice
+                    $createdAt->modify('+1 month');
+                }
+                $expiredAt = $faker->dateTimeInInterval($createdAt, '+1 month');
                 $invoices = (new Invoice())
                     ->setQuote($quotes[array_rand($quotes)])
                     ->setName($name)

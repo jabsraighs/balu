@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Invoice;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -27,6 +28,28 @@ class InvoiceRepository extends ServiceEntityRepository
             ->setParameter('status', 'valider')
             ->getQuery()
             ->getResult();
+    }
+
+    public function getMonthlyRevenueByUser(User $user)
+    {
+        $currentMonth = date('m');
+        $currentYear = date('Y');
+        // Calculate the start and end date of the current month
+        $startDate = new \DateTime("$currentYear-$currentMonth-01");
+        $endDate = new \DateTime("$currentYear-$currentMonth-" . date('t', strtotime("$currentYear-$currentMonth")));
+
+        $result = $this->createQueryBuilder('i')
+            ->innerJoin('i.userInvoice','user')
+            ->select("SUM(i.totalAmount)")
+            ->where('user.id = :userId')
+            ->andWhere('i.createdAt BETWEEN :startDate AND :endDate')
+            ->setParameter('userId', $user->getId())
+            ->setParameter('startDate', $startDate)
+            ->setParameter('endDate', $endDate)
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        return $result;
     }
 
 //    /**

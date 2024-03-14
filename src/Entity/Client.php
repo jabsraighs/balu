@@ -42,6 +42,9 @@ class Client
     #[ORM\OneToMany(mappedBy: 'client', targetEntity: Invoice::class)]
     private Collection $invoices;
 
+    #[ORM\Column]
+    private ?\DateTimeImmutable $createdAt = null;
+
     public function __construct()
     {
         $this->quotes = new ArrayCollection();
@@ -181,6 +184,18 @@ class Client
                 $invoice->setClient(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTimeImmutable $createdAt): static
+    {
+        $this->createdAt = $createdAt;
 
         return $this;
     }

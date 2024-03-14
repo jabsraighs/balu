@@ -53,6 +53,7 @@ class ProductFixtures extends Fixture implements DependentFixtureInterface {
             $product->setPrice($faker->randomFloat(2, 10, 1000));
             $product->setCategory($categories[array_rand($categories)]);
             $product->setUser($users[array_rand($users)]);
+            $product->setUnit("h");
 
             $manager->persist($product);
         }

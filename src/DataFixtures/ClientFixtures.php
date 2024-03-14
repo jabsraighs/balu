@@ -15,14 +15,12 @@ class ClientFixtures extends Fixture implements DependentFixtureInterface {
 
     public function load(ObjectManager $manager): void
     {
-        // $product = new Product();
-        // $manager->persist($product);
         $faker = \Faker\Factory::create('fr-Fr'); // Fix the namespace here
-        //$date = new \DateTimeImmutable();
+        $date = new \DateTimeImmutable();
         $users = $manager->getRepository(User::class)->findAll();
         $object = (new Client())
             ->setEmail($faker->email())
-            //  ->setCreatedAt($date);
+            ->setCreatedAt($date)
             ->setFirstname($faker->firstName())
             ->setLastname($faker->lastName())
             ->setAddress($faker->address())
@@ -35,7 +33,7 @@ class ClientFixtures extends Fixture implements DependentFixtureInterface {
         for ($i = 0; $i < 100; $i++) {
             $object = (new Client())
             ->setEmail($faker->email())
-            //  ->setCreatedAt($date);
+            ->setCreatedAt($date)
             ->setFirstname($faker->firstName())
             ->setLastname($faker->lastName())
             ->setAddress($faker->address())

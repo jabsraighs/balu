@@ -30,7 +30,9 @@ class QuoteLineFixtures extends Fixture implements DependentFixtureInterface {
                     ->setQuote($quote[array_rand($quote)])
                     ->setQuantity($quantity)
                     ->setUnitPrice($unitPrice)
-                    ->setSubtotal($quantity * $unitPrice);
+                    ->setSubtotal($quantity * $unitPrice)
+                    ->setUnit("h");
+
             $manager->persist($quoteLines);
         }
         $manager->flush();

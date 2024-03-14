@@ -44,7 +44,7 @@ class UserFixtures extends Fixture {
             $manager->persist($object);
 
 
-        for ($i = 0; $i < 4; $i++) {
+        for ($i = 0; $i < 1; $i++) {
             $object = (new User())
                 ->setEmail($faker->email())
                 ->setRoles([])

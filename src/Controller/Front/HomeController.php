@@ -7,6 +7,7 @@ use App\Entity\UserInformation;
 use App\Form\CompanyType;
 use App\Form\UserInformationType;
 use App\Repository\UserRepository;
+use App\Service\CalculService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,9 +21,18 @@ class HomeController extends AbstractController
 {
     #[Route('/accueil', name: '_accueil', methods: ['GET'])]
     #[IsGranted("ROLE_USER")]
-    public function getAccueil(UserRepository $userRepository): Response
+    public function getAccueil(CalculService $calculService): Response
     {
-        return $this->render('Front/home/index.html.twig', []);
+        $monthlyRevenue = $calculService->monthlyRevenue();
+        $acceptedQuotes = $calculService->acceptedQuotes();
+        $conversionRate = $calculService->conversionRate();
+        $newClients = $calculService->newClients();
+        return $this->render('Front/home/index.html.twig', [
+            'monthlyRevenue' => $monthlyRevenue,
+            'acceptedQuotes' => $acceptedQuotes,
+            'conversionRate' => $conversionRate,
+            'newClients' => $newClients
+        ]);
     }
 
     #[Route('/onboarding', name: '_onboarding', methods: ['GET', 'POST'])]

@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Client;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -28,6 +29,22 @@ class ClientRepository extends ServiceEntityRepository
             ->setParameter('clientId', $clientId)
             ->getQuery()
             ->getResult();
+    }
+
+    public function getNewClientsByUser(User $user): array
+    {
+        $currentMonth = (new \DateTime())->format('Y-m');
+        $startDate = new \DateTime("$currentMonth-01 00:00:00");
+        $endDate = new \DateTime("$currentMonth-" . date('t', strtotime($currentMonth)) . " 23:59:59");
+
+        return $this->createQueryBuilder('c')
+            ->andWhere('c.userClient = :user')
+            ->andWhere('c.createdAt BETWEEN :startDate AND :endDate')
+            ->setParameter('user', $user)
+            ->setParameter('startDate', $startDate)
+            ->setParameter('endDate', $endDate)
+            ->getQuery()
+            ->getScalarResult();
     }
 
 //    /**

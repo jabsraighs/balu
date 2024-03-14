@@ -53,6 +53,23 @@ class QuoteRepository extends ServiceEntityRepository
         return $result;
     }
 
+    /**
+    * @return array Returns the number of validated quotes of the user
+    */
+    public function findQuotesAcceptedByUser(User $user): Array
+    {
+        $result = $this->createQueryBuilder('q')
+            ->andWhere('q.status = :status')
+            ->andWhere('q.userQuote = :user')
+            ->setParameter('status', 'valider')
+            ->setParameter('user', $user)
+            ->getQuery()
+            ->getScalarResult();
+
+        return $result;
+    }
+
+
 //    /**
 //     * @return Quote[] Returns an array of Quote objects
 //     */
