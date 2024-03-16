@@ -96,12 +96,12 @@ class CalculService {
         $totalInvoices = count($this->invoiceRepository->findBy(["userInvoice" => $user]));
 
         if ($totalQuotes > 0) {
-            $conversionRate = ($totalInvoices / $totalQuotes) * 100;
+            $conversionRate = $totalInvoices / $totalQuotes;
         } else {
             $conversionRate = 0;
         }
 
-        return $conversionRate;
+        return number_format($conversionRate, 1);
     }
 
     public function newClients()

@@ -4,59 +4,106 @@
 {% endblock %}
 
 {% block body %}
- {% if is_granted('ROLE_USER') and app.user.isVerified == true %}
-	<div class="flex flex-col gap-7">
-		<div>
-			<h1 class="text-4xl text-secondary-500 font-extrabold">Tableau de bord</h1>
-			<p class="text-xs text-gray-500"> Bienvenue sur votre tableau de bord </p>
-		</div>
+	{% if is_granted('ROLE_USER') and app.user.isVerified == true %}
+		<div class="flex flex-col gap-7">
+			<div>
+				<h1 class="text-4xl text-secondary-500 font-extrabold">Tableau de bord</h1>
+				<p class="text-xs text-gray-500">
+					Bienvenue sur votre tableau de bord
+				</p>
+			</div>
 
-		<div class="flex gap-3">
-			{% embed '_components/_card.html.twig' %}
-				{% block title %}Revenue du mois
-				{% endblock %}
-				{% block total %}{{ monthlyRevenue }}
-				{% endblock %}
-				{% block icon %}
-					<svg width="24" height="24" viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-						<path d="M2 12C2 7.28595 2 4.92893 3.46447 3.46447C4.92893 2 7.28595 2 12 2C16.714 2 19.0711 2 20.5355 3.46447C22 4.92893 22 7.28595 22 12C22 16.714 22 19.0711 20.5355 20.5355C19.0711 22 16.714 22 12 22C7.28595 22 4.92893 22 3.46447 20.5355C2 19.0711 2 16.714 2 12Z" stroke="#AAAAAA" stroke-width="2"/>
-						<path d="M7 18V9" stroke="#AAAAAA" stroke-width="2" stroke-linecap="round"/>
-						<path d="M12 18V6" stroke="#AAAAAA" stroke-width="2" stroke-linecap="round"/>
-						<path d="M17 18V13" stroke="#AAAAAA" stroke-width="2" stroke-linecap="round"/>
-					</svg>
-				{% endblock %}
-			{% endembed %}
+			<div class="grid grid-cols-1 gap-3 md:grid-cols-2 md:gap-6 2md:grid-cols-4 xl:gap-7.5">
+				{% embed '_components/_card.html.twig' %}
+					{% block title %}Revenue du mois
+					{% endblock %}
+					{% block total %}€
+						{{ monthlyRevenue }}
+					{% endblock %}
+					{% block icon %}
+						<svg width="32px" height="32px" viewbox="0 0 1024 1024" class="icon" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M951.87 253.86c0-82.18-110.05-144.14-256-144.14s-256 61.96-256 144.14c0 0.73 0.16 1.42 0.18 2.14h-0.18v109.71h73.14v-9.06c45.77 25.81 109.81 41.33 182.86 41.33 67.39 0 126.93-13.33 171.71-35.64 6.94 7.18 11.15 14.32 11.15 20.58 0 28.25-72.93 70.98-182.86 70.98h-73.12v73.14h73.12c67.4 0 126.96-13.33 171.74-35.65 6.95 7.17 11.11 14.31 11.11 20.6 0 28.27-72.93 71-182.86 71l-25.89 0.12c-15.91 0.14-31.32 0.29-46.34-0.11l-1.79 73.11c8.04 0.2 16.18 0.27 24.48 0.27 7.93 0 16-0.05 24.2-0.12l25.34-0.12c67.44 0 127.02-13.35 171.81-35.69 6.97 7.23 11.04 14.41 11.04 20.62 0 28.27-72.93 71-182.86 71h-73.12v73.14h73.12c67.44 0 127.01-13.35 171.81-35.69 6.98 7.22 11.05 14.4 11.05 20.62 0 28.27-72.93 71-182.86 71h-73.12v73.14h73.12c145.95 0 256-61.96 256-144.14 0-0.68-0.09-1.45-0.11-2.14h0.11V256h-0.18c0.03-0.72 0.2-1.42 0.2-2.14z m-438.86 0c0-28.27 72.93-71 182.86-71s182.86 42.73 182.86 71c0 28.25-72.93 70.98-182.86 70.98s-182.86-42.73-182.86-70.98z" fill="#0F1F3C"/><path d="M330.15 365.71c-145.95 0-256 61.96-256 144.14 0 0.73 0.16 1.42 0.18 2.14h-0.18v256c0 82.18 110.05 144.14 256 144.14s256-61.96 256-144.14V512h-0.18c0.02-0.72 0.18-1.42 0.18-2.14 0-82.18-110.05-144.15-256-144.15zM147.29 638.93c0-6.32 4.13-13.45 11.08-20.62 44.79 22.33 104.36 35.67 171.78 35.67 67.39 0 126.93-13.33 171.71-35.64 6.94 7.18 11.15 14.32 11.15 20.58 0 28.25-72.93 70.98-182.86 70.98s-182.86-42.72-182.86-70.97z m182.86-200.07c109.93 0 182.86 42.73 182.86 71 0 28.25-72.93 70.98-182.86 70.98s-182.86-42.73-182.86-70.98c0-28.27 72.93-71 182.86-71z m0 400.14c-109.93 0-182.86-42.73-182.86-71 0-6.29 4.17-13.43 11.11-20.6 44.79 22.32 104.34 35.66 171.75 35.66 67.4 0 126.96-13.33 171.74-35.65 6.95 7.17 11.11 14.31 11.11 20.6 0.01 28.26-72.92 70.99-182.85 70.99z" fill="#0F1F3C"/></svg>
+					{% endblock %}
+				{% endembed %}
+				{% embed '_components/_card.html.twig' %}
+					{% block title %}Devis acceptés
+					{% endblock %}
+					{% block total %}
+						{{ acceptedQuotes }}
+					{% endblock %}
+					{% block icon %}
+						<svg width="32px" height="32px" viewBox="0 0 1024 1024" class="icon"  version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M731.15 585.97c-100.99 0-182.86 81.87-182.86 182.86s81.87 182.86 182.86 182.86 182.86-81.87 182.86-182.86-81.87-182.86-182.86-182.86z m0 292.57c-60.5 0-109.71-49.22-109.71-109.71s49.22-109.71 109.71-109.71c60.5 0 109.71 49.22 109.71 109.71s-49.21 109.71-109.71 109.71z" fill="#0F1F3C" /><path d="M718.01 778.55l-42.56-38.12-36.6 40.86 84.02 75.26 102.98-118.46-41.4-36zM219.51 474.96h219.43v73.14H219.51z" fill="#0F1F3C" /><path d="M182.61 365.86h585.62v179.48h73.14V145.21c0-39.96-32.5-72.48-72.46-72.48h-27.36c-29.18 0-55.04 16.73-65.88 42.59-5.71 13.64-27.82 13.66-33.57-0.02-10.86-25.86-36.71-42.57-65.88-42.57h-18.16c-29.18 0-55.04 16.73-65.88 42.59-5.71 13.64-27.82 13.66-33.57-0.02-10.86-25.86-36.71-42.57-65.88-42.57H375.3c-29.18 0-55.04 16.73-65.88 42.59-5.71 13.64-27.82 13.66-33.57-0.02-10.86-25.86-36.71-42.57-65.88-42.57H182.4c-39.96 0-72.48 32.52-72.48 72.48v805.14h401.21v-73.14H183.04l-0.43-511.35z m25.81-222.29c14.25 34.09 47.32 56.11 84.23 56.11 36.89 0 69.96-22.02 82.66-53.8l15.86-2.3c14.25 34.09 47.32 56.11 84.23 56.11 36.89 0 69.96-22.02 82.66-53.8l16.59-2.3c14.25 34.09 47.32 56.11 84.23 56.11 36.89 0 69.96-22.02 82.66-53.8l26.68-0.66v147.5H182.54l-0.13-146.84 26.01-2.33z" fill="#0F1F3C" /></svg>
+					{% endblock %}
+				{% endembed %}
+				{% embed '_components/_card.html.twig' %}
+					{% block title %}Taux de conversion
+					{% endblock %}
+					{% block total %}%
+						{{ conversionRate }}
+					{% endblock %}
+					{% block icon %}
+						<svg width="32px" height="32px" viewbox="0 0 1024 1024" class="icon" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M914.29 219.43c0-80.66-65.62-146.29-146.29-146.29H274.29c-84.57 0-155.45 64.11-164.57 146.29v475.43h146.29v256h585.14V346.08c43.69-25.34 73.14-72.62 73.14-126.65z m-585.14 73.14c0-19.55 15.43-35.57 34.75-36.53a90.403 90.403 0 0 1-16.44 36.53h-18.31zM182.87 621.71v-384c0-50.41 41.02-91.43 91.43-91.43 30.46 0 57.48 14.97 74.1 37.94-52.3 8.33-92.39 53.74-92.39 108.34v329.15h-73.14z m585.14 256H329.15V365.72h438.86v511.99z m0-585.14H429.54c6.12-17.37 9.32-35.86 9.32-54.86 0-33.81-10.25-65.26-27.8-91.43H768c40.34 0 73.14 32.8 73.14 73.14s-32.79 73.15-73.13 73.15z" fill="#0F1F3C"/><path d="M416.392 762.75L635.83 449.3l44.933 31.456-219.438 313.45zM457.15 588.27c42.34 0 76.8-34.46 76.8-76.8s-34.46-76.8-76.8-76.8c-42.34 0-76.8 34.46-76.8 76.8s34.46 76.8 76.8 76.8z m0-109.72c18.14 0 32.91 14.77 32.91 32.91 0 18.14-14.77 32.91-32.91 32.91-18.14 0-32.91-14.77-32.91-32.91 0-18.14 14.77-32.91 32.91-32.91zM563.2 731.46c0 42.34 34.46 76.8 76.8 76.8s76.8-34.46 76.8-76.8-34.46-76.8-76.8-76.8-76.8 34.46-76.8 76.8z m109.72 0c0 18.14-14.77 32.91-32.91 32.91s-32.91-14.77-32.91-32.91c0-18.14 14.77-32.91 32.91-32.91s32.91 14.77 32.91 32.91z" fill="#0F1F3C"/></svg>
+					{% endblock %}
+				{% endembed %}
+				{% embed '_components/_card.html.twig' %}
+					{% block title %}Nouveaux clients
+					{% endblock %}
+					{% block total %}
+						{{ newClients }}
+					{% endblock %}
+					{% block icon %}
+						<svg xmlns="http://www.w3.org/2000/svg" width="32px" height="32px" viewbox="0 0 24 24" class="stroke-secondary-500" fill="none" stroke="#2A314B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+							<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+							<circle cx="9" cy="7" r="4"></circle>
+							<path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+							<path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+						</svg>
+					{% endblock %}
+				{% endembed %}
+			</div>
 		</div>
-	</div>
-  {% else %}
-  <div class="flex flex-col gap-7">
-		<div class="flex">
-			<p class="text-xs text-gray-500"> Bienvenue sur Vous devez verifier Votre compte afin de pouvoir accéder au site </p>
+	{% else %}
+		<div class="flex flex-col gap-7">
+			<div class="flex">
+				<p class="text-xs text-gray-500">
+					Bienvenue sur Vous devez verifier Votre compte afin de pouvoir accéder au site
+				</p>
 
 				<a href={{path("app_Resend_email")}} class="h-16 w-full flex items-center justify-center relative gap-4 cursor-pointer hover:opacity-70">
-						<div class="flex items-center gap-3 w-40">
+					<div class="flex items-center gap-3 w-40">
 
-							<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 568.557 568.557" xml:space="preserve" fill="#000000">
-							<g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-							<g id="SVGRepo_iconCarrier"> <rect x="28.822" y="161.736" style="fill:#333333;" width="511.424" height="350.56"></rect>
-							 <g> <g> <polygon style="fill:#FFFFFF;" points="284.262,388.521 3.782,217.112 16.278,196.616 284.198,360.361 552.118,195.368 564.71,215.8 "
-							 ></polygon> <rect x="-45.389" y="412.098" transform="matrix(-0.6225 0.7826 -0.7826 -0.6225 493.7142 610.0538)" style="fill:#FFFFFF;" width="290.236" height="24"></rect> <rect x="456.868" y="278.999" transform="matrix(-0.7829 0.6222 -0.6222 -0.7829 1099.8141 464.4384)" style="fill:#FFFFFF;" width="24.001" height="290.249"></rect> </g> 
-							 </g> <g> <rect x="276.246" y="110.008" style="fill:#0BA4E0;" width="16" height="161.6">
-							 </rect> <polygon style="fill:#0BA4E0;" points="349.078,116.424 284.246,23.352 219.414,116.424 "></polygon> </g> </g>
-							 </svg>
-							<p class="text-delete-500"> renvoie du lien de verification du compte </p>
-						</div>
+						<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewbox="0 0 568.557 568.557" xml:space="preserve" fill="#000000">
+							<g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+							<g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+							<g id="SVGRepo_iconCarrier">
+								<rect x="28.822" y="161.736" style="fill:#333333;" width="511.424" height="350.56"></rect>
+								<g>
+									<g>
+										<polygon style="fill:#FFFFFF;" points="284.262,388.521 3.782,217.112 16.278,196.616 284.198,360.361 552.118,195.368 564.71,215.8 "></polygon>
+										<rect x="-45.389" y="412.098" transform="matrix(-0.6225 0.7826 -0.7826 -0.6225 493.7142 610.0538)" style="fill:#FFFFFF;" width="290.236" height="24"></rect>
+										<rect x="456.868" y="278.999" transform="matrix(-0.7829 0.6222 -0.6222 -0.7829 1099.8141 464.4384)" style="fill:#FFFFFF;" width="24.001" height="290.249"></rect>
+									</g>
+								</g>
+								<g>
+									<rect x="276.246" y="110.008" style="fill:#0BA4E0;" width="16" height="161.6"></rect>
+									<polygon style="fill:#0BA4E0;" points="349.078,116.424 284.246,23.352 219.414,116.424 "></polygon>
+								</g>
+							</g>
+						</svg>
+						<p class="text-delete-500">
+							renvoie du lien de verification du compte
+						</p>
+					</div>
 				</a>
 				<a href={{path("app_logout")}} class="h-16 w-full flex items-center justify-center relative gap-4 cursor-pointer hover:opacity-70">
-						<div class="flex items-center gap-3 w-40">
+					<div class="flex items-center gap-3 w-40">
 
-							<svg width="24" height="25" viewbox="0 0 24 25" fill="none" class="text-delete-500" xmlns="http://www.w3.org/2000/svg">
-								<path d="M15 12.4998H2M2 12.4998L5.5 9.49976M2 12.4998L5.5 15.4998" stroke="#CD2020" stroke-opacity="0.8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-								<path d="M9.00195 7.49976C9.01406 5.32473 9.11051 4.14682 9.87889 3.37844C10.7576 2.49976 12.1718 2.49976 15.0002 2.49976H16.0002C18.8286 2.49976 20.2429 2.49976 21.1215 3.37844C22.0002 4.25712 22.0002 5.67133 22.0002 8.49976V16.4998C22.0002 19.3282 22.0002 20.7424 21.1215 21.6211C20.3531 22.3895 19.1752 22.486 17 22.4981M9.00195 17.4998C9.01406 19.6748 9.11051 20.8527 9.87889 21.6211C10.5202 22.2624 11.4467 22.4357 13 22.4825" stroke="#CD2020" stroke-opacity="0.8" stroke-width="2" stroke-linecap="round"/>
-							</svg>
-							<p class="text-delete-500">Se déconnecter</p>
-						</div>
-					</a>
-		</div>
-{%endif%}
-{% endblock %}
+						<svg width="24" height="25" viewbox="0 0 24 25" fill="none" class="text-delete-500" xmlns="http://www.w3.org/2000/svg">
+							<path d="M15 12.4998H2M2 12.4998L5.5 9.49976M2 12.4998L5.5 15.4998" stroke="#CD2020" stroke-opacity="0.8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+							<path d="M9.00195 7.49976C9.01406 5.32473 9.11051 4.14682 9.87889 3.37844C10.7576 2.49976 12.1718 2.49976 15.0002 2.49976H16.0002C18.8286 2.49976 20.2429 2.49976 21.1215 3.37844C22.0002 4.25712 22.0002 5.67133 22.0002 8.49976V16.4998C22.0002 19.3282 22.0002 20.7424 21.1215 21.6211C20.3531 22.3895 19.1752 22.486 17 22.4981M9.00195 17.4998C9.01406 19.6748 9.11051 20.8527 9.87889 21.6211C10.5202 22.2624 11.4467 22.4357 13 22.4825" stroke="#CD2020" stroke-opacity="0.8" stroke-width="2" stroke-linecap="round"/>
+						</svg>
+						<p class="text-delete-500">Se déconnecter</p>
+					</div>
+				</a>
+			</div>
+			{%endif%}
+		{% endblock %}

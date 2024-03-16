@@ -77,8 +77,11 @@ module.exports = {
 				sidebar: "300px",
 				"10p": "10%",
 			},
+			minWidth: {
+				card: "20.5rem"
+			},
 			height: {
-				card: "16.375rem",
+				card: "9.375rem",
 			},
 			borderColor: {
 				primaryLight: "rgba(72,123,209, 0.1)",
