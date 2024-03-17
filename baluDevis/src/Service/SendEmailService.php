@@ -4,9 +4,7 @@ namespace App\Service;
 
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Mailer\MailerInterface;
-use App\Enity\User;
 use App\Entity\User as EntityUser;
-
 use SymfonyCasts\Bundle\VerifyEmail\VerifyEmailHelperInterface;
 
 class SendEmailService {

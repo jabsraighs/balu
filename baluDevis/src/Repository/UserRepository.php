@@ -47,6 +47,14 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ->getQuery()
             ->getResult();
     }
+    public function findAllExceptAdmin()
+    {
+        return $this->createQueryBuilder('u')
+            ->andWhere('u.roles NOT LIKE :role')
+            ->setParameter('role', '%ROLE_ADMIN%')
+            ->getQuery()
+            ->getResult();
+    }
    
 //    /**
 //     * @return User[] Returns an array of User objects

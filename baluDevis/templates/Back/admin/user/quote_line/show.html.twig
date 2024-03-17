@@ -8,10 +8,6 @@
     <table class="table">
         <tbody>
             <tr>
-                <th>Id</th>
-                <td>{{ quote_line.id }}</td>
-            </tr>
-            <tr>
                 <th>Quantity</th>
                 <td>{{ quote_line.quantity }}</td>
             </tr>
@@ -26,9 +22,9 @@
         </tbody>
     </table>
 
-    <a href="{{ path('back_admin_user_quote_line_index') }}">back to list</a>
+    <a href="{{ path('front_user_quote_line_index') }}">back to list</a>
 
-    <a href="{{ path('back_admin_user_quote_line_edit', {'id': quote_line.id}) }}">edit</a>
+    <a href="{{ path('front_user_quote_line_edit', {'id': quote_line.id}) }}">edit</a>
 
-    {{ include('Back/admin/user/quote_line/_delete_form.html.twig') }}
+    {{ include('Front/user/quote_line/_delete_form.html.twig') }}
 {% endblock %}

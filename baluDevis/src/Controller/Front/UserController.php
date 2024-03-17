@@ -16,6 +16,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 #[Route('/user',name: '_user')]
+#[IsGranted('ROLE_USER')]
 class UserController extends AbstractController
 {
 
