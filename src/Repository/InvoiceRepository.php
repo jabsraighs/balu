@@ -43,13 +43,49 @@ class InvoiceRepository extends ServiceEntityRepository
             ->select("SUM(i.totalAmount)")
             ->where('user.id = :userId')
             ->andWhere('i.createdAt BETWEEN :startDate AND :endDate')
+            ->andWhere('i.paymentStatus = :status')
             ->setParameter('userId', $user->getId())
             ->setParameter('startDate', $startDate)
             ->setParameter('endDate', $endDate)
+            ->setParameter('status', "valider")
             ->getQuery()
             ->getSingleScalarResult();
 
         return $result;
+    }
+
+    public function getAnnualRevenueByUser(User $user): ?float
+    {
+        return $this->createQueryBuilder('i')
+            ->select('SUM(i.totalAmount)')
+            ->andWhere('i.userInvoice = :user')
+            ->andWhere('i.paymentStatus = :status')
+            ->setParameter('user', $user)
+            ->setParameter('status', 'valider')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    public function getEveryMonthlyRevenue(User $user): array
+    {
+        $result = $this->createQueryBuilder('i')
+            ->select('MONTH(i.createdAt) as month', 'SUM(i.totalAmount) as totalAmount')
+            ->andWhere('i.userInvoice = :user')
+            ->andWhere('i.paymentStatus = :status')
+            ->groupBy('month')
+            ->setParameter('user', $user)
+            ->setParameter('status', 'valider')
+            ->getQuery()
+            ->getResult();
+
+        $monthlyRevenue = [];
+        foreach ($result as $row) {
+            $month = $row['month'];
+            $totalAmount = $row['totalAmount'];
+            $monthlyRevenue[$month] = $totalAmount;
+        }
+
+        return $monthlyRevenue;
     }
 
 //    /**

@@ -3,11 +3,11 @@
 namespace App\EventSubscriber;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpKernel\Event\ControllerEvent;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class OnboardingRedirectSubscriber implements EventSubscriberInterface
 {
@@ -20,17 +20,8 @@ class OnboardingRedirectSubscriber implements EventSubscriberInterface
         $this->tokenStorage = $tokenStorage;
     }
 
-    public function onKernelController(ControllerEvent $event)
+    public function onKernelRequest(RequestEvent  $event)
     {
-        // Check if the controller is a Closure or an invokable object
-        $controller = $event->getController();
-        if (!\is_array($controller)) {
-            return;
-        }
-
-        if (!$event->isMainRequest()) {
-            return;
-        }
 
         $routeName = $event->getRequest()->attributes->get('_route');
 
@@ -40,9 +31,8 @@ class OnboardingRedirectSubscriber implements EventSubscriberInterface
             $user = $token->getUser();
             if ($user && empty($user->getUserInformation())) {
                 $url = $this->urlGenerator->generate('front_onboarding');
-                $event->setController(function () use ($url) {
-                    return new RedirectResponse($url);
-                });
+                $response = new RedirectResponse($url);
+                $event->setResponse($response);
             }
         }
     }
@@ -50,7 +40,7 @@ class OnboardingRedirectSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            KernelEvents::CONTROLLER => 'onKernelController',
+            KernelEvents::REQUEST => 'onKernelRequest',
         ];
     }
 }

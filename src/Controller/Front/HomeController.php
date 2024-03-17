@@ -27,11 +27,14 @@ class HomeController extends AbstractController
         $acceptedQuotes = $calculService->acceptedQuotes();
         $conversionRate = $calculService->conversionRate();
         $newClients = $calculService->newClients();
+        $annualAndMonthlyRevenue = $calculService->getAnnualAndMonthlyRevenue();
         return $this->render('Front/home/index.html.twig', [
             'monthlyRevenue' => $monthlyRevenue,
             'acceptedQuotes' => $acceptedQuotes,
             'conversionRate' => $conversionRate,
-            'newClients' => $newClients
+            'newClients' => $newClients,
+            'annualRevenue' => $annualAndMonthlyRevenue["annualRevenue"],
+            'revenuePerMonth' => $annualAndMonthlyRevenue["revenuePerMonth"],
         ]);
     }
 
@@ -41,8 +44,7 @@ class HomeController extends AbstractController
     {
         
         $userInformation = $this->getUser()->getUserInformation() ?? new UserInformation();
-
-        if(!empty($userInformation)) {
+        if($userInformation->getFirstname() !== null) {
             return $this->redirectToRoute('front_accueil', [], Response::HTTP_SEE_OTHER);
         }
         

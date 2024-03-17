@@ -9,8 +9,7 @@ use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
-
-
+use Faker\Factory;
 
 class InvoiceFixtures extends Fixture implements DependentFixtureInterface {
 
@@ -18,23 +17,23 @@ class InvoiceFixtures extends Fixture implements DependentFixtureInterface {
 
     public function load(ObjectManager $manager): void
     {
-        $faker = \Faker\Factory::create('fr-Fr'); // Fix the namespace here
+        $faker = Factory::create('fr_FR');
         $status = ["valider", "en cours", "refuser"];
         $quotes = $manager->getRepository(Quote::class)->findValidQuotes();
         $users = $manager->getRepository(User::class)->findAll();
         $clients = $manager->getRepository(Client::class)->findAll();
-        $tva = [0,10,20];
+        $tva = [0, 10, 20];
 
-            for ($i = 0; $i < 1000; $i++) {
+        for ($month = 1; $month <= 12; $month++) {
+            for ($i = 0; $i < 200; $i++) {
                 $quantity = $faker->numberBetween(1, 100);
-                $name = "Facture numero".$i ;
-                $createdAt = $faker->dateTimeThisMonth(); // Default to today's date
+                $name = "Facture numéro " . ($i + 1);
+                $createdAt = $faker->dateTimeThisMonth()->setDate(date('Y'), $month, 1);
                 if ($i % 2 == 0) {
-                    // Set createdAt to 1 month later for every other invoice
                     $createdAt->modify('+1 month');
                 }
                 $expiredAt = $faker->dateTimeInInterval($createdAt, '+1 month');
-                $invoices = (new Invoice())
+                $invoice = (new Invoice())
                     ->setQuote($quotes[array_rand($quotes)])
                     ->setName($name)
                     ->setUserInvoice($users[array_rand($users)])
@@ -43,17 +42,15 @@ class InvoiceFixtures extends Fixture implements DependentFixtureInterface {
                     ->setTotalAmount($quantity)
                     ->setClient($clients[array_rand($clients)])
                     ->setTva($tva[array_rand($tva)])
-                    ->setTotalTva($faker->randomFloat(2,0,1000))
-           
+                    ->setTotalTva($faker->randomFloat(2, 0, 1000))
                     ->setPaymentStatus($status[array_rand($status)]);
-                   
-           
 
-
-                $manager->persist($invoices);
+                $manager->persist($invoice);
             }
-        $manager->flush();
         }
+
+        $manager->flush();
+    }
 
     public function getDependencies()
     {

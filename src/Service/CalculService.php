@@ -78,7 +78,7 @@ class CalculService {
         $user = $this->security->getUser();
         $monthlyRevenue = $this->invoiceRepository->getMonthlyRevenueByUser($user);
 
-        return $monthlyRevenue;
+        return $monthlyRevenue ?? 0;
     }
 
     public function acceptedQuotes(): float
@@ -110,5 +110,14 @@ class CalculService {
         $newClients = $this->clientRepository->getNewClientsByUser($user);
 
         return count($newClients);
+    }
+
+    public function getAnnualAndMonthlyRevenue()
+    {
+        $user = $this->security->getUser();
+        $annualRevenue = $this->invoiceRepository->getAnnualRevenueByUser($user);
+        $revenuePerMonth = $this->invoiceRepository->getEveryMonthlyRevenue($user);
+
+        return ['annualRevenue' => $annualRevenue, 'revenuePerMonth' => $revenuePerMonth];
     }
 }

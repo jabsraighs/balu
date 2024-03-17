@@ -82,6 +82,7 @@ module.exports = {
 			},
 			height: {
 				card: "9.375rem",
+				chart: "250px",
 			},
 			borderColor: {
 				primaryLight: "rgba(72,123,209, 0.1)",
