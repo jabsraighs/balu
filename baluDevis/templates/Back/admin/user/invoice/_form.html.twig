@@ -1,3 +1,93 @@
-{{ form_start(form) }}
-    {{ form_widget(form) }}
-{{ form_end(form) }}
+<div class="flex items-center justify-center">
+	<div class="bg-white border border-primaryLight mt-4 px-8 py-4 rounded-3xl w-full max-w-lg">
+		{{ form_start(form, {"attr": {"class": "flex-1 flex flex-col items-center justify-center gap-4"}}) }}
+		<div class="flex flex-col gap-2 w-full">
+			<div class="flex flex-col gap-1 w-full">
+				<div class="relative">
+					{{ form_label(form.dueDate, "description") }}
+				</div>
+
+				{{ form_widget(form.dueDate, {"attr": {"class": "pl-2 rounded-md w-full border-primary-500"}}) }}
+			</div>
+			<div class="flex flex-col gap-1 w-full">
+				<div class="relative">
+					{{ form_label(form.paymentStatus, "Status du Paiement") }}
+				</div>
+
+				{{ form_widget(form.paymentStatus, {"attr": {"class": "pl-2 rounded-md w-full border-primary-500"}}) }}
+			</div>
+
+			<div class="flex flex-col gap-1 w-full">
+				<div class="relative">
+					{{ form_label(form.tva, "Taux de Tva") }}
+				</div>
+
+				{{ form_widget(form.tva, {"attr": {"class": "pl-2 rounded-md w-full border-primary-500"}}) }}
+			</div>
+             <div class="flex flex-col gap-1 w-full">
+				<div class="relative">
+					{{ form_label(form.client, "Client") }}
+				</div>
+
+				{{ form_widget(form.client, {"attr": {"class": "pl-2 rounded-md w-full border-primary-500"}}) }}
+			</div>
+            <div class="flex flex-col gap-1 w-full">
+				<div class="relative"  id="quoteItem" data-prototype="{{form_row(form.quoteLines.vars.prototype)|e('html_attr')}}">
+					{{ form_label(form.quoteLines, "Service") }}
+                    <span></span>
+				</div>
+
+				{{ form_widget(form.quoteLines, {"attr": {"class": "pl-2 rounded-md w-full border-primary-500"}}) }}
+			</div>
+		</div>
+
+		<button class="py-2 px-8 flex items-center justify-center bg-primary-500 rounded-md mt-8 text-white shadow-md font-bold" type="submit">{{ button_label|default('Créer') }}</button>
+		{{ form_end(form) }}
+	</div>
+</div>
+
+
+{% block javascripts %}
+    <script>
+    // Add new quote line form on button click
+    let collection , buttonAdd , span
+    window.onload = () => {
+        collection = document.querySelector("#quoteItem");
+        span = collection.querySelector("span");
+        
+        buttonAdd = document.createElement("button");
+        buttonAdd.className = "add-quoteLine btn ";
+        buttonAdd.innerText = "Ajouter un service" ;
+
+        let newButton = span.append(buttonAdd);
+        collection.dataset.index = collection.querySelectorAll("input").length;
+
+
+        buttonAdd.addEventListener("click" , function() {
+            addButton(collection, newButton);
+        })
+    }
+    
+    function addButton(collection , newButton) {
+        let prototype = collection.dataset.prototype;
+        let index = collection.dataset.index;
+        prototype = prototype.replace(/__name__/g, index);
+        let content = document.createElement("html");
+        content.innerHTML = prototype;
+        let newForm = content.querySelector("div");
+        let deleteButton = document.createElement("button");
+        deleteButton.type = "button";
+        deleteButton.className =  "supp-quoteLine btn red secondary" ; 
+        deleteButton.id = "delete-quote-item" + index;
+        deleteButton.innerText = "Suprrimer un Service" ;
+        newForm.append(deleteButton);
+        collection.dataset.index++;
+        let buttoAdd = collection.querySelector(".add-quoteLine btn secondary");
+        span.insertBefore(newForm,buttonAdd);
+
+        deleteButton.addEventListener("click",function() {
+            this.previousElementSibling.parentElement.remove();
+        })
+    }
+</script>
+{% endblock %}

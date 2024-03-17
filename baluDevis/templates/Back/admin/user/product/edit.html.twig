@@ -1,10 +1,10 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Modifier Utilisateur{{user.id}}{% endblock %}
+{% block title %}Modifier {{product.name}}{% endblock %}
 
 {% block body %}
 	<div class="flex gap-2 items-center">
-		<a href="{{ path('back_admin_user_index') }}">
+		<a href="{{ path('back_admin_user_product_index') }}">
 			<svg height="35px" width="35px" version="1.1" class="fill-secondary-500 hover:opacity-60 transition-opacity" id="_x32_" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewbox="0 0 512 512" xml:space="preserve">
 				<g>
 					<path class="st0" d="M154.52,265.848l90.964,69.014c2.329,1.766,4.674,2.702,6.78,2.702c2.148,0,4.022-0.974,5.276-2.741
@@ -19,11 +19,11 @@
 			</svg>
 		</a>
 		{% embed '_components/_page_title.html.twig' %}
-			{% block title %}Modifier l'utilisateur
+			{% block title %}Modifier le produit
 			{% endblock %}
 		{% endembed %}
 	</div>
 
-    {{ include('Back/admin/user/_form.html.twig', {'button_label': 'Mettre à jour'}) }}
+    {{ include('Back/admin/user/product/_form.html.twig', {'button_label': 'Mettre à jour'}) }}
 
 {% endblock %}

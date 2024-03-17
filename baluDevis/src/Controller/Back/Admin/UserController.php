@@ -23,7 +23,7 @@ class UserController extends AbstractController
     public function index(UserRepository $userRepository): Response
     {
         return $this->render('Back/admin/user/index.html.twig', [
-            'users' => $userRepository->findAll(),
+            'users' => $userRepository->findAllExceptAdmin(),
         ]);
     }
 // pas sur que c'est necessaire  cette route
@@ -74,7 +74,7 @@ class UserController extends AbstractController
         ]);
     }
     #[isGranted("ROLE_ADMIN")]
-    #[Route('/{id}/edit', name: '_update', methods: ['GET', 'POST'])]
+    #[Route('/{id}/edit', name: '_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, User $user, EntityManagerInterface $entityManager): Response
     {
         $form = $this->createForm(UserType::class, $user);

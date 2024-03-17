@@ -1,11 +1,62 @@
-{% extends 'base.html.twig' %}
+{% block titile %} Creer_devis {% endblock %}
+{% block body%}
+        {{ form_start(form) }}
+            {{ form_row(form.dueDate) }}
+            {{ form_row(form.paymentStatus) }}
+            {{ form_row(form.tva) }}
+            {{ form_row(form.client) }}
+         
 
-{% block title %}New Invoice{% endblock %}
+            {# Render other fields if any #}
+            <div id="quoteItem" data-prototype="{{form_row(form.quoteLines.vars.prototype)|e('html_attr')}}">
+                 {{ form_row(form.quoteLines) }}
+                <span></span>
+            </div>
+        <button type> Create Invoice </button>
+        {{ form_end(form) }}
+{%endblock %}
 
-{% block body %}
-    <h1>Create new Invoice</h1>
+{% block javascripts %}
+    <script>
+    // Add new quote line form on button click
+    let collection , buttonAdd , span
+    window.onload = () => {
+        collection = document.querySelector("#quoteItem");
+        span = collection.querySelector("span");
+        
+        buttonAdd = document.createElement("button");
+        buttonAdd.className = "add-quoteLine btn ";
+        buttonAdd.innerText = "add quote item" ;
 
-    {{ include('Back/admin/user/invoice/_form.html.twig') }}
+        let newButton = span.append(buttonAdd);
+        collection.dataset.index = collection.querySelectorAll("input").length;
 
-    <a href="{{ path('back_admin_user_invoice_index') }}">back to list</a>
+
+        buttonAdd.addEventListener("click" , function() {
+            addButton(collection, newButton);
+        })
+    }
+    
+    function addButton(collection , newButton) {
+        let prototype = collection.dataset.prototype;
+        let index = collection.dataset.index;
+        prototype = prototype.replace(/__name__/g, index);
+        let content = document.createElement("html");
+        content.innerHTML = prototype;
+        let newForm = content.querySelector("div");
+        let deleteButton = document.createElement("button");
+        deleteButton.type = "button";
+        deleteButton.className =  "supp-quoteLine btn red secondary" ; 
+        deleteButton.id = "delete-quote-item" + index;
+        deleteButton.innerText = "delete quote item" ;
+        newForm.append(deleteButton);
+        collection.dataset.index++;
+        let buttoAdd = collection.querySelector(".add-quoteLine btn secondary");
+        span.insertBefore(newForm,buttonAdd);
+
+        deleteButton.addEventListener("click",function() {
+            this.previousElementSibling.parentElement.remove();
+        })
+    }
+</script>
 {% endblock %}
