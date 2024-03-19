@@ -26,6 +26,7 @@ Encore
     .addEntry('onboarding', './assets/onboarding.js')
     .addEntry('register', './assets/register.js')
     .addEntry('invoice', './assets/invoice.js')
+    .addEntry('client_show', './assets/clientShow.js')
     .addEntry('quote', './assets/quote.js')
 
 

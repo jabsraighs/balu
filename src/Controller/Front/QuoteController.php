@@ -63,6 +63,11 @@ class QuoteController extends AbstractController
         $user = $this->getUser();
         // Récupérer les clients de l'utilisateur
         $clients = $clientRepository->findBy(['userClient' => $user]);
+        $clientId = $request->query->get('client_id');
+        if($clientId !== null) {
+            $client = $clientRepository->find($clientId);
+            $quote->setClient($client);
+        }
         // Créer le formulaire et transmettre les clients
 
         $form = $this->createForm(QuoteType::class,$quote, ['clients' => $clients]);

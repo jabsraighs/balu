@@ -1,0 +1,38 @@
+{% macro renderTable(items, headerRows, keys, emptyText) %}
+	<div class="relative overflow-x-auto rounded-3xl border  border-primaryLight shadow-sm">
+		<table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+			<thead class="text-xs text-gray-700 uppercase bg-white border-b">
+				{% for headerRow in headerRows %}
+					<tr>
+						{% for column in headerRow %}
+							<th scope="col" class="px-6 py-3 font-bold">{{ column }}</th>
+						{% endfor %}
+					</tr>
+				{% endfor %}
+			</thead>
+			<tbody>
+				{% if items|length > 0 %}
+					{% for item in items %}
+						<tr class="product-row bg-white border-b transition-opacity duration-300 ease-in-out">
+							{% for key in keys %}
+								{% if loop.first %}
+									<th scope="row" class="px-6 py-4 font-medium text-secondary-900 whitespace-nowrap">{{  attribute(item, key)  }}</th>
+								{% else %}
+                                    {% if attribute(item, key).timestamp is defined %}
+									    <td class="px-6 py-4 text-secondary-300">{{ attribute(item, key)|date('Y-m-d') }}</td>
+                                    {% else %}
+									    <td class="px-6 py-4 text-secondary-300">{{ attribute(item, key) }}</td>
+                                    {% endif %}
+								{% endif %}
+							{% endfor %}
+						</tr>
+					{% else %}
+						<tr class="bg-white border-b">
+							<td colspan="{{ headerRows|length }}">{{emptyText}}</td>
+						</tr>
+					{% endfor %}
+				{% endif %}
+			</tbody>
+		</table>
+	</div>
+{% endmacro %}
