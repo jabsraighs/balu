@@ -37,6 +37,7 @@ class ClientController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $client = $client->setUserClient($user);
+            $client->setCreatedAt(new \DateTimeImmutable());
             $entityManager->persist($client);
             $entityManager->flush();
 
