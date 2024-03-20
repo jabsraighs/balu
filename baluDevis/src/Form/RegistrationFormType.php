@@ -4,7 +4,9 @@ namespace App\Form;
 
 use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
@@ -26,7 +28,16 @@ class RegistrationFormType extends AbstractType
                 'attr' => ["id" => "email", "placeholder" => "votremail@example.com"],
                 "label_attr" => ["class" => "font-bold text-primary-500"],
             ])
-                ->add('plainPassword', RepeatedType::class, [
+            ->add('roles',ChoiceType::class, [
+                'label' => "Type d'Entreprise",
+                'choices' => array([
+                    "Entreprise" =>  "ROLE_ENTREPRISE" ,
+                    "Freelance" => "ROLE_AUTO_ENTREPRENEUR"
+                ]),
+                'multiple' => false,
+                'expanded' => true,
+            ])
+            ->add('plainPassword', RepeatedType::class, [
                     // instead of being set onto the object directly,
                     // this is read and encoded in the controller
                     'mapped' => false,
@@ -62,6 +73,17 @@ class RegistrationFormType extends AbstractType
                     ]),
                 ],
             ]) ;
+            $builder->get('roles')
+        ->addModelTransformer(new CallbackTransformer(
+            function ($rolesArray) {
+                // transform the array to a string
+                return count($rolesArray)? $rolesArray[0]: null;
+            },
+            function ($rolesString) {
+                // transform the string back to an array
+                return [$rolesString];
+            }
+        ));
     }
 
     public function configureOptions(OptionsResolver $resolver): void

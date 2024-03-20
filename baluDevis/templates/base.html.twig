@@ -140,10 +140,16 @@
 				<header class="w-full bg-white h-14 relative z-0 flex flex-row-reverse justify-between items-center">
 					<div class="flex gap-4 items-center flex-row-reverse">
 						<div class="mr-8 flex items-center gap-3">
+						{% if (is_granted('ROLE_USER') or is_granted('ROLE_ADMIN')) and app.user.isVerified == true  %}
 							<div class="flex items-baseline h-full justify-center flex-col gap-0">
-								<p>Jean Arthur</p>
+								<p class="text-xs text-gray-500"> {{ app.user.entreprise.email }}</p>
 								<p class="text-xs text-gray-500">{{ app.user.email }}</p>
 							</div>
+						{% else %}
+						<div class="flex items-baseline h-full justify-center flex-col gap-0">
+								<p class="text-xs text-gray-500">{{ app.user.email }}</p>
+							</div>
+						{% endif%}
 						</div>
 						<svg width="24" height="24" viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
 							<path d="M18.7491 9.70957V9.00497C18.7491 5.13623 15.7274 2 12 2C8.27256 2 5.25087 5.13623 5.25087 9.00497V9.70957C5.25087 10.5552 5.00972 11.3818 4.5578 12.0854L3.45036 13.8095C2.43882 15.3843 3.21105 17.5249 4.97036 18.0229C9.57274 19.3257 14.4273 19.3257 19.0296 18.0229C20.789 17.5249 21.5612 15.3843 20.5496 13.8095L19.4422 12.0854C18.9903 11.3818 18.7491 10.5552 18.7491 9.70957Z" stroke="#AAAAAA" stroke-width="2"/>
@@ -158,6 +164,7 @@
 						</svg>
 					</div>
 				</header>
+			
 			{%endif %}
 			<div class="h-full w-full {{ currentRoute not in notLoggedPaths ? '2md:pl-side' : '' }}">
 				<div class="w-full h-full {{ currentRoute not in notLoggedPaths ? 'p-8 pt-10 2md:p-10' : '' }}"> {% block body %}{% endblock %}

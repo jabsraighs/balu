@@ -39,10 +39,13 @@ security:
         - { path: ^/register, roles: PUBLIC_ACCESS }
         - { path: ^/reset-password, roles: ROLE_ADMIN }
         - { path: ^/accueil, roles: ROLE_USER}
-        
+
 
     role_hierarchy:
-        # ROLE_MODERATOR: ROLE_USER
+        ROLE_AUTO_ENTREPENEUR: ROLE_USER
+        ROLE_MODERATOR: ROLE_USER
+        ROLE_COMPTABLE: ROLE_USER
+        ROLE_ENTREPRISE: ROLE_USER
         ROLE_ADMIN: ROLE_MODERATOR
 
 when@test:
