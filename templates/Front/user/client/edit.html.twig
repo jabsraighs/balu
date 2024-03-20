@@ -1,13 +1,31 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Edit Client{% endblock %}
+{% block title %}Edit
+{% endblock %}
 
 {% block body %}
-    <h1>Edit Client</h1>
+	<div class="mx-auto max-w-screen-2xl p-4 md:p-6 2xl:p-10">
+		<div class="mx-auto">
+			<div class="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+				<h1 class="text-3xl text-secondary-500 font-extrabold">
+					Client
+				</h1>
 
-    {{ include('Front/user/client/_form.html.twig', {'button_label': 'Update'}) }}
+				<nav>
+					<ol class="flex items-center gap-2">
+						<li>
+							<a class="font-medium text-secondary-200" href="{{ path('front_accueil' ) }}">Tableau de bord /</a>
+						</li>
+						<li>
+							<a class="font-medium text-secondary-200" href="{{ path('front_user_client_index' ) }}">Clients /</a>
+						</li>
+						<li class="text-primary-500">Editer client</li>
+					</ol>
+				</nav>
+			</div>
 
-    <a href="{{ path('front_user_client_index') }}"> back to list </a>
+	        {{ include('Front/user/client/_form.html.twig', {'button_label': 'Mettre à jour'}) }}
+		</div>
+	</div>
 
-    {{ include('Front/user/client/_delete_form.html.twig') }}
 {% endblock %}
