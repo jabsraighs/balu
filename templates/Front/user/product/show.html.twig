@@ -1,32 +1,74 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Produit{% endblock %}
+{% block title %}Produit
+{% endblock %}
 
 {% block body %}
-    <h1>Produit</h1>
+	<div class="mx-auto max-w-screen-2xl p-4 md:p-6 2xl:p-10">
+		<div class="mx-auto">
+			<div class="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+				<h1 class="text-3xl text-secondary-500 font-extrabold">
+					Produit
+				</h1>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ product.id }}</td>
-            </tr>
-            <tr>
-                <th>Name</th>
-                <td>{{ product.name }}</td>
-            </tr>
-            <tr>
-                <th>Description</th>
-                <td>{{ product.description }}</td>
-            </tr>
-            <tr>
-                <th>Price</th>
-                <td>{{ product.price }}</td>
-            </tr>
-        </tbody>
-    </table>
+				<nav>
+					<ol class="flex items-center gap-2">
+						<li>
+							<a class="font-medium text-secondary-200" href="{{ path('front_accueil' ) }}">Tableau de bord /</a>
+						</li>
+						<li>
+							<a class="font-medium text-secondary-200" href="{{ path('front_user_product_index' ) }}">Produits /</a>
+						</li>
+						<li class="text-primary-500">Produit</li>
+					</ol>
+				</nav>
+			</div>
 
-    <a href="{{ path('front_user_product_edit', {'id': product.id}) }}">Editer</a>
+			<div class="overflow-hidden rounded-lg border border-stroke bg-white shadow-default p-4">
+				<ul class="flex flex-col gap-1 md:flex-row md:justify-end md:gap-2">
+					<li class="text-primary-400 hover:opacity-80 transition-opacity ease-in-out">
+						<a href="{{path('front_user_product_edit', {id: product.id})}}">Modifier</a>
+					</li>
+					<li class="text-primary-400 hover:opacity-80 transition-opacity ease-in-out">
+                    <form method="post" action="{{ path('front_user_product_delete', {'id': product.id}) }}" onsubmit="return confirm('Voulez vous vraiment supprimer ce produit ?');">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ product.id) }}">
+                        <button>Supprimer</button>
+                    </form>
+					</li>
+				</ul>
 
-    {{ include('Front/user/product/_delete_form.html.twig') }}
+				<hr class="h-px my-3 bg-gray-200 border-0">
+
+				<div class="flex flex-col gap-2 mt-4">
+					<h2 class="text-xl text-secondary-600 font-bold mb-4">
+						{{product.name}}</h2>
+
+					<p class="text-lg text-secondary-400 font-semibold">Informations
+					</p>
+					<div class="flex flex-col gap-3 text-sm mt-4" data-tab="info">
+						<div class="flex flex-col gap-1">
+							<p class="text-secondary-300">Description du produit:
+							</p>
+							<p>{{product.description}}</p>
+						</div>
+						<div class="flex flex-col gap-1">
+							<p class="text-secondary-300">Prix:
+							</p>
+							<p>{{product.price}}</p>
+						</div>
+						<div class="flex flex-col gap-1">
+							<p class="text-secondary-300">Unité:
+							</p>
+							<p>{{product.unit}}</p>
+						</div>
+						<div class="flex flex-col gap-1">
+							<p class="text-secondary-300">Catégorie:
+							</p>
+							<p>{{product.category}}</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 {% endblock %}

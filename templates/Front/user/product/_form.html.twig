@@ -1,5 +1,5 @@
 <div class="flex items-center justify-center">
-	<div class="bg-white border border-primaryLight mt-4 px-8 py-4 rounded-3xl w-full max-w-lg">
+	<div class="overflow-hidden rounded-lg border border-stroke bg-white shadow-default p-4 w-full">
 		{{ form_start(form, {"attr": {"class": "flex-1 flex flex-col items-center justify-center gap-4"}}) }}
 		{% do form.user.setRendered %}
 		<div class="flex flex-col gap-2 w-full">
@@ -25,6 +25,14 @@
 				</div>
 
 				{{ form_widget(form.price, {"attr": {"class": "pl-2 rounded-md w-full border-primary-500"}}) }}
+			</div>
+
+			<div class="flex flex-col gap-1 w-full">
+				<div class="relative">
+					{{ form_label(form.unit, "Unité") }}
+				</div>
+
+				{{ form_widget(form.unit, {"attr": {"class": "pl-2 rounded-md w-full border-primary-500"}}) }}
 			</div>
 
 			<div class="flex flex-col gap-1 w-full">

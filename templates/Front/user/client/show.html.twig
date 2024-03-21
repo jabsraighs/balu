@@ -82,36 +82,36 @@
 						<li class="me-2 cursor-pointer">
 							<p aria-current="page" data-tabtitle="info" class="inline-block p-4 text-white bg-secondary rounded-t-lg transition-colors ease-in">Info</p>
 						</li>
-					</a>
-				</li>
-				<li class="me-2 cursor-pointer">
-					<p data-tabtitle="invoices" class="inline-block p-4 rounded-t-lg hover:text-gray-600 hover:bg-gray-50 transition-colors ease-in">Factures</p>
-				</li>
-			</a>
-		</li>
-		<li class="me-2 cursor-pointer">
-			<p class="inline-block p-4 rounded-t-lg hover:text-gray-600 hover:bg-gray-50 transition-colors ease-in" data-tabtitle="quotes">Devis</p>
-		</li>
-	</a>
-</li></ul><div class="flex flex-col gap-1 text-sm mt-4" data-tab="info">
-<div class="flex flex-col gap-1">
-	<p class="text-secondary-300">Adresse de facturation:
-	</p>
-	<p>{{client.address}}</p>
-</div>
-<div class="flex flex-col gap-1">
-	<p class="text-secondary-300">E-mail:
-	</p>
-	<p>{{client.email}}</p>
-</div>
-<div class="flex flex-col gap-1">
-	<p class="text-secondary-300">Numéro de téléphone:
-	</p>
-	<p>{{client.phone}}</p>
-</div></div><div class="flex-col gap-1 text-sm mt-4 hidden" data-tab="invoices">
-{{ table.renderTable(client.invoices, headerRows, keys, "Pas de factures.") }}</div><div class="flex-col gap-1 text-sm mt-4 hidden" data-tab="quotes">
-{{ table.renderTable(client.quotes, headerRowsQuotes, keysQuotes, "Pas de devis.") }}</div></div></div></div></div>{# <a href="{{ path('front_user_client_index') }}">back to list</a>
-							
-							    <a href="{{ path('front_user_client_edit', {'id': client.id}) }}">edit</a>
-							
-							    {{ include('Front/user/client/_delete_form.html.twig') }} #}{% endblock %}
+						<li class="me-2 cursor-pointer">
+							<p data-tabtitle="invoices" class="inline-block p-4 rounded-t-lg hover:text-gray-600 hover:bg-gray-50 transition-colors ease-in">Factures</p>
+						</li>
+						<li class="me-2 cursor-pointer">
+							<p class="inline-block p-4 rounded-t-lg hover:text-gray-600 hover:bg-gray-50 transition-colors ease-in" data-tabtitle="quotes">Devis</p>
+						</li>
+					</ul>
+					<div class="flex flex-col gap-1 text-sm mt-4" data-tab="info">
+						<div class="flex flex-col gap-1">
+							<p class="text-secondary-300">Adresse de facturation:
+							</p>
+							<p>{{client.address}}</p>
+						</div>
+						<div class="flex flex-col gap-1">
+							<p class="text-secondary-300">E-mail:
+							</p>
+							<p>{{client.email}}</p>
+						</div>
+						<div class="flex flex-col gap-1">
+							<p class="text-secondary-300">Numéro de téléphone:
+							</p>
+							<p>{{client.phone}}</p>
+						</div>
+					</div>
+					<div class="flex-col gap-1 text-sm mt-4 hidden" data-tab="invoices">
+						{{ table.renderTable(client.invoices, headerRows, keys, "Pas de factures.") }}</div>
+					<div class="flex-col gap-1 text-sm mt-4 hidden" data-tab="quotes">
+						{{ table.renderTable(client.quotes, headerRowsQuotes, keysQuotes, "Pas de devis.") }}</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}
