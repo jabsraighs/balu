@@ -30,10 +30,10 @@ class RegistrationFormType extends AbstractType
             ])
             ->add('roles',ChoiceType::class, [
                 'label' => "Type d'Entreprise",
-                'choices' => array([
+                'choices' => [
                     "Entreprise" =>  "ROLE_ENTREPRISE" ,
                     "Freelance" => "ROLE_AUTO_ENTREPRENEUR"
-                ]),
+                ],
                 'multiple' => false,
                 'expanded' => true,
             ])
@@ -73,7 +73,7 @@ class RegistrationFormType extends AbstractType
                     ]),
                 ],
             ]) ;
-            $builder->get('roles')
+        $builder->get('roles')
         ->addModelTransformer(new CallbackTransformer(
             function ($rolesArray) {
                 // transform the array to a string

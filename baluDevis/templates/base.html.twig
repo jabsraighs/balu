@@ -140,7 +140,11 @@
 				<header class="w-full bg-white h-14 relative z-0 flex flex-row-reverse justify-between items-center">
 					<div class="flex gap-4 items-center flex-row-reverse">
 						<div class="mr-8 flex items-center gap-3">
-						{% if (is_granted('ROLE_USER') or is_granted('ROLE_ADMIN')) and app.user.isVerified == true  %}
+						{% if (is_granted('ROLE_ENTREPRISE') ) and app.user.isVerified == true  %}
+							<div class="flex items-baseline h-full justify-center flex-col gap-0">
+								<p class="text-xs text-gray-500">Entreprise : {{ app.user.email }}</p>
+							</div>
+						{% elseif (is_granted('ROLE_USER_ENTREPRISE')) and app.user.isVerified == true  %}
 							<div class="flex items-baseline h-full justify-center flex-col gap-0">
 								<p class="text-xs text-gray-500"> {{ app.user.entreprise.email }}</p>
 								<p class="text-xs text-gray-500">{{ app.user.email }}</p>

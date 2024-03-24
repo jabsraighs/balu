@@ -43,7 +43,6 @@ class RegistrationController extends AbstractController{
                     $form->get('plainPassword')->getData()
                 )
             );
-            dd();
             $entityManager->persist($user);
             $entityManager->flush();
             $this->addFlash('message', 'Your account has been created Please Confirm your Email to verifie it..');
