@@ -16,6 +16,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/user',name: '_user')]
 #[IsGranted('ROLE_USER')]
+#[IsGranted('ROLE_COMPTABLE')]
 class UserController extends AbstractController
 {
 
@@ -24,41 +25,54 @@ class UserController extends AbstractController
     {
         $user = $this->getUser()->getId();
         $userInfo = $userRepository->findBy(['id' => $user]);
-
+        $company = $user->getUsers();
+        $usersCompany = $userRepository->findBy(['users' => $company]);
         return $this->render('Front/user/index.html.twig', [
             'users' => $userInfo,
         ]);
     }
+    #[IsGranted('ROLE_COMPTABLE')]
+#[Route('/new', name: '_new', methods: ['GET', 'POST'])]
+public function new(Request $request, HasherUserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager): Response
+{
+    // Récupérer l'entreprise de l'utilisateur actuel
+    $entreprise = $this->getUser();
 
-// pas sur que c'est necessaire  cette route
-    #[Route('/new', name: '_new', methods: ['GET', 'POST'])]
-    public function new(Request $request,HasherUserPasswordHasherInterface $userPasswordHasher,EntityManagerInterface $entityManager): Response
-    {
-        $user = new User();
-        $form = $this->createForm(UserType::class, $user);
-        $form->handleRequest($request);
+    // Créer une nouvelle instance d'utilisateur
+    $user = new User();
 
-        if ($form->isSubmitted() && $form->isValid()) {
-          // encode the plain password
-            $user->setPassword(
-                $userPasswordHasher->hashPassword(
-                    $user,
-                    $form->get('plainPassword')->getData()
-                )
-            );
-            $entityManager->persist($user);
-            $entityManager->flush();
+    // Créer le formulaire pour l'utilisateur
+    $form = $this->createForm(UserType::class, $user);
+    $form->handleRequest($request);
 
-            return $this->redirectToRoute('front_user_index', [], Response::HTTP_SEE_OTHER);
-        }
+    if ($form->isSubmitted() && $form->isValid()) {
+        // Hasher le mot de passe
+        $hashedPassword = $userPasswordHasher->hashPassword(
+            $user,
+            $form->get('plainPassword')->getData()
+        );
+        $user->setPassword($hashedPassword);
 
-        return $this->render('Front/user/new.html.twig', [
-            'user' => $user,
-            'form' => $form,
-        ]);
+        // Associer l'utilisateur à l'entreprise
+        $user->setEntreprise($entreprise);
+
+        // Persister l'utilisateur
+        $entityManager->persist($user);
+        $entityManager->flush();
+
+        // Rediriger vers la liste des utilisateurs
+        return $this->redirectToRoute('front_user_index', [], Response::HTTP_SEE_OTHER);
     }
 
+    return $this->render('Front/user/new.html.twig', [
+        'user' => $user,
+        'form' => $form->createView(),
+    ]);
+}
+
+
     #[Route('/{id}', name: '_show', methods: ['GET'])]
+    #[IsGranted('ROLE_COMPTABLE')]
     public function show(User $user): Response
     {
         return $this->render('Front/user/show.html.twig', [
@@ -67,6 +81,7 @@ class UserController extends AbstractController
     }
 
     #[Route('/{id}/clients', name: '_show_clients', methods: ['GET'])]
+    #[IsGranted('ROLE_COMPTABLE')]
     public function showClientsByUserId(ClientRepository $clientRepository,$id): Response
     {
 
@@ -78,6 +93,7 @@ class UserController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: '_update', methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_COMPTABLE')]
     public function edit(Request $request, User $user, EntityManagerInterface $entityManager): Response
     {
         $form = $this->createForm(UserType::class, $user);
@@ -96,6 +112,7 @@ class UserController extends AbstractController
     }
 
     #[Route('/{id}', name: '_delete', methods: ['POST'])]
+    #[IsGranted('ROLE_COMPTABLE')]
     public function delete(Request $request, User $user, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete'.$user->getId(), $request->request->get('_token'))) {

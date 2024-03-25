@@ -124,10 +124,124 @@
 					</a>
 				</nav>
 			</aside>
-		 {% else %}
+		{% elseif (is_granted('ROLE_ENTREPRISE') or is_granted('ROLE_COMPTABLE')) and app.user.isVerified == true %}
+	<body class="bg-background relative">
+			<div id="overlay" class="transition-all absolute top-0 lef-0 h-screen w-full bg-black opacity-40 z-10 hidden"> </div>
+			<aside id="sidebar" class="h-screen transition-all flex gap-2 w-sidebar bg-white shadow-small flex-col absolute -left-full top-0 z-30 2md:fixed 2md:left-0">
+				<div class="flex items-center flex-row-reverse">
+				<div id="sidebar-toggle-off" class="rotate-180 2md:hidden text-secondary-500 cursor-pointer">
+						<svg  width="60" height="60" viewbox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+							<path d="M22.5 37.5L30 30L22.5 22.5" stroke="#AAAAAA" stroke-width="0.9375"/>
+							<path d="M30 37.5L37.5 30L30 22.5" stroke="#AAAAAA" stroke-width="0.9375"/>
+						</svg>
+				</div>
+				</div>
+				<div class="flex items-center justify-center">
+					<img class="object-contain h-40 w-40 relative" src="/Logo.png"/>
+				</div>
 
-			
-				
+				<nav class="flex flex-col justify-between h-full">
+					<div>
+						<a href="{{path("front_accueil")}}" class="h-16 w-full flex items-center justify-center relative gap-4 cursor-pointer">
+							<span class="h-full absolute top-0 left-0 w-1 {{ currentRoute is same as(path("front_accueil")) ? 'bg-primary-500' : '' }}"></span>
+							<div class="flex items-center w-40 gap-3">
+								<svg width="25" height="24" viewbox="0 0 25 24" fill="none" class="text-secondary-500" xmlns="http://www.w3.org/2000/svg">
+									<path d="M22.5 22H2.5" stroke="#2A314B" stroke-width="2" stroke-linecap="round"/>
+									<path d="M2.5 11.0001L6.56296 7.7498M22.5 11.0001L14.3741 4.49943C13.2784 3.62291 11.7216 3.62291 10.6259 4.49943L9.84398 5.12498" stroke="#2A314B" stroke-width="2" stroke-linecap="round"/>
+									<path d="M16 5.5V3.5C16 3.22386 16.2239 3 16.5 3H19C19.2761 3 19.5 3.22386 19.5 3.5V8.5" stroke="#2A314B" stroke-width="2" stroke-linecap="round"/>
+									<path d="M4.5 22V9.5" stroke="#2A314B" stroke-width="2" stroke-linecap="round"/>
+									<path d="M20.5 9.5V13.5M20.5 22V17.5" stroke="#2A314B" stroke-width="2" stroke-linecap="round"/>
+									<path d="M15.5 22V17C15.5 15.5858 15.5 14.8787 15.0607 14.4393C14.6213 14 13.9142 14 12.5 14C11.0858 14 10.3787 14 9.93934 14.4393M9.5 22V17" stroke="#2A314B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+									<path d="M14.5 9.5C14.5 10.6046 13.6046 11.5 12.5 11.5C11.3954 11.5 10.5 10.6046 10.5 9.5C10.5 8.39543 11.3954 7.5 12.5 7.5C13.6046 7.5 14.5 8.39543 14.5 9.5Z" stroke="#2A314B" stroke-width="2"/>
+								</svg>
+
+								<p class="text-secondary-500">Tableau de bord</p>
+							</div>
+						</a>
+						<a href="{{path("front_user_index")}}" class="h-16 w-full flex items-center justify-center relative gap-4 cursor-pointer hover:opacity-70">
+							<span class="h-full absolute top-0 left-0 w-1 {{ currentRoute is same as(path("front_user_client_index")) ? 'bg-primary-500' : '' }}"></span>
+
+							<div class="flex items-center w-40 gap-3">
+
+								<svg width="24" height="24" viewbox="0 0 24 24" fill="none" class="text-secondary-500" xmlns="http://www.w3.org/2000/svg">
+									<path d="M13 20V18C13 15.2386 10.7614 13 8 13C5.23858 13 3 15.2386 3 18V20H13ZM13 20H21V19C21 16.0545 18.7614 14 16 14C14.5867 14 13.3103 14.6255 12.4009 15.6311M11 7C11 8.65685 9.65685 10 8 10C6.34315 10 5 8.65685 5 7C5 5.34315 6.34315 4 8 4C9.65685 4 11 5.34315 11 7ZM18 9C18 10.1046 17.1046 11 16 11C14.8954 11 14 10.1046 14 9C14 7.89543 14.8954 7 16 7C17.1046 7 18 7.89543 18 9Z" stroke="#2A314B" stroke-opacity="0.8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+								</svg>
+
+
+								<p class="text-secondary-500 opacity-80"> Partenaires </p>
+							</div>
+						</a>
+
+						<a href="{{path("front_user_client_index")}}" class="h-16 w-full flex items-center justify-center relative gap-4 cursor-pointer hover:opacity-70">
+							<span class="h-full absolute top-0 left-0 w-1 {{ currentRoute is same as(path("front_user_client_index")) ? 'bg-primary-500' : '' }}"></span>
+
+							<div class="flex items-center w-40 gap-3">
+
+								<svg width="24" height="24" viewbox="0 0 24 24" fill="none" class="text-secondary-500" xmlns="http://www.w3.org/2000/svg">
+									<path d="M13 20V18C13 15.2386 10.7614 13 8 13C5.23858 13 3 15.2386 3 18V20H13ZM13 20H21V19C21 16.0545 18.7614 14 16 14C14.5867 14 13.3103 14.6255 12.4009 15.6311M11 7C11 8.65685 9.65685 10 8 10C6.34315 10 5 8.65685 5 7C5 5.34315 6.34315 4 8 4C9.65685 4 11 5.34315 11 7ZM18 9C18 10.1046 17.1046 11 16 11C14.8954 11 14 10.1046 14 9C14 7.89543 14.8954 7 16 7C17.1046 7 18 7.89543 18 9Z" stroke="#2A314B" stroke-opacity="0.8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+								</svg>
+
+
+								<p class="text-secondary-500 opacity-80">Clients</p>
+							</div>
+						</a>
+
+						<a href="{{path("front_user_product_index")}}" class="h-16 w-full flex items-center justify-center relative gap-4 cursor-pointer hover:opacity-70">
+							<span class="h-full absolute top-0 left-0 w-1 {{ currentRoute is same as(path("front_user_product_index")) ? 'bg-primary-500' : '' }}"></span>
+
+							<div class="flex items-center w-40 gap-3">
+
+								<svg width="25" height="25" viewBox="0 0 25 25"class="text-secondary-500"  fill="none" xmlns="http://www.w3.org/2000/svg">
+									<path fill-rule="evenodd" clip-rule="evenodd" d="M12.6908 2.4502L21.6908 7.64635V18.0387L12.6908 23.2348L3.6908 18.0387V7.64635L12.6908 2.4502ZM9.69075 12.1495L9.6908 19.1934L11.6908 20.3482V13.3042L9.69075 12.1495ZM5.6908 9.8402V16.884L7.69078 18.0387V10.9949L5.6908 9.8402ZM16.6279 7.03265L10.7414 10.4468L12.6908 11.5723L18.5908 8.16596L16.6279 7.03265ZM12.6908 4.7596L6.7908 8.16596L8.74369 9.29343L14.6302 5.87929L12.6908 4.7596Z" fill="#2A314B"/>
+								</svg>
+
+
+								<p class="text-secondary-500 opacity-80">Produits</p>
+							</div>
+						</a>
+
+						<a href="{{path("front_user_invoice_index")}}" class="h-16 w-full flex items-center justify-center relative gap-4 cursor-pointer hover:opacity-70">
+							<span class="h-full absolute top-0 left-0 w-1 {{ currentRoute is same as(path("front_user_invoice_index")) ? 'bg-primary-500' : '' }}"></span>
+							<div class="flex items-center gap-3 w-40">
+
+								<svg width="24" height="24" viewbox="0 0 24 24" fill="none" class="text-secondary-500" xmlns="http://www.w3.org/2000/svg">
+									<path d="M8.15997 11.205H16.05V13.08H8.15997V11.205ZM8.15997 14.745H16.05V16.62H8.15997V14.745ZM8.15997 7.60498H16.05V9.47998H8.15997V7.60498Z" fill="#2A314B" fill-opacity="0.8"/>
+									<path d="M17.01 1.5L14.46 0.42L12.12 1.5L9.615 0.42L7.26 1.5L3.69 0V24L7.26 22.5L9.615 23.535L12.12 22.5L14.46 23.535L17.01 22.5L20.31 24V0L17.01 1.5ZM18.42 21.165L17.04 20.55L14.505 21.585L12.15 20.505L9.63 21.54L7.305 20.505L5.58 21.21V2.79L7.305 3.495L9.63 2.46L12.15 3.495L14.505 2.46L17.04 3.495L18.42 2.88V21.165Z" fill="#2A314B" fill-opacity="0.8"/>
+								</svg>
+
+
+								<p class="text-secondary-500 opacity-80">Factures</p>
+							</div>
+						</a>
+
+						<a href="{{path("front_user_quote_index")}}" class="h-16 w-full flex items-center justify-center relative gap-4 cursor-pointer hover:opacity-70">
+							<span class="h-full absolute top-0 left-0 w-1 {{ currentRoute is same as(path("front_user_quote_index")) ? 'bg-primary-500' : '' }}"></span>
+							<div class="flex items-center gap-3 w-40">
+
+								<svg width="25" height="24" viewbox="0 0 25 24" class="text-secondary-500" fill="none" xmlns="http://www.w3.org/2000/svg">
+									<path fill-rule="evenodd" clip-rule="evenodd" d="M18.5 4L22.5 8V20H2.5V4H18.5ZM18 6H4.5V18H20.5V8.5L18 6ZM7.5 8L7.49998 14.1996L10.3621 10.622L13.419 12.15L15.6655 10.1284L16.3345 10.8716L13.5812 13.3496L10.637 11.878L8.1402 15L18.5 15V16H6.5V8H7.5Z" fill="#2A314B" fill-opacity="0.8"/>
+								</svg>
+
+
+								<p class="text-secondary-500 opacity-80">Devis</p>
+							</div>
+						</a>
+					</div>
+
+					<a href={{path("app_logout")}} class="h-16 w-full flex items-center justify-center relative gap-4 cursor-pointer hover:opacity-70">
+						<div class="flex items-center gap-3 w-40">
+
+							<svg width="24" height="25" viewbox="0 0 24 25" fill="none" class="text-delete-500" xmlns="http://www.w3.org/2000/svg">
+								<path d="M15 12.4998H2M2 12.4998L5.5 9.49976M2 12.4998L5.5 15.4998" stroke="#CD2020" stroke-opacity="0.8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+								<path d="M9.00195 7.49976C9.01406 5.32473 9.11051 4.14682 9.87889 3.37844C10.7576 2.49976 12.1718 2.49976 15.0002 2.49976H16.0002C18.8286 2.49976 20.2429 2.49976 21.1215 3.37844C22.0002 4.25712 22.0002 5.67133 22.0002 8.49976V16.4998C22.0002 19.3282 22.0002 20.7424 21.1215 21.6211C20.3531 22.3895 19.1752 22.486 17 22.4981M9.00195 17.4998C9.01406 19.6748 9.11051 20.8527 9.87889 21.6211C10.5202 22.2624 11.4467 22.4357 13 22.4825" stroke="#CD2020" stroke-opacity="0.8" stroke-width="2" stroke-linecap="round"/>
+							</svg>
+
+
+							<p class="text-delete-500">Se déconnecter</p>
+						</div>
+					</a>
+				</nav>
+			</aside>
 		{%endif %}
 		{% for message in app.flashes("message")%}
 			<div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -146,7 +260,7 @@
 							</div>
 						{% elseif (is_granted('ROLE_USER_ENTREPRISE')) and app.user.isVerified == true  %}
 							<div class="flex items-baseline h-full justify-center flex-col gap-0">
-								<p class="text-xs text-gray-500"> {{ app.user.entreprise.email }}</p>
+								<p class="text-xs text-gray-500"> Entreprise : {{ app.user.entreprise.email }}</p>
 								<p class="text-xs text-gray-500">{{ app.user.email }}</p>
 							</div>
 						{% else %}

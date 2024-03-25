@@ -31,7 +31,7 @@ class RegistrationFormType extends AbstractType
             ->add('roles',ChoiceType::class, [
                 'label' => "Type d'Entreprise",
                 'choices' => [
-                    "Entreprise" =>  "ROLE_ENTREPRISE" ,
+                    "Entreprise" =>  "ROLE_COMPTABLE" ,
                     "Freelance" => "ROLE_AUTO_ENTREPRENEUR"
                 ],
                 'multiple' => false,

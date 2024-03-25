@@ -54,7 +54,6 @@ class ClientController extends AbstractController
     {
         return $this->render('Front/user/client/show.html.twig', [
             'client' => $client,
-            dump($client)
         ]);
     }
 

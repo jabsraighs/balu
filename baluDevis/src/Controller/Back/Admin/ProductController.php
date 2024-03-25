@@ -22,7 +22,7 @@ class ProductController extends AbstractController
     {
         return $this->render('Back/admin/product/index.html.twig', [
             'products' => $productRepository->findAll(),
-            dump()
+
         ]);
     }
 
