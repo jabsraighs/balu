@@ -2,7 +2,7 @@
 
 namespace App\Form;
 
-use App\Entity\Client; 
+use App\Entity\Client;
 use App\Entity\Quote;
 use App\Form\QuoteLineType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -22,45 +22,56 @@ class QuoteType extends AbstractType
     {
         $clients = $options['clients'];
         $builder
-            ->add('description',TextType::class,[
+            ->add('description', TextType::class, [
                 'label' => 'Description',
                 'required' => true
             ])
-            ->add('expiryAt',DateType::class,[
+            ->add('expiryAt', DateType::class, [
                 'label' => "Date d'expiration",
                 'widget' => 'single_text',
                 'input' => 'datetime_immutable'
             ])
-            ->add('status',ChoiceType::class, [
+            ->add('status', ChoiceType::class, [
                 'label' => 'Status',
                 'choices' => [
-                    "in progress" =>  "en cours" ,
+                    "in progress" =>  "en cours",
                     "validate" =>  "valider",
                     "decline" => "decline"
                 ],
                 'multiple' => false,
                 'expanded' => true,
             ])
-            ->add('tva',ChoiceType::class, [
+            ->add('tva', ChoiceType::class, [
                 'label' => 'Taux Tva',
                 'choices' => [
-                    "0%" =>  "0" ,
+                    "0%" =>  "0",
                     "10%" =>  "0.10",
                     "20%" => "0.20"
                 ],
                 'multiple' => false,
                 'expanded' => true,
             ])
-           // ->add('totalAmount')  total amount pas besoin vu que les item et leur sub total qui le determine
-                ->add('client', EntityType::class, [
+            ->add('client', EntityType::class, [
                 'label' => 'Client',
                 'class' => Client::class,
-                'choice_label' => 'email',
+                'choice_label' => function (Client $client) {
+                    return $client->getFullName();
+                },
                 'choices' => $clients,
                 'multiple' => false,
                 'expanded' => false,
-             ])
-             ->add('quoteLines', CollectionType::class, [
+                'placeholder' => 'Sélectionner un client',
+                'data' => null,
+                'empty_data' => null,
+                'choice_attr' => function (Client $client) {
+                    return [
+                        'data-client-id' => $client->getId(),
+                        'data-client-name' => $client->getFullname(),
+                        'data-client-address' => $client->getAddress(),
+                    ];
+                }
+            ])
+            ->add('quoteLines', CollectionType::class, [
                 'required' => true,
                 'entry_type' => QuoteLineType::class,
                 'label' => 'QuoteLines',
@@ -69,8 +80,7 @@ class QuoteType extends AbstractType
                 'allow_delete' => true,
                 'by_reference' => false, // Set to false to use the setter method for Quote::setQuoteLines
 
-             ]);
-
+            ]);
     }
     public function configureOptions(OptionsResolver $resolver): void
     {

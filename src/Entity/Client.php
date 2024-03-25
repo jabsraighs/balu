@@ -199,4 +199,12 @@ class Client
 
         return $this;
     }
+
+    public function getFullname(): string
+    {
+        $firstname = $this->getFirstname();
+        $lastname = $this->getLastname();
+
+        return "$lastname $firstname";
+    }
 }

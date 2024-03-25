@@ -28,6 +28,7 @@ Encore
     .addEntry('invoice', './assets/invoice.js')
     .addEntry('client_show', './assets/clientShow.js')
     .addEntry('quote', './assets/quote.js')
+    .addEntry('new_quote', './assets/newQuote.js')
 
 
 

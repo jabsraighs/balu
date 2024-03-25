@@ -1,7 +1,26 @@
 <div class="flex items-center justify-center">
-	<div class="bg-white border border-primaryLight mt-4 px-8 py-4 rounded-3xl w-full max-w-lg">
+	<div class="overflow-hidden rounded-lg border border-stroke bg-white shadow-default p-4 w-full">
 		{{ form_start(form, {"attr": {"class": "flex-1 flex flex-col items-center justify-center gap-4"}}) }}
 		<div class="flex flex-col gap-2 w-full">
+			<div class="flex flex-col gap-1 w-full">
+				<div class="relative flex justify-between">
+					{{ form_label(form.client, "Client") }}
+					<p id="client_change" class="text-primary-500 cursor-pointer font-bold hidden">Changer de client</p>
+				</div>
+
+				<div class="flex-col gap-4 hidden mt-4" id="client_show">
+					<p class="text-lg font-bold text-secondary-900 mb-2" id="current_client_name"></p>
+					<div>
+						<p class="text-sm text-gray-600">Adresse:</p>
+						<p class="text-sm text-gray-600" id="current_client_address"></p>
+					</div>
+				</div>
+
+				{{ form_widget(form.client, {"attr": {"class": "pl-2 py-2 rounded-md w-full border-primary-500"}}) }}
+			</div>
+
+			<hr class="h-px my-3 bg-gray-200 border-0">
+
 			<div class="flex flex-col gap-1 w-full">
 				<div class="relative">
 					{{ form_label(form.description, "description") }}
@@ -24,24 +43,17 @@
 
 				{{ form_widget(form.status, {"attr": {"class": "pl-2 rounded-md w-full border-primary-500"}}) }}
 			</div>
-            <div class="flex flex-col gap-1 w-full">
+			<div class="flex flex-col gap-1 w-full">
 				<div class="relative">
 					{{ form_label(form.tva, "Taux tva") }}
 				</div>
 
 				{{ form_widget(form.tva, {"attr": {"class": "pl-2 rounded-md w-full border-primary-500"}}) }}
 			</div>
-             <div class="flex flex-col gap-1 w-full">
-				<div class="relative">
-					{{ form_label(form.client, "Client") }}
-				</div>
-
-				{{ form_widget(form.client, {"attr": {"class": "pl-2 rounded-md w-full border-primary-500"}}) }}
-			</div>
-            <div class="flex flex-col gap-1 w-full">
-				<div class="relative"  id="quoteItem" data-prototype="{{form_row(form.quoteLines.vars.prototype)|e('html_attr')}}">
+			<div class="flex flex-col gap-1 w-full">
+				<div class="relative" id="quoteItem" data-prototype="{{form_row(form.quoteLines.vars.prototype)|e('html_attr')}}">
 					{{ form_label(form.quoteLines, "Service") }}
-                    <span></span>
+					<span></span>
 				</div>
 
 				{{ form_widget(form.quoteLines, {"attr": {"class": "pl-2 rounded-md w-full border-primary-500"}}) }}
@@ -55,46 +67,48 @@
 
 
 {% block javascripts %}
-    <script>
-    // Add new quote line form on button click
-    let collection , buttonAdd , span
-    window.onload = () => {
-        collection = document.querySelector("#quoteItem");
-        span = collection.querySelector("span");
-        
-        buttonAdd = document.createElement("button");
-        buttonAdd.className = "add-quoteLine btn ";
-        buttonAdd.innerText = "Ajouter un service" ;
+	<script>
+		// Add new quote line form on button click
+let collection,
+buttonAdd,
+span
+window.onload = () => {
+collection = document.querySelector("#quoteItem");
+span = collection.querySelector("span");
 
-        let newButton = span.append(buttonAdd);
-        collection.dataset.index = collection.querySelectorAll("input").length;
+buttonAdd = document.createElement("button");
+buttonAdd.className = "add-quoteLine btn ";
+buttonAdd.innerText = "Ajouter un service";
+
+let newButton = span.append(buttonAdd);
+collection.dataset.index = collection.querySelectorAll("input").length;
 
 
-        buttonAdd.addEventListener("click" , function() {
-            addButton(collection, newButton);
-        })
-    }
-    
-    function addButton(collection , newButton) {
-        let prototype = collection.dataset.prototype;
-        let index = collection.dataset.index;
-        prototype = prototype.replace(/__name__/g, index);
-        let content = document.createElement("html");
-        content.innerHTML = prototype;
-        let newForm = content.querySelector("div");
-        let deleteButton = document.createElement("button");
-        deleteButton.type = "button";
-        deleteButton.className =  "supp-quoteLine btn red secondary" ; 
-        deleteButton.id = "delete-quote-item" + index;
-        deleteButton.innerText = "Suprrimer un Service" ;
-        newForm.append(deleteButton);
-        collection.dataset.index++;
-        let buttoAdd = collection.querySelector(".add-quoteLine btn secondary");
-        span.insertBefore(newForm,buttonAdd);
+buttonAdd.addEventListener("click", function () {
+addButton(collection, newButton);
+})
+}
 
-        deleteButton.addEventListener("click",function() {
-            this.previousElementSibling.parentElement.remove();
-        })
-    }
-</script>
+function addButton(collection, newButton) {
+let prototype = collection.dataset.prototype;
+let index = collection.dataset.index;
+prototype = prototype.replace(/__name__/g, index);
+let content = document.createElement("html");
+content.innerHTML = prototype;
+let newForm = content.querySelector("div");
+let deleteButton = document.createElement("button");
+deleteButton.type = "button";
+deleteButton.className = "supp-quoteLine btn red secondary";
+deleteButton.id = "delete-quote-item" + index;
+deleteButton.innerText = "Suprrimer un Service";
+newForm.append(deleteButton);
+collection.dataset.index ++;
+let buttoAdd = collection.querySelector(".add-quoteLine btn secondary");
+span.insertBefore(newForm, buttonAdd);
+
+deleteButton.addEventListener("click", function () {
+this.previousElementSibling.parentElement.remove();
+})
+}
+	</script>
 {% endblock %}
