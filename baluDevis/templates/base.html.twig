@@ -19,7 +19,7 @@
 
 	{% set currentRoute = app.request.pathinfo %}
 	{% set notLoggedPaths = [path("app_login"), path("app_register"), path("app_verify_email"), path("app_Resend_email")] %}
-	{% if (is_granted('ROLE_USER') or is_granted('ROLE_ADMIN')) and app.user.isVerified == true %}
+	{% if (is_granted('ROLE_AUTO_ENTREPENEUR') or is_granted('ROLE_ADMIN')) and app.user.isVerified == true %}
 	<body class="bg-background relative">
 			<div id="overlay" class="transition-all absolute top-0 lef-0 h-screen w-full bg-black opacity-40 z-10 hidden"> </div>
 			<aside id="sidebar" class="h-screen transition-all flex gap-2 w-sidebar bg-white shadow-small flex-col absolute -left-full top-0 z-30 2md:fixed 2md:left-0">
@@ -95,7 +95,7 @@
 								<p class="text-secondary-500 opacity-80">Factures</p>
 							</div>
 						</a>
-
+					
 						<a href="{{path("front_user_quote_index")}}" class="h-16 w-full flex items-center justify-center relative gap-4 cursor-pointer hover:opacity-70">
 							<span class="h-full absolute top-0 left-0 w-1 {{ currentRoute is same as(path("front_user_quote_index")) ? 'bg-primary-500' : '' }}"></span>
 							<div class="flex items-center gap-3 w-40">
@@ -108,6 +108,7 @@
 								<p class="text-secondary-500 opacity-80">Devis</p>
 							</div>
 						</a>
+						
 					</div>
 
 					<a href={{path("app_logout")}} class="h-16 w-full flex items-center justify-center relative gap-4 cursor-pointer hover:opacity-70">
@@ -124,7 +125,7 @@
 					</a>
 				</nav>
 			</aside>
-		{% elseif (is_granted('ROLE_ENTREPRISE') or is_granted('ROLE_COMPTABLE')) and app.user.isVerified == true %}
+		{% elseif (is_granted('ROLE_COMPTABLE')) and app.user.isVerified == true %}
 	<body class="bg-background relative">
 			<div id="overlay" class="transition-all absolute top-0 lef-0 h-screen w-full bg-black opacity-40 z-10 hidden"> </div>
 			<aside id="sidebar" class="h-screen transition-all flex gap-2 w-sidebar bg-white shadow-small flex-col absolute -left-full top-0 z-30 2md:fixed 2md:left-0">
@@ -199,6 +200,7 @@
 								<p class="text-secondary-500 opacity-80">Produits</p>
 							</div>
 						</a>
+					
 
 						<a href="{{path("front_user_invoice_index")}}" class="h-16 w-full flex items-center justify-center relative gap-4 cursor-pointer hover:opacity-70">
 							<span class="h-full absolute top-0 left-0 w-1 {{ currentRoute is same as(path("front_user_invoice_index")) ? 'bg-primary-500' : '' }}"></span>
@@ -213,7 +215,8 @@
 								<p class="text-secondary-500 opacity-80">Factures</p>
 							</div>
 						</a>
-
+						
+						
 						<a href="{{path("front_user_quote_index")}}" class="h-16 w-full flex items-center justify-center relative gap-4 cursor-pointer hover:opacity-70">
 							<span class="h-full absolute top-0 left-0 w-1 {{ currentRoute is same as(path("front_user_quote_index")) ? 'bg-primary-500' : '' }}"></span>
 							<div class="flex items-center gap-3 w-40">
@@ -227,6 +230,7 @@
 							</div>
 						</a>
 					</div>
+					
 
 					<a href={{path("app_logout")}} class="h-16 w-full flex items-center justify-center relative gap-4 cursor-pointer hover:opacity-70">
 						<div class="flex items-center gap-3 w-40">
