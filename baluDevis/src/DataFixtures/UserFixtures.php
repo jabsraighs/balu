@@ -43,7 +43,7 @@ class UserFixtures extends Fixture
         for ($j = 0; $j < 3; $j++) {
             $enterprise = (new User())
                 ->setEmail('entreprise' . $j . '@example.com')
-                ->setRoles(['ROLES_ENTREPRISE'])
+                ->setRoles(['ROLE_ENTREPRISE','ROLE_COMPTABLE'])
                 ->setIsVerified(true)
                 ->setCreatedAt($date);
             $enterprise->setPassword($this->passwordHasher->hashPassword($enterprise, $password));
@@ -55,7 +55,7 @@ class UserFixtures extends Fixture
         for ($i = 0; $i < 10; $i++) {
             $user = (new User())
                 ->setEmail($faker->email())
-                ->setRoles(['ROLES_ENTREPRISE'])
+                ->setRoles(['ROLE_ENTREPRISE','ROLE_COMPTABLE'])
                 ->setIsVerified($isVerified[array_rand($isVerified)])
                 ->setCreatedAt($date);
             $user->setPassword($this->passwordHasher->hashPassword($user, $password));

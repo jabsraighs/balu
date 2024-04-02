@@ -15,7 +15,6 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface as Hashe
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/user',name: '_user')]
-#[IsGranted('ROLE_USER')]
 #[IsGranted('ROLE_COMPTABLE')]
 class UserController extends AbstractController
 {
@@ -23,13 +22,16 @@ class UserController extends AbstractController
     #[Route('/', name: '_index', methods: ['GET'])]
     public function index(UserRepository $userRepository): Response
     {
-        $user = $this->getUser()->getId();
-        $userInfo = $userRepository->findBy(['id' => $user]);
-        $company = $user->getUsers();
-        $usersCompany = $userRepository->findBy(['users' => $company]);
-        return $this->render('Front/user/index.html.twig', [
-            'users' => $userInfo,
-        ]);
+        //Query qui recup les entreprise ("roles entreprise")
+        $entreprise = $userRepository->findOneBy(['roles' => 'ROLE_ENTREPRISE']);
+       
+       //puis recup les users liee au entreprise
+        $user = $this->getUser();
+        $userEntreprise =  $userRepository->findBy(['id' => $user,'entreprise_id'=>$entreprise]);
+        dd($userEntreprise);
+         return $this->render('Front/user/index.html.twig', [
+             'users' => $userEntreprise,
+         ]);
     }
     #[IsGranted('ROLE_COMPTABLE')]
 #[Route('/new', name: '_new', methods: ['GET', 'POST'])]
