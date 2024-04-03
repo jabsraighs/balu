@@ -16,24 +16,21 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/user',name: '_user')]
 #[IsGranted('ROLE_COMPTABLE')]
+
 class UserController extends AbstractController
 {
 
     #[Route('/', name: '_index', methods: ['GET'])]
     public function index(UserRepository $userRepository): Response
     {
-        //Query qui recup les entreprise ("roles entreprise")
-        $entreprise = $userRepository->findOneBy(['roles' => 'ROLE_ENTREPRISE']);
        
-       //puis recup les users liee au entreprise
         $user = $this->getUser();
-        $userEntreprise =  $userRepository->findBy(['id' => $user,'entreprise_id'=>$entreprise]);
-        dd($userEntreprise);
+        $userEntreprise =  $userRepository->findAssociatedUsers($user);
          return $this->render('Front/user/index.html.twig', [
              'users' => $userEntreprise,
          ]);
     }
-    #[IsGranted('ROLE_COMPTABLE')]
+#[IsGranted('ROLE_COMPTABLE')]
 #[Route('/new', name: '_new', methods: ['GET', 'POST'])]
 public function new(Request $request, HasherUserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager): Response
 {
@@ -42,7 +39,8 @@ public function new(Request $request, HasherUserPasswordHasherInterface $userPas
 
     // Créer une nouvelle instance d'utilisateur
     $user = new User();
-
+    $user->setRoles(['ROLE_USER_ENTREPRISE']); // Correction : Utiliser le setter sans réaffectation
+    $user->setEntreprise($entreprise); // Correction : Associer l'utilisateur à l'entreprise
     // Créer le formulaire pour l'utilisateur
     $form = $this->createForm(UserType::class, $user);
     $form->handleRequest($request);
@@ -54,9 +52,6 @@ public function new(Request $request, HasherUserPasswordHasherInterface $userPas
             $form->get('plainPassword')->getData()
         );
         $user->setPassword($hashedPassword);
-
-        // Associer l'utilisateur à l'entreprise
-        $user->setEntreprise($entreprise);
 
         // Persister l'utilisateur
         $entityManager->persist($user);
@@ -71,6 +66,7 @@ public function new(Request $request, HasherUserPasswordHasherInterface $userPas
         'form' => $form->createView(),
     ]);
 }
+
 
 
     #[Route('/{id}', name: '_show', methods: ['GET'])]
