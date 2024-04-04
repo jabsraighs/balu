@@ -52,11 +52,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Product::class)]
     private Collection $products;
 
-    #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'users')]
-    private ?self $Entreprise = null;
-
-    #[ORM\OneToMany(mappedBy: 'Entreprise', targetEntity: self::class)]
-    private Collection $users;
+    #[ORM\ManyToOne(inversedBy: 'partenaires')]
+    private ?Entreprise $entreprise = null;
 
     public function __construct(){
 
@@ -65,7 +62,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->quotes = new ArrayCollection();
         $this->invoices = new ArrayCollection();
         $this->products = new ArrayCollection();
-        $this->users = new ArrayCollection();
+
     }
     public function __toString(){
         return $this->getEmail(); // Replace with the appropriate property or method representing the string value.
@@ -290,45 +287,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getEntreprise(): ?self
+    public function getEntreprise(): ?Entreprise
     {
-        return $this->Entreprise;
+        return $this->entreprise;
     }
 
-    public function setEntreprise(?self $Entreprise): static
+    public function setEntreprise(?Entreprise $entreprise): static
     {
-        $this->Entreprise = $Entreprise;
+        $this->entreprise = $entreprise;
 
         return $this;
     }
 
-    /**
-     * @return Collection<int, self>
-     */
-    public function getUsers(): Collection
-    {
-        return $this->users;
-    }
-
-    public function addUser(self $user): static
-    {
-        if (!$this->users->contains($user)) {
-            $this->users->add($user);
-            $user->setEntreprise($this);
-        }
-
-        return $this;
-    }
-
-    public function removeUser(self $user): static
-    {
-        if ($this->users->removeElement($user)) {
-            // set the owning side to null (unless already changed)
-            if ($user->getEntreprise() === $this) {
-                $user->setEntreprise(null);
-            }
-        }
-
-        return $this;
-    }
 }

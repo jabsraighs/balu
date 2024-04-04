@@ -39,9 +39,6 @@ security:
         - { path: ^/register, roles: PUBLIC_ACCESS }
         - { path: ^/reset-password, roles: ROLE_ADMIN }
         - { path: ^/accueil, roles: ['ROLE_AUTO_ENTREPRENEUR', 'ROLE_USER_ENTREPRISE','ROLE_COMPTABLE','ROLE_USER'] }
-    
-
-        
 
     role_hierarchy:
         ROLE_AUTO_ENTREPRENEUR: ROLE_USER

@@ -19,13 +19,16 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class UserController extends AbstractController
 {
-
+    
     #[Route('/', name: '_index', methods: ['GET'])]
     public function index(UserRepository $userRepository): Response
     {
        
-        $user = $this->getUser();
-        $userEntreprise =  $userRepository->findAssociatedUsers($user);
+       
+        $entreprise = $this->getUser();
+        $users = $entreprise->getUsers();
+        dd($users);
+        $userEntreprise =  $userRepository->findAssociatedUsers($entreprise);
          return $this->render('Front/user/index.html.twig', [
              'users' => $userEntreprise,
          ]);
@@ -36,25 +39,23 @@ public function new(Request $request, HasherUserPasswordHasherInterface $userPas
 {
     // Récupérer l'entreprise de l'utilisateur actuel
     $entreprise = $this->getUser();
-
+    
     // Créer une nouvelle instance d'utilisateur
-    $user = new User();
-    $user->setRoles(['ROLE_USER_ENTREPRISE']); // Correction : Utiliser le setter sans réaffectation
-    $user->setEntreprise($entreprise); // Correction : Associer l'utilisateur à l'entreprise
-    // Créer le formulaire pour l'utilisateur
-    $form = $this->createForm(UserType::class, $user);
+    $partenaire = new User();
+    $partenaire->setRoles(['ROLE_USER_ENTREPRISE']); 
+    $form = $this->createForm(UserType::class, $partenaire);
     $form->handleRequest($request);
-
     if ($form->isSubmitted() && $form->isValid()) {
         // Hasher le mot de passe
         $hashedPassword = $userPasswordHasher->hashPassword(
-            $user,
+            $partenaire,
             $form->get('plainPassword')->getData()
         );
-        $user->setPassword($hashedPassword);
-
+        // $partenaire->setEntreprise($entreprise);
+        $partenaire = $partenaire->setPassword($hashedPassword);
+        $entreprise->addUser($partenaire);
         // Persister l'utilisateur
-        $entityManager->persist($user);
+        $entityManager->persist($partenaire);
         $entityManager->flush();
 
         // Rediriger vers la liste des utilisateurs
@@ -62,7 +63,7 @@ public function new(Request $request, HasherUserPasswordHasherInterface $userPas
     }
 
     return $this->render('Front/user/new.html.twig', [
-        'user' => $user,
+        'user' => $partenaire,
         'form' => $form->createView(),
     ]);
 }

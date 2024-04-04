@@ -62,11 +62,13 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     public function findAssociatedUsers(User $user): array
     {
         return $this->createQueryBuilder('u')
-            ->leftJoin('u.Entreprise', 'e')
-            ->andWhere('e.id = :userId')
-            ->setParameter('userId', $user->getId())
-            ->getQuery()
-            ->getResult();
+        ->select('u')
+        ->innerJoin('u.Entreprise', 'e')
+        ->innerJoin('e.users', 'a')
+        ->where('a.id = :userId')
+        ->setParameter('userId', $user->getId())
+        ->getQuery()
+        ->getResult();
     }
     
 //    /**
