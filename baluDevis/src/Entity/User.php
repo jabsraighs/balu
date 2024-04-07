@@ -55,6 +55,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\ManyToOne(inversedBy: 'partenaires')]
     private ?Entreprise $entreprise = null;
 
+    #[ORM\OneToOne(mappedBy: 'userEntreprise', cascade: ['persist', 'remove'])]
+    private ?Entreprise $userCreateEntreprise = null;
+
     public function __construct(){
 
         $this->createdAt = new \DateTimeImmutable();
@@ -295,6 +298,23 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setEntreprise(?Entreprise $entreprise): static
     {
         $this->entreprise = $entreprise;
+
+        return $this;
+    }
+
+    public function getUserCreateEntreprise(): ?Entreprise
+    {
+        return $this->userCreateEntreprise;
+    }
+
+    public function setUserCreateEntreprise(Entreprise $userCreateEntreprise): static
+    {
+        // set the owning side of the relation if necessary
+        if ($userCreateEntreprise->getUserEntreprise() !== $this) {
+            $userCreateEntreprise->setUserEntreprise($this);
+        }
+
+        $this->userCreateEntreprise = $userCreateEntreprise;
 
         return $this;
     }

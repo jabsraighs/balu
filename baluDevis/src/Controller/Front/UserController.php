@@ -25,9 +25,7 @@ class UserController extends AbstractController
     {
        
        
-        $entreprise = $this->getUser();
-        $users = $entreprise->getUsers();
-        dd($users);
+        $user = $this->getUser();
         $userEntreprise =  $userRepository->findAssociatedUsers($entreprise);
          return $this->render('Front/user/index.html.twig', [
              'users' => $userEntreprise,

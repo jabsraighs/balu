@@ -27,8 +27,13 @@ class Entreprise
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 
+    #[ORM\OneToOne(inversedBy: 'userCreateEntreprise', cascade: ['persist', 'remove'])]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $userEntreprise = null;
+
     public function __construct()
     {
+        $this->createdAt = new \DateTimeImmutable();
         $this->partenaires = new ArrayCollection();
     }
 
@@ -99,6 +104,18 @@ class Entreprise
     public function setCreatedAt(\DateTimeImmutable $createdAt): static
     {
         $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getUserEntreprise(): ?User
+    {
+        return $this->userEntreprise;
+    }
+
+    public function setUserEntreprise(User $userEntreprise): static
+    {
+        $this->userEntreprise = $userEntreprise;
 
         return $this;
     }

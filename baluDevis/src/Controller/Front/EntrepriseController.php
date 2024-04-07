@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\Front;
 
 use App\Entity\Entreprise;
 use App\Form\EntrepriseType;
@@ -19,19 +19,34 @@ class EntrepriseController extends AbstractController
     #[Route('/', name: '_entreprise_index', methods: ['GET'])]
     public function index(EntrepriseRepository $entrepriseRepository): Response
     {
+        $user = $this->getUser();
+        $entreprises = $entrepriseRepository->findBy(['userEntreprise'=> $user->getId()]);
         return $this->render('Front/user/entreprise/index.html.twig', [
-            'entreprises' => $entrepriseRepository->findAll(),
+            'entreprises' => $entreprises,
         ]);
     }
 
     #[Route('/new', name: '_entreprise_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
+        
+        $user = $this->getUser();
+        $existAlready = $this->getUser()->getUserCreateEntreprise();
+       
+            if ($existAlready) {
+                return $this->render('bundles\twigBundles\Exception\errors.html.twig', [
+                    'message' => 'An error occurred: Enterprise already exists. Please try again later or contact support.'
+                ]);
+            }
+        
         $entreprise = new Entreprise();
         $form = $this->createForm(EntrepriseType::class, $entreprise);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $entreprise->setUserEntreprise($user);
+            $user->setUserCreateEntreprise($entreprise);
+            $entityManager->persist($user);
             $entityManager->persist($entreprise);
             $entityManager->flush();
 

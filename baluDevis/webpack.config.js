@@ -24,6 +24,7 @@ Encore
     .addEntry('product', './assets/product.js')
     .addEntry('invoice', './assets/invoice.js')
     .addEntry('quote', './assets/quote.js')
+  
 
 
 
