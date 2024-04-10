@@ -16,55 +16,63 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/user',name: '_user')]
 #[IsGranted('ROLE_COMPTABLE')]
-
 class UserController extends AbstractController
 {
-    
+    #[IsGranted('ROLE_COMPTABLE')]
     #[Route('/', name: '_index', methods: ['GET'])]
     public function index(UserRepository $userRepository): Response
     {
-       
-       
+        
         $user = $this->getUser();
-        $userEntreprise =  $userRepository->findAssociatedUsers($entreprise);
+        $entreprise = $this->getUser()->getId();
+        $partenaire = $userRepository->findBy(["entreprise" => $entreprise ]);
+        $userEntreprise =  $userRepository->findAll();
+        dd($partenaire);
          return $this->render('Front/user/index.html.twig', [
-             'users' => $userEntreprise,
+             'users' => $partenaire,
          ]);
     }
-#[IsGranted('ROLE_COMPTABLE')]
-#[Route('/new', name: '_new', methods: ['GET', 'POST'])]
-public function new(Request $request, HasherUserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager): Response
-{
-    // Récupérer l'entreprise de l'utilisateur actuel
-    $entreprise = $this->getUser();
-    
-    // Créer une nouvelle instance d'utilisateur
-    $partenaire = new User();
-    $partenaire->setRoles(['ROLE_USER_ENTREPRISE']); 
-    $form = $this->createForm(UserType::class, $partenaire);
-    $form->handleRequest($request);
-    if ($form->isSubmitted() && $form->isValid()) {
-        // Hasher le mot de passe
-        $hashedPassword = $userPasswordHasher->hashPassword(
-            $partenaire,
-            $form->get('plainPassword')->getData()
-        );
-        // $partenaire->setEntreprise($entreprise);
-        $partenaire = $partenaire->setPassword($hashedPassword);
-        $entreprise->addUser($partenaire);
-        // Persister l'utilisateur
-        $entityManager->persist($partenaire);
-        $entityManager->flush();
+    #[IsGranted('ROLE_COMPTABLE')]
+    #[Route('/new', name: '_new', methods: ['GET', 'POST'])]
+    public function new(Request $request, HasherUserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager): Response
+    {
+        $user = $this->getUser();
+        $entreprise = $this->getUser()->getEntreprise();
+        //verification qu'il existe une entreprise
+            if ($entreprise== null) {
+                return $this->render('bundles\twigBundles\Exception\errorPartenaire.html.twig', [
+                    'message' => 'An error occurred: Enterprise already exists. Please try again later or contact support.'
+                ]);
+            }
+        $partenairesEntreprise = new User();
+        $partenairesEntreprise->setRoles(['ROLE_USER_ENTREPRISE']); 
+        $form = $this->createForm(UserType::class, $partenairesEntreprise);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            // Hasher le mot de passe
+            $hashedPassword = $userPasswordHasher->hashPassword(
+                $partenairesEntreprise,
+                $form->get('plainPassword')->getData()
+            );
+            $entreprise->addPartenaire($partenairesEntreprise);
+            $partenairesEntreprise = $partenairesEntreprise->setPassword($hashedPassword);
+            // Persister l'utilisateur
+            	
+            $entityManager->persist($entreprise);
+            $entityManager->persist($partenairesEntreprise);
+            $entityManager->persist($user);
 
-        // Rediriger vers la liste des utilisateurs
-        return $this->redirectToRoute('front_user_index', [], Response::HTTP_SEE_OTHER);
+            $entityManager->flush();
+
+            // Rediriger vers la liste des utilisateurs
+            return $this->redirectToRoute('front_user_index', [], Response::HTTP_SEE_OTHER);
+        }
+
+        return $this->render('Front/user/new.html.twig', [
+            'user' => $partenairesEntreprise,
+            'form' => $form->createView(),
+        ]);
     }
-
-    return $this->render('Front/user/new.html.twig', [
-        'user' => $partenaire,
-        'form' => $form->createView(),
-    ]);
-}
 
 
 

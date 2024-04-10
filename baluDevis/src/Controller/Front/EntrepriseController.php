@@ -45,6 +45,7 @@ class EntrepriseController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entreprise->setUserEntreprise($user);
+            $user->setEntreprise($entreprise);
             $user->setUserCreateEntreprise($entreprise);
             $entityManager->persist($user);
             $entityManager->persist($entreprise);

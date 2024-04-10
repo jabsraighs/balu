@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Entreprise;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\EntityManager;
@@ -59,17 +60,29 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ->getQuery()
             ->getResult();
     }
-    public function findAssociatedUsers(User $user): array
+
+
+    public function findPartenairesByUserId($userId)
     {
         return $this->createQueryBuilder('u')
-        ->select('u')
-        ->innerJoin('u.Entreprise', 'e')
-        ->innerJoin('e.users', 'a')
-        ->where('a.id = :userId')
-        ->setParameter('userId', $user->getId())
+            ->join('u.entreprise', 'e') // Assurez-vous que la relation entre User et Entreprise est correctement définie dans votre entité User
+            ->where('e.userEntreprise = :userId') // Assurez-vous que le nom de la colonne correspond à votre modèle de données réel
+            ->setParameter('userId', $userId)
+            ->andWhere('e.partenaires = :userId') // Utilisez la bonne association entre les entités Entreprise et Partenaires
+            ->getQuery()
+            ->getResult(); 
+    }
+    public function findUsersByEnterprise(Entreprise $entreprise)
+{
+    return $this->createQueryBuilder('u')
+        ->where('u.entreprise = :entreprise')
+        ->setParameter('entreprise', $entreprise)
         ->getQuery()
         ->getResult();
-    }
+}
+    
+   
+  
     
 //    /**
 //     * @return User[] Returns an array of User objects

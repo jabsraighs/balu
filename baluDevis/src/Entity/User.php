@@ -53,7 +53,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private Collection $products;
 
     #[ORM\ManyToOne(inversedBy: 'partenaires')]
-    private ?Entreprise $entreprise = null;
+    private ?Entreprise $entreprise = null; 
 
     #[ORM\OneToOne(mappedBy: 'userEntreprise', cascade: ['persist', 'remove'])]
     private ?Entreprise $userCreateEntreprise = null;
@@ -65,6 +65,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->quotes = new ArrayCollection();
         $this->invoices = new ArrayCollection();
         $this->products = new ArrayCollection();
+        
 
     }
     public function __toString(){
