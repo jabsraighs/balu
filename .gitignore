@@ -1,0 +1,6 @@
+baluDevis/.env
+baluDevis/composer.json
+baluDevis/composer.lock
+baluDevis/symfony.lock
+baluDevis/package.json
+baluDevis/package-lock.json

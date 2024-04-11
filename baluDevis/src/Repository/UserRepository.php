@@ -60,26 +60,17 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ->getQuery()
             ->getResult();
     }
-
-
-    public function findPartenairesByUserId($userId)
+   
+    public function findUsersByRoleAndEnterpriseId($user)
     {
         return $this->createQueryBuilder('u')
-            ->join('u.entreprise', 'e') // Assurez-vous que la relation entre User et Entreprise est correctement définie dans votre entité User
-            ->where('e.userEntreprise = :userId') // Assurez-vous que le nom de la colonne correspond à votre modèle de données réel
-            ->setParameter('userId', $userId)
-            ->andWhere('e.partenaires = :userId') // Utilisez la bonne association entre les entités Entreprise et Partenaires
+            ->andWhere('u.roles = :roles')
+            ->andWhere('u.entreprise = :entreprise_id')
+            ->setParameter('roles', 'ROLE_USER_ENTREPRISE')
+            ->setParameter('entreprise_id', $user)
             ->getQuery()
-            ->getResult(); 
+            ->getResult();
     }
-    public function findUsersByEnterprise(Entreprise $entreprise)
-{
-    return $this->createQueryBuilder('u')
-        ->where('u.entreprise = :entreprise')
-        ->setParameter('entreprise', $entreprise)
-        ->getQuery()
-        ->getResult();
-}
     
    
   

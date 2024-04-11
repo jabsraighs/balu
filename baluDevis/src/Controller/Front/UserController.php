@@ -6,6 +6,7 @@ use App\Entity\User;
 use App\Form\UserType;
 use App\Repository\ClientRepository;
 use App\Repository\UserRepository;
+use App\Service\SendEmailService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -22,19 +23,17 @@ class UserController extends AbstractController
     #[Route('/', name: '_index', methods: ['GET'])]
     public function index(UserRepository $userRepository): Response
     {
-        
         $user = $this->getUser();
-        $entreprise = $this->getUser()->getId();
-        $partenaire = $userRepository->findBy(["entreprise" => $entreprise ]);
-        $userEntreprise =  $userRepository->findAll();
-        dd($partenaire);
+
+        $entreprise = $this->getUser();
+        $partenaire = $userRepository->findBy(["entreprise" => $user->getEntreprise()->getId() ]);
          return $this->render('Front/user/index.html.twig', [
              'users' => $partenaire,
          ]);
     }
     #[IsGranted('ROLE_COMPTABLE')]
     #[Route('/new', name: '_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, HasherUserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager): Response
+    public function new(Request $request, HasherUserPasswordHasherInterface $userPasswordHasher,SendEmailService $mailService, EntityManagerInterface $entityManager): Response
     {
         $user = $this->getUser();
         $entreprise = $this->getUser()->getEntreprise();
@@ -57,13 +56,21 @@ class UserController extends AbstractController
             $entreprise->addPartenaire($partenairesEntreprise);
             $partenairesEntreprise = $partenairesEntreprise->setPassword($hashedPassword);
             // Persister l'utilisateur
-            	
+            
             $entityManager->persist($entreprise);
             $entityManager->persist($partenairesEntreprise);
             $entityManager->persist($user);
-
             $entityManager->flush();
+            // send verification email
+            $mailService->send(
+                'app_verify_email',
+                $partenairesEntreprise,
+                'devisbalu698@gmail.com',
+                $partenairesEntreprise->getEmail(),
+                'Please Confirm your Email to verify it. u have been add as a collaborators  ',
+                'registration/confirmation_email.html.twig',
 
+        );
             // Rediriger vers la liste des utilisateurs
             return $this->redirectToRoute('front_user_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -97,7 +104,7 @@ class UserController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/edit', name: '_update', methods: ['GET', 'POST'])]
+    #[Route('/{id}/edit', name: '_edit', methods: ['GET', 'POST'])]
     #[IsGranted('ROLE_COMPTABLE')]
     public function edit(Request $request, User $user, EntityManagerInterface $entityManager): Response
     {

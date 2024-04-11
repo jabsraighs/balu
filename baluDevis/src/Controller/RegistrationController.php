@@ -99,7 +99,7 @@ class RegistrationController extends AbstractController{
                     'app_verify_email',
                     $user,
                     'devisbalu698@gmail.com',
-                    $this->$user->getEmail(),
+                    $user->getEmail(),
                     'Please Confirm your Email to verifie it. ',
                     'registration/confirmation_email.html.twig',
 
@@ -107,6 +107,7 @@ class RegistrationController extends AbstractController{
             $this->addFlash('success', 'Un email de vérification a été envoyé à votre adresse.');
         } catch (\Exception $e) {
             $this->addFlash('error', 'Une erreur s\'est produite lors de l\'envoi de l\'email de vérification.');
+            
         }
 
         return $this->redirectToRoute('app_logout');
