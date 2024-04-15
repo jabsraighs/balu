@@ -56,6 +56,9 @@ class Invoice
     #[ORM\OneToMany(mappedBy: 'invoice', targetEntity: QuoteLine::class ,  cascade: ['persist'])]
     private Collection $quoteLines;
 
+    #[ORM\ManyToOne(inversedBy: 'entrepriseInvoices')]
+    private ?Entreprise $entreprise = null;
+
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
@@ -266,6 +269,18 @@ class Invoice
                 $quoteLine->setInvoice(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getEntreprise(): ?Entreprise
+    {
+        return $this->entreprise;
+    }
+
+    public function setEntreprise(?Entreprise $entreprise): static
+    {
+        $this->entreprise = $entreprise;
 
         return $this;
     }

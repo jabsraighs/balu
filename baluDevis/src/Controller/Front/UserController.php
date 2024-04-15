@@ -24,8 +24,13 @@ class UserController extends AbstractController
     public function index(UserRepository $userRepository): Response
     {
         $user = $this->getUser();
-
-        $entreprise = $this->getUser();
+        $entreprise = $user->getEntreprise();
+        if ($entreprise === null) {
+            return $this->render('bundles\twigBundles\Exception\errorPartenaire.html.twig', [
+                'message' => 'An error occurred: Enterprise already exists. Please try again later or contact support.'
+            ]);
+        }
+       
         $partenaire = $userRepository->findBy(["entreprise" => $user->getEntreprise()->getId() ]);
          return $this->render('Front/user/index.html.twig', [
              'users' => $partenaire,

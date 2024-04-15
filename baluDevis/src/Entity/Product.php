@@ -33,6 +33,9 @@ class Product
     #[ORM\JoinColumn(nullable: false)]
     private ?user $user = null;
 
+    #[ORM\ManyToOne(inversedBy: 'entrepriseProducts')]
+    private ?Entreprise $entreprise = null;
+
     public function getId(): ?Uuid
     {
         return $this->id;
@@ -94,6 +97,18 @@ class Product
     public function setUser(?user $user): static
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    public function getEntreprise(): ?Entreprise
+    {
+        return $this->entreprise;
+    }
+
+    public function setEntreprise(?Entreprise $entreprise): static
+    {
+        $this->entreprise = $entreprise;
 
         return $this;
     }

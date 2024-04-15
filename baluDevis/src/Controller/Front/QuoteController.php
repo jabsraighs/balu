@@ -24,6 +24,8 @@ class QuoteController extends AbstractController
     #[Route('/', name: '_quote_index', methods: ['GET','POST'])]
     public function index(  QuoteRepository $quoteRepository,  Request $request,  ClientRepository $clientRepository ): Response {
         $user = $this->getUser();
+          $entreprise = $user->getEntreprise();
+   
         // Initialize quote and retrieve user's clients
         $quotes = new Quote();
         $clients = $clientRepository->findBy(['userClient' => $user]);

@@ -54,6 +54,9 @@ class Quote
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
+    #[ORM\ManyToOne(inversedBy: 'entrepriseQuotes')]
+    private ?Entreprise $entreprise = null;
+
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
@@ -260,6 +263,18 @@ class Quote
         $quoteName = "Devis n° {$datePart}_{$quoteIdPart}";
 
         return $quoteName;
+    }
+
+    public function getEntreprise(): ?Entreprise
+    {
+        return $this->entreprise;
+    }
+
+    public function setEntreprise(?Entreprise $entreprise): static
+    {
+        $this->entreprise = $entreprise;
+
+        return $this;
     }
 }
 
