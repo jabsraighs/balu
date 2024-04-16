@@ -17,25 +17,55 @@ class ClientController extends AbstractController
     #[Route('/', name: '_client_index', methods: ['GET'])]
     public function index(ClientRepository $clientRepository): Response
     {
-        $user = $this->getUser()->getId();
-        $userClients = $clientRepository->findBy(['userClient' => $user]);
+        
+        $user = $this->getUser();
+        $roles = $user->getRoles();
+        if (in_array('ROLE_COMPTABLE', $roles)) {
+            $entreprise = $user->getEntreprise();
+            dd($entreprise);
+            $userClients = $entreprise->getEntrepriseClients();
+        }
+        elseif (in_array('ROLE_USER_ENTREPRISE', $roles)) {
+            $entreprise = $user->getEntreprise();
+            $userClients = $entreprise->getEntrepriseClients();
+        }
+        else {
+            $userClients = $clientRepository->findBy(['userClient' => $user->getId()]);            dd($entreprise);
+        }
 
         return $this->render('Front/user/client/index.html.twig', [
             'clients' => $userClients,
         ]);
     }
 
-
-
     #[Route('/new', name: '_client_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $client = new Client();
         $user = $this->getUser();
+        $entreprise = $user->getEntreprise();
         $form = $this->createForm(ClientType::class, $client);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            if (in_array('ROLE_COMPTABLE', $user->getRoles())) {
+                $client->setEntreprise($user->getEntreprise());
+                $entreprise->addEntrepriseClient($client);
+                $entityManager->persist($client);
+                $entityManager->flush();
+                return $this->redirectToRoute('front_user_client_index', [], Response::HTTP_SEE_OTHER);
+    
+            } elseif (in_array('ROLE_AUTO_ENTREPRENEUR', $user->getRoles()))  {
+                $client->setUserClient($user);
+                $entityManager->persist($client);
+                $entityManager->flush();
+                return $this->redirectToRoute('front_user_client_index', [], Response::HTTP_SEE_OTHER);
+            }
+            else {
+                // If user does not have access, return an error message
+                $this->addFlash('error', 'You do not have access to create a client.');
+                return $this->redirectToRoute('front_dashboard'); // Assuming there's a dashboard route
+            }
             $client = $client->setUserClient($user);
             $entityManager->persist($client);
             $entityManager->flush();
@@ -86,3 +116,4 @@ class ClientController extends AbstractController
         return $this->redirectToRoute('front_user_client_index', [], Response::HTTP_SEE_OTHER);
     }
 }
+

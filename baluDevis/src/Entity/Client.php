@@ -36,7 +36,7 @@ class Client
     private Collection $quotes;
 
     #[ORM\ManyToOne(inversedBy: 'clients')]
-    #[ORM\JoinColumn(nullable: false)]
+    
     private ?User $userClient = null;
 
     #[ORM\OneToMany(mappedBy: 'client', targetEntity: Invoice::class)]

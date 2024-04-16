@@ -33,6 +33,7 @@
                     <tr>
                         <th scope="col" class="px-6 py-3 font-bold">email</th>
                         <th scope="col" class="px-6 py-3 font-bold">roles</th>
+                        <th scope="col" class="px-6 py-3 font-bold">compte Verifie</th>
                         <th scope="col" class="px-6 py-3 font-bold">Actions</th>
                     </tr>
                 </thead>
@@ -40,9 +41,12 @@
                 {% for user in users %}
                     <tr class="product-row bg-white border-b transition-opacity duration-300 ease-in-out">
                         <th scope="row" class="px-6 py-4 font-medium text-secondary-900 whitespace-nowrap">{{ user.email }}</th>
-                       
                         <td class="px-6 py-4 text-secondary-300">{{ user.roles[0] }}</td>
-
+                        {% if user.isVerified %} 
+                            <td class="px-6 py-4 text-secondary-300">{{ user.isVerified}}</td>
+                        {% else %}
+                            <td class="px-6 py-4 text-secondary-300"> ce collaborateur doit activé son compte </td>
+                        {% endif %}
                         <td class="px-6 py-4 text-secondary-300 flex items-center gap-2">
                         <div class="inline-flex rounded-md shadow-sm items-center w-full h-full">
                             <a href="{{ path('front_user_show', {'id': user.id}) }}" aria-current="page" class="px-4 py-2 text-sm font-medium text-primary-700 bg-white border border-gray-200 rounded-s-lg hover:bg-gray-100 focus:z-10 focus:ring-2 ">
