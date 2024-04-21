@@ -5,8 +5,8 @@
 
 {% block body %}
 
-{% if is_granted('ROLE_AUTO_ENTREPRENEUR') and app.user.isVerified == true%}
-				<div class="flex flex-col gap-7">
+{% if is_granted('ROLE_AUTO_ENTREPRENEUR') and app.user.isVerified == true %}
+	<div class="flex flex-col gap-7">
 		<div>
 			<h1 class="text-4xl text-secondary-500 font-extrabold">Tableau de bord de votre Auto Entreprise</h1>
 			<p class="text-xs text-gray-500"> Bienvenue sur votre tableau de bord </p>
@@ -39,28 +39,29 @@
 			</div>
 		</div>
 	</div>	
-	{% elseif is_granted('ROLE_COMPTABLE') and app.user.isVerified == true%}
-	<div class="flex flex-col gap-7">
-	<div class="flex flex-col gap-7">
+	{% elseif is_granted('ROLE_COMPTABLE') and app.user.isVerified == true %}
+
+	
 			
 			{% if not app.user.userCreateEntreprise %}
-			<div class="flex flex-col gap-3">
-				<div class="w-full h-20 bg-white border border-primaryLight rounded-3xl flex px-8 py-4">
-					<svg fill="#000000" height="55" width="55" version="1.1" 
-					id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
-					viewBox="0 0 512 512" xml:space="preserve"><g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-					<g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier">
-					<g transform="translate(1 1)"> <g> <g> <path d="M331.8-1H178.2C112.493-1,58.733,52.76,58.733,118.467v153.6c0,65.707,53.76,119.467,119.467,119.467h28.16 c7.68,0,14.507,6.827,14.507,14.507v84.48c0,9.387,5.973,17.067,14.507,19.627C237.08,511,239.64,511,241.347,511 c6.827,0,12.8-3.413,17.067-8.533l52.053-74.24c13.653-20.48,34.133-34.987,58.027-42.667 c49.493-16.213,82.773-61.44,82.773-113.493v-153.6C451.267,52.76,397.507-1,331.8-1z M434.2,272.92 c0,44.373-28.16,83.627-70.827,97.28c-27.307,9.387-50.347,25.6-66.56,48.64l-52.907,74.24c-0.853,1.707-2.56,0.853-3.413,0.853 c-0.853-0.853-2.56-0.853-2.56-3.413v-84.48c0-17.067-14.507-31.573-31.573-31.573H178.2c-56.32,0-102.4-46.08-102.4-102.4 v-153.6c0-56.32,46.08-102.4,102.4-102.4h153.6c56.32,0,102.4,46.08,102.4,102.4V272.92z"></path> <path d="M297.667,289.133h-8.533v-128c0-14.507-11.093-25.6-25.6-25.6H229.4c-14.507,0-25.6,11.093-25.6,25.6 c0,14.507,11.093,25.6,25.6,25.6h8.533v102.4H229.4c-14.507,0-25.6,11.093-25.6,25.6c0,14.507,11.093,25.6,25.6,25.6h68.267 c14.507,0,25.6-11.093,25.6-25.6C323.267,300.227,312.173,289.133,297.667,289.133z M297.667,323.267H229.4 c-5.12,0-8.533-3.413-8.533-8.533s3.413-8.533,8.533-8.533h17.067c5.12,0,8.533-3.413,8.533-8.533V178.2 c0-5.12-3.413-8.533-8.533-8.533H229.4c-5.12,0-8.533-3.413-8.533-8.533s3.413-8.533,8.533-8.533h34.133 c4.267,0,8.533,3.413,8.533,8.533v136.533c0,5.12,3.413,8.533,8.533,8.533h17.067c5.12,0,8.533,3.413,8.533,8.533 S302.787,323.267,297.667,323.267z"></path> <path d="M255,118.467c18.773,0,34.133-15.36,34.133-34.133c0-18.773-15.36-34.133-34.133-34.133s-34.133,15.36-34.133,34.133 C220.867,103.107,236.227,118.467,255,118.467z M255,67.267c9.387,0,17.067,7.68,17.067,17.067 c0,9.387-7.68,17.067-17.067,17.067c-9.387,0-17.067-7.68-17.067-17.067C237.933,74.947,245.613,67.267,255,67.267z">
-					</path> </g> </g> </g> </g></svg>
-					<p class="text-xl font-semibold text-secondary-500"> Vous avez bien crée le compte maintenant veuillez crée votre entreprise ci dessous </p>
+				<div class="flex flex-col gap-3">
+					<div class="w-full h-20 bg-white border border-primaryLight rounded-3xl flex px-8 py-4">
+						<svg fill="#000000" height="55" width="55" version="1.1" 
+						id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
+						viewBox="0 0 512 512" xml:space="preserve"><g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+						<g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier">
+						<g transform="translate(1 1)"> <g> <g> <path d="M331.8-1H178.2C112.493-1,58.733,52.76,58.733,118.467v153.6c0,65.707,53.76,119.467,119.467,119.467h28.16 c7.68,0,14.507,6.827,14.507,14.507v84.48c0,9.387,5.973,17.067,14.507,19.627C237.08,511,239.64,511,241.347,511 c6.827,0,12.8-3.413,17.067-8.533l52.053-74.24c13.653-20.48,34.133-34.987,58.027-42.667 c49.493-16.213,82.773-61.44,82.773-113.493v-153.6C451.267,52.76,397.507-1,331.8-1z M434.2,272.92 c0,44.373-28.16,83.627-70.827,97.28c-27.307,9.387-50.347,25.6-66.56,48.64l-52.907,74.24c-0.853,1.707-2.56,0.853-3.413,0.853 c-0.853-0.853-2.56-0.853-2.56-3.413v-84.48c0-17.067-14.507-31.573-31.573-31.573H178.2c-56.32,0-102.4-46.08-102.4-102.4 v-153.6c0-56.32,46.08-102.4,102.4-102.4h153.6c56.32,0,102.4,46.08,102.4,102.4V272.92z"></path> <path d="M297.667,289.133h-8.533v-128c0-14.507-11.093-25.6-25.6-25.6H229.4c-14.507,0-25.6,11.093-25.6,25.6 c0,14.507,11.093,25.6,25.6,25.6h8.533v102.4H229.4c-14.507,0-25.6,11.093-25.6,25.6c0,14.507,11.093,25.6,25.6,25.6h68.267 c14.507,0,25.6-11.093,25.6-25.6C323.267,300.227,312.173,289.133,297.667,289.133z M297.667,323.267H229.4 c-5.12,0-8.533-3.413-8.533-8.533s3.413-8.533,8.533-8.533h17.067c5.12,0,8.533-3.413,8.533-8.533V178.2 c0-5.12-3.413-8.533-8.533-8.533H229.4c-5.12,0-8.533-3.413-8.533-8.533s3.413-8.533,8.533-8.533h34.133 c4.267,0,8.533,3.413,8.533,8.533v136.533c0,5.12,3.413,8.533,8.533,8.533h17.067c5.12,0,8.533,3.413,8.533,8.533 S302.787,323.267,297.667,323.267z"></path> <path d="M255,118.467c18.773,0,34.133-15.36,34.133-34.133c0-18.773-15.36-34.133-34.133-34.133s-34.133,15.36-34.133,34.133 C220.867,103.107,236.227,118.467,255,118.467z M255,67.267c9.387,0,17.067,7.68,17.067,17.067 c0,9.387-7.68,17.067-17.067,17.067c-9.387,0-17.067-7.68-17.067-17.067C237.933,74.947,245.613,67.267,255,67.267z">
+						</path> </g> </g> </g> </g></svg>
+						<p class="text-xl font-semibold text-secondary-500"> Vous avez bien crée le compte maintenant veuillez crée votre entreprise ci dessous </p>
+					</div>
 				</div>
-			</div>
-			
+				
 				<a href="{{ path('front_user_entreprise_new') }}" class="bg-primary-300 hover:bg-primary-400 text-white font-bold py-2 px-4 rounded inline-flex items-center transition-colors ease-linear">
 					<span>Créer votre Entreprise</span>
 				</a>
-{% elseif is_granted('ROLE_USER_ENTREPRISE') and app.user.isVerified == true%}
-				<div class="flex flex-col gap-7">
+			{% endif %}
+		
+			<div class="flex flex-col gap-7">
 		<div>
 			<h1 class="text-4xl text-secondary-500 font-extrabold">Tableau de bord de votre Entreprise</h1>
 			<p class="text-xs text-gray-500"> Bienvenue sur votre tableau de bord </p>
@@ -92,72 +93,106 @@
 				{% embed '_components/_invoice_item.html.twig' %}{% endembed %}
 			</div>
 		</div>
-	</div>
+	</div>	
+	{% elseif is_granted('ROLE_USER_ENTREPRISE') and app.user.isVerified == true %}
 
-			{% endif %}
-		<div>
-			<h1 class="text-4xl text-secondary-500 font-extrabold">Tableau de bord Entreprise</h1>
-			<p class="text-xs text-gray-500"> Bienvenue sur votre tableau de bord </p>
-		</div>
+					<div class="flex flex-col gap-7">
+			<div>
+				<h1 class="text-4xl text-secondary-500 font-extrabold">Tableau de bord de votre Entreprise</h1>
+				<p class="text-xs text-gray-500"> Bienvenue sur votre tableau de bord </p>
+			</div>
 
-		<div class="flex gap-3">
-			{% embed '_components/_card.html.twig' %}
-				{% block title %}Revenue
-				{% endblock %}
-				{% block total %}2500
-				{% endblock %}
-				{% block icon %}
-					<svg width="24" height="24" viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-						<path d="M2 12C2 7.28595 2 4.92893 3.46447 3.46447C4.92893 2 7.28595 2 12 2C16.714 2 19.0711 2 20.5355 3.46447C22 4.92893 22 7.28595 22 12C22 16.714 22 19.0711 20.5355 20.5355C19.0711 22 16.714 22 12 22C7.28595 22 4.92893 22 3.46447 20.5355C2 19.0711 2 16.714 2 12Z" stroke="#AAAAAA" stroke-width="2"/>
-						<path d="M7 18V9" stroke="#AAAAAA" stroke-width="2" stroke-linecap="round"/>
-						<path d="M12 18V6" stroke="#AAAAAA" stroke-width="2" stroke-linecap="round"/>
-						<path d="M17 18V13" stroke="#AAAAAA" stroke-width="2" stroke-linecap="round"/>
-					</svg>
-				{% endblock %}
-			{% endembed %}
-		</div>
+			<div class="flex gap-3">
+				{% embed '_components/_card.html.twig' %}
+					{% block title %}Revenue
+					{% endblock %}
+					{% block total %}2500
+					{% endblock %}
+					{% block icon %}
+						<svg width="24" height="24" viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+							<path d="M2 12C2 7.28595 2 4.92893 3.46447 3.46447C4.92893 2 7.28595 2 12 2C16.714 2 19.0711 2 20.5355 3.46447C22 4.92893 22 7.28595 22 12C22 16.714 22 19.0711 20.5355 20.5355C19.0711 22 16.714 22 12 22C7.28595 22 4.92893 22 3.46447 20.5355C2 19.0711 2 16.714 2 12Z" stroke="#AAAAAA" stroke-width="2"/>
+							<path d="M7 18V9" stroke="#AAAAAA" stroke-width="2" stroke-linecap="round"/>
+							<path d="M12 18V6" stroke="#AAAAAA" stroke-width="2" stroke-linecap="round"/>
+							<path d="M17 18V13" stroke="#AAAAAA" stroke-width="2" stroke-linecap="round"/>
+						</svg>
+					{% endblock %}
+				{% endembed %}
+			</div>
 
-		<div class="flex flex-col gap-7">
-			<h2 class="text-xl font-semibold text-secondary-500">Factures récentes</h2>
-			<div class="flex flex-col gap-3">
-				{% embed '_components/_invoice_item.html.twig' %}{% endembed %}
-				{% embed '_components/_invoice_item.html.twig' %}{% endembed %}
-				{% embed '_components/_invoice_item.html.twig' %}{% endembed %}
-				{% embed '_components/_invoice_item.html.twig' %}{% endembed %}
+			<div class="flex flex-col gap-7">
+				<h2 class="text-xl font-semibold text-secondary-500">Factures récentes</h2>
+				<div class="flex flex-col gap-3">
+					{% embed '_components/_invoice_item.html.twig' %}{% endembed %}
+					{% embed '_components/_invoice_item.html.twig' %}{% endembed %}
+					{% embed '_components/_invoice_item.html.twig' %}{% endembed %}
+					{% embed '_components/_invoice_item.html.twig' %}{% endembed %}
+				</div>
 			</div>
 		</div>
-	</div>	
-{% else %}
-		<div class="flex flex-col gap-7">
-				<div class="flex">
-					<p class="text-xs text-gray-500"> Bienvenue sur Vous devez verifier Votre compte afin de pouvoir accéder au site </p>
 
-						<a href={{path("app_Resend_email")}} class="h-16 w-full flex items-center justify-center relative gap-4 cursor-pointer hover:opacity-70">
-								<div class="flex items-center gap-3 w-40">
+			<div>
+				<h1 class="text-4xl text-secondary-500 font-extrabold">Tableau de bord Entreprise</h1>
+				<p class="text-xs text-gray-500"> Bienvenue sur votre tableau de bord </p>
+			</div>
 
-									<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 568.557 568.557" xml:space="preserve" fill="#000000">
-									<g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-									<g id="SVGRepo_iconCarrier"> <rect x="28.822" y="161.736" style="fill:#333333;" width="511.424" height="350.56"></rect>
-									<g> <g> <polygon style="fill:#FFFFFF;" points="284.262,388.521 3.782,217.112 16.278,196.616 284.198,360.361 552.118,195.368 564.71,215.8 "
-									></polygon> <rect x="-45.389" y="412.098" transform="matrix(-0.6225 0.7826 -0.7826 -0.6225 493.7142 610.0538)" style="fill:#FFFFFF;" width="290.236" height="24"></rect> <rect x="456.868" y="278.999" transform="matrix(-0.7829 0.6222 -0.6222 -0.7829 1099.8141 464.4384)" style="fill:#FFFFFF;" width="24.001" height="290.249"></rect> </g> 
-									</g> <g> <rect x="276.246" y="110.008" style="fill:#0BA4E0;" width="16" height="161.6">
-									</rect> <polygon style="fill:#0BA4E0;" points="349.078,116.424 284.246,23.352 219.414,116.424 "></polygon> </g> </g>
-									</svg>
-									<p class="text-delete-500"> renvoie du lien de verification du compte </p>
-								</div>
-						</a>
-						<a href={{path("app_logout")}} class="h-16 w-full flex items-center justify-center relative gap-4 cursor-pointer hover:opacity-70">
-								<div class="flex items-center gap-3 w-40">
+			<div class="flex gap-3">
+				{% embed '_components/_card.html.twig' %}
+					{% block title %}Revenue
+					{% endblock %}
+					{% block total %}2500
+					{% endblock %}
+					{% block icon %}
+						<svg width="24" height="24" viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+							<path d="M2 12C2 7.28595 2 4.92893 3.46447 3.46447C4.92893 2 7.28595 2 12 2C16.714 2 19.0711 2 20.5355 3.46447C22 4.92893 22 7.28595 22 12C22 16.714 22 19.0711 20.5355 20.5355C19.0711 22 16.714 22 12 22C7.28595 22 4.92893 22 3.46447 20.5355C2 19.0711 2 16.714 2 12Z" stroke="#AAAAAA" stroke-width="2"/>
+							<path d="M7 18V9" stroke="#AAAAAA" stroke-width="2" stroke-linecap="round"/>
+							<path d="M12 18V6" stroke="#AAAAAA" stroke-width="2" stroke-linecap="round"/>
+							<path d="M17 18V13" stroke="#AAAAAA" stroke-width="2" stroke-linecap="round"/>
+						</svg>
+					{% endblock %}
+				{% endembed %}
+			</div>
 
-									<svg width="24" height="25" viewbox="0 0 24 25" fill="none" class="text-delete-500" xmlns="http://www.w3.org/2000/svg">
-										<path d="M15 12.4998H2M2 12.4998L5.5 9.49976M2 12.4998L5.5 15.4998" stroke="#CD2020" stroke-opacity="0.8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-										<path d="M9.00195 7.49976C9.01406 5.32473 9.11051 4.14682 9.87889 3.37844C10.7576 2.49976 12.1718 2.49976 15.0002 2.49976H16.0002C18.8286 2.49976 20.2429 2.49976 21.1215 3.37844C22.0002 4.25712 22.0002 5.67133 22.0002 8.49976V16.4998C22.0002 19.3282 22.0002 20.7424 21.1215 21.6211C20.3531 22.3895 19.1752 22.486 17 22.4981M9.00195 17.4998C9.01406 19.6748 9.11051 20.8527 9.87889 21.6211C10.5202 22.2624 11.4467 22.4357 13 22.4825" stroke="#CD2020" stroke-opacity="0.8" stroke-width="2" stroke-linecap="round"/>
-									</svg>
-									<p class="text-delete-500">Se déconnecter</p>
-								</div>
-							</a>
+			<div class="flex flex-col gap-7">
+				<h2 class="text-xl font-semibold text-secondary-500">Factures récentes</h2>
+				<div class="flex flex-col gap-3">
+					{% embed '_components/_invoice_item.html.twig' %}{% endembed %}
+					{% embed '_components/_invoice_item.html.twig' %}{% endembed %}
+					{% embed '_components/_invoice_item.html.twig' %}{% endembed %}
+					{% embed '_components/_invoice_item.html.twig' %}{% endembed %}
 				</div>
-{%endif%}
+			</div>
+		</div>	
+	{% else %}
+			<div class="flex flex-col gap-7">
+					<div class="flex">
+						<p class="text-xs text-gray-500"> Bienvenue sur Vous devez verifier Votre compte afin de pouvoir accéder au site </p>
+
+							<a href={{path("app_Resend_email")}} class="h-16 w-full flex items-center justify-center relative gap-4 cursor-pointer hover:opacity-70">
+									<div class="flex items-center gap-3 w-40">
+
+										<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 568.557 568.557" xml:space="preserve" fill="#000000">
+										<g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+										<g id="SVGRepo_iconCarrier"> <rect x="28.822" y="161.736" style="fill:#333333;" width="511.424" height="350.56"></rect>
+										<g> <g> <polygon style="fill:#FFFFFF;" points="284.262,388.521 3.782,217.112 16.278,196.616 284.198,360.361 552.118,195.368 564.71,215.8 "
+										></polygon> <rect x="-45.389" y="412.098" transform="matrix(-0.6225 0.7826 -0.7826 -0.6225 493.7142 610.0538)" style="fill:#FFFFFF;" width="290.236" height="24"></rect> <rect x="456.868" y="278.999" transform="matrix(-0.7829 0.6222 -0.6222 -0.7829 1099.8141 464.4384)" style="fill:#FFFFFF;" width="24.001" height="290.249"></rect> </g> 
+										</g> <g> <rect x="276.246" y="110.008" style="fill:#0BA4E0;" width="16" height="161.6">
+										</rect> <polygon style="fill:#0BA4E0;" points="349.078,116.424 284.246,23.352 219.414,116.424 "></polygon> </g> </g>
+										</svg>
+										<p class="text-delete-500"> renvoie du lien de verification du compte </p>
+									</div>
+							</a>
+							<a href={{path("app_logout")}} class="h-16 w-full flex items-center justify-center relative gap-4 cursor-pointer hover:opacity-70">
+									<div class="flex items-center gap-3 w-40">
+
+										<svg width="24" height="25" viewbox="0 0 24 25" fill="none" class="text-delete-500" xmlns="http://www.w3.org/2000/svg">
+											<path d="M15 12.4998H2M2 12.4998L5.5 9.49976M2 12.4998L5.5 15.4998" stroke="#CD2020" stroke-opacity="0.8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+											<path d="M9.00195 7.49976C9.01406 5.32473 9.11051 4.14682 9.87889 3.37844C10.7576 2.49976 12.1718 2.49976 15.0002 2.49976H16.0002C18.8286 2.49976 20.2429 2.49976 21.1215 3.37844C22.0002 4.25712 22.0002 5.67133 22.0002 8.49976V16.4998C22.0002 19.3282 22.0002 20.7424 21.1215 21.6211C20.3531 22.3895 19.1752 22.486 17 22.4981M9.00195 17.4998C9.01406 19.6748 9.11051 20.8527 9.87889 21.6211C10.5202 22.2624 11.4467 22.4357 13 22.4825" stroke="#CD2020" stroke-opacity="0.8" stroke-width="2" stroke-linecap="round"/>
+										</svg>
+										<p class="text-delete-500">Se déconnecter</p>
+									</div>
+								</a>
+					</div>
+	{% endif %}
 
 {% endblock %}
 

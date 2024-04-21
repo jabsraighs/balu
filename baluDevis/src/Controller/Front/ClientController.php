@@ -10,8 +10,11 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
+
 
 #[Route('/user/client',name: '_user')]
+#[isGranted("ROLE_USER")]
 class ClientController extends AbstractController
 {
     #[Route('/', name: '_client_index', methods: ['GET'])]
@@ -22,15 +25,24 @@ class ClientController extends AbstractController
         $roles = $user->getRoles();
         if (in_array('ROLE_COMPTABLE', $roles)) {
             $entreprise = $user->getEntreprise();
-            dd($entreprise);
+            if ($entreprise === null) {
+                return $this->render('bundles\twigBundles\Exception\errorPartenaire.html.twig', [
+                   'message' => 'An error occurred: Enterprise already exists. Please try again later or contact support.'
+               ]);
+           }
             $userClients = $entreprise->getEntrepriseClients();
         }
         elseif (in_array('ROLE_USER_ENTREPRISE', $roles)) {
             $entreprise = $user->getEntreprise();
+            if ($entreprise === null) {
+                return $this->render('bundles\twigBundles\Exception\errorPartenaire.html.twig', [
+                   'message' => 'An error occurred: Enterprise already exists. Please try again later or contact support.'
+               ]);
+           }
             $userClients = $entreprise->getEntrepriseClients();
         }
         else {
-            $userClients = $clientRepository->findBy(['userClient' => $user->getId()]);            dd($entreprise);
+            $userClients = $clientRepository->findBy(['userClient' => $user->getId()]);            
         }
 
         return $this->render('Front/user/client/index.html.twig', [
@@ -44,6 +56,11 @@ class ClientController extends AbstractController
         $client = new Client();
         $user = $this->getUser();
         $entreprise = $user->getEntreprise();
+        if ($entreprise === null) {
+             return $this->render('bundles\twigBundles\Exception\errorPartenaire.html.twig', [
+                'message' => 'An error occurred: Enterprise already exists. Please try again later or contact support.'
+            ]);
+        }
         $form = $this->createForm(ClientType::class, $client);
         $form->handleRequest($request);
 
@@ -67,12 +84,13 @@ class ClientController extends AbstractController
                 return $this->redirectToRoute('front_dashboard'); // Assuming there's a dashboard route
             }
             $client = $client->setUserClient($user);
+            dd($user,$entreprise,$user);
             $entityManager->persist($client);
             $entityManager->flush();
 
             return $this->redirectToRoute('front_user_client_index', [], Response::HTTP_SEE_OTHER);
         }
-
+       
         return $this->render('Front/user/client/new.html.twig', [
             'client' => $client,
             'form' => $form,

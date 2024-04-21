@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Entreprise;
 use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
@@ -18,8 +19,8 @@ class UserFixtures extends Fixture
         $faker = \Faker\Factory::create('fr-Fr');
         $password = 'azerty';
         $isVerified = [false, true];
+        $roles = ["ROLE_AUTO_ENTREPRENEUR","ROLE_COMPTABLE"];
         $date = new \DateTimeImmutable();
-        
         $object = (new User())
             ->setEmail('azerty@gmail.com')
             ->setRoles(['ROLE_AUTO_ENTREPRENEUR'])
@@ -38,35 +39,17 @@ class UserFixtures extends Fixture
 
             $object->setPassword($this->passwordHasher->hashPassword($object, $password));
             $manager->persist($object);
-        // Create users to serve as "entreprise"
-        $selectedUsers = [];
-        for ($j = 0; $j < 3; $j++) {
-            $enterprise = (new User())
-                ->setEmail('entreprise' . $j . '@example.com')
-                ->setRoles(['ROLE_COMPTABLE'])
-                ->setIsVerified(true)
-                ->setCreatedAt($date);
-            $enterprise->setPassword($this->passwordHasher->hashPassword($enterprise, $password));
-            $manager->persist($enterprise);
-            $selectedUsers[] = $enterprise;
-        }
 
-        // Create users and assign them to the "entreprise" users
-        for ($i = 0; $i < 100; $i++) {
+        for ($i = 0; $i < 15; $i++) {
             $user = (new User())
                 ->setEmail($faker->email())
-                ->setRoles(['ROLE_USER_ENTREPRISE'])
+                ->setRoles([$roles[array_rand($roles)]])
                 ->setIsVerified($isVerified[array_rand($isVerified)])
                 ->setCreatedAt($date);
             $user->setPassword($this->passwordHasher->hashPassword($user, $password));
-            
-            // Randomly assign a user to one of the "entreprise" users
-            $enterprise = $selectedUsers[array_rand($selectedUsers)];
-            $user->setEntreprise($enterprise);
-            
             $manager->persist($user);
         }
-        for ($i = 0; $i < 10; $i++) {
+        for ($i = 0; $i < 60; $i++) {
             $user = (new User())
                 ->setEmail($faker->email())
                 ->setRoles([])
