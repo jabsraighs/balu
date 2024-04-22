@@ -50,7 +50,7 @@ class Invoice
     private ?float $totalTva = null;
 
     #[ORM\ManyToOne(inversedBy: 'invoices')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: true)]
     private ?Client $client= null;
 
     #[ORM\OneToMany(mappedBy: 'invoice', targetEntity: QuoteLine::class ,  cascade: ['persist'])]

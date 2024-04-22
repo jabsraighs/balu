@@ -40,10 +40,14 @@ class InvoiceController extends AbstractController
     {
         $user = $this->getUser();
         $invoice = new Invoice();
-        $clientsInvoice = $clientRepository->findBy(['userClient' => $user]);
         // Créer le formulaire et transmettre les clients
+        if(in_array('ROLE_COMPTABLE',$user->getRoles())) {
+            $clientsInvoice = $clientRepository->findBy(['entreprise' => $user]);
+        }
+        else {
+            $clientsInvoice = $clientRepository->findBy(['userClient' => $user]);
+        }
         $form = $this->createForm(InvoiceType::class,$invoice, ['client' => $clientsInvoice]);
-
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

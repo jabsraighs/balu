@@ -34,7 +34,7 @@ class EntrepriseController extends AbstractController
         $existAlready = $this->getUser()->getUserCreateEntreprise();
        
             if ($existAlready) {
-                return $this->render('bundles\twigBundles\Exception\errors.html.twig', [
+                return $this->render('bundles\twigBundles\Exception\error.html.twig', [
                     'message' => 'An error occurred: Enterprise already exists. Please try again later or contact support.'
                 ]);
             }

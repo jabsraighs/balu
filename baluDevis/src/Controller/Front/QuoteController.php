@@ -24,35 +24,21 @@ class QuoteController extends AbstractController
     #[Route('/', name: '_quote_index', methods: ['GET','POST'])]
     public function index(  QuoteRepository $quoteRepository,  Request $request,  ClientRepository $clientRepository ): Response {
         $user = $this->getUser();
-          $entreprise = $user->getEntreprise();
-   
-        // Initialize quote and retrieve user's clients
-        $quotes = new Quote();
-        $clients = $clientRepository->findBy(['userClient' => $user]);
-
-        // Create form and pass clients to it
-        $form = $this->createForm(QuoteFilterType::class, $quotes, ['clients' => $clients]);
-        $form->handleRequest($request);
-
-        // Handle form submission and validation
-        if ($form->isSubmitted() && $form->isValid()) {
-            // Apply findSearch method to filter quotes
-            $quotes = $quoteRepository->findSearch($quotes, $user);
-            return $this->render('Front/user/quote/index.html.twig', [
-                'form' => $form,
-                'quotes' => $quotes,
-            ]);
+        $roles = $user->getRoles();
+        if (in_array('ROLE_COMPTABLE', $roles) or in_array('ROLE_USER_ENTREPRISE', $roles)) {
+            $entreprise = $user->getEntreprise();
+            if ($entreprise === null) {
+                return $this->render('bundles\twigBundles\Exception\errorPartenaire.html.twig', [
+                   'message' => 'An error occurred: Enterprise already exists. Please try again later or contact support.'
+               ]);
+           }
+            $userQuotes = $entreprise->getEntrepriseQuotes();
         }
 
-        // Retrieve quotes associated with the user
-        $userQuotes = $quoteRepository->findBy(
-            ['userQuote' => $user],
-            ['id' => 'DESC'] // Order by the 'createdAt' property in descending order
-        );
-
-        // Render the template with form and quotes data
+        else {
+            $userQuotes = $quoteRepository->findBy(['userClient' => $user->getId()]);            
+        }
         return $this->render('Front/user/quote/index.html.twig', [
-            'form' => $form->createView(),
             'quotes' => $userQuotes,
         ]);
     }
@@ -63,24 +49,33 @@ class QuoteController extends AbstractController
     {
         $quote = new Quote();
         $user = $this->getUser();
-        // Récupérer les clients de l'utilisateur
-        $clients = $clientRepository->findBy(['userClient' => $user]);
-        // Créer le formulaire et transmettre les clients
-
+        $clients = null;
+        if(in_array('ROLE_COMPTABLE',$user->getRoles())) {
+            $entreprise = $user->getEntreprise();
+            $clients = $clientRepository->findBy(['entreprise' => $entreprise]);
+        } else {
+            $clients = $clientRepository->findBy(['userClient' => $user]);
+        }
         $form = $this->createForm(QuoteType::class,$quote, ['clients' => $clients]);
         $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            //service calcul quoteLine and set Quote attributes
-            $calculService->calculQuote($quote,$user);
-                // Persist and flush the entities
-            $entityManager->persist($quote);
-            $quoteName = $quote->generateName();
-            $quote = $quote->setName($quoteName);
-            $entityManager->flush();
+            if ($form->isSubmitted() && $form->isValid()) {
+                if(in_array('ROLE_COMPTABLE',$user->getRoles())) {
+                    $calculService->calculQuote($quote,$user);
+                    $entityManager->persist($quote);
+                    $quoteName = $quote->generateName();
+                    $quote = $quote->setName($quoteName);
+                } 
+                else {
+                    $calculService->calculQuote($quote,$user);
+                    $entityManager->persist($quote);
+                    $quoteName = $quote->generateName();
+                    $quote = $quote->setName($quoteName);
+                }
+                $entityManager->flush();
 
-            return $this->redirectToRoute('front_user_quote_index', [], Response::HTTP_SEE_OTHER);
-        }
-
+                return $this->redirectToRoute('front_user_quote_index', [], Response::HTTP_SEE_OTHER);
+            }
+        
         return $this->render('Front/user/quote/new.html.twig', [
             'quote' => $quote,
             'form' => $form,
@@ -90,7 +85,13 @@ class QuoteController extends AbstractController
     #[Route('/{id}', name: '_quote_show', methods: ['GET'])]
     public function show(Quote $quote,ClientRepository $clientRepository): Response
     {
-        $client = $quote->getClient()->getEmail();
+        $user = $this->getUser();
+        if(in_array('ROLE_COMPTABLE',$user->getRoles())) {
+            $entreprise = $quote->getEntreprise();
+            $client = $entreprise->getEmail();
+        } else {
+            $client = $quote->getClient()->getEmail();
+        }
 
         return $this->render('Front/user/quote/show.html.twig', [
 
@@ -102,8 +103,13 @@ class QuoteController extends AbstractController
     #[Route('/{id}/edit', name: '_quote_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Quote $quote, EntityManagerInterface $entityManager, ClientRepository $clientRepository,CalculService $calculService): Response {
         $user = $this->getUser();
-        $clients = $clientRepository->findBy(['userClient' => $user]);
-        // Créer le formulaire et transmettre les clients
+        $clients = null;
+        if(in_array('ROLE_COMPTABLE',$user->getRoles())) {
+            $entreprise = $user->getEntreprise();
+            $clients = $clientRepository->findBy(['entreprise' => $entreprise]);
+        } else {
+            $clients = $clientRepository->findBy(['userClient' => $user]);
+        }
 
         $form = $this->createForm(QuoteType::class,$quote, ['clients' => $clients]);
         $form->handleRequest($request);
@@ -112,9 +118,9 @@ class QuoteController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
 
             $calculService->calculQuote($quote,$user);
-                // Persist and flush the entities
-            $entityManager->persist($quote);
+
             $quote = $quote->setName($quote->getName());
+            $entityManager->persist($quote);
             $entityManager->flush();
 
             return $this->redirectToRoute('front_user_quote_index', [], Response::HTTP_SEE_OTHER);

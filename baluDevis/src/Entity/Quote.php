@@ -48,7 +48,7 @@ class Quote
     private ?string $Description = null;
 
     #[ORM\ManyToOne(inversedBy: 'quotes')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: true)]
     private ?User $userQuote = null;
 
     #[ORM\Column(length: 255)]

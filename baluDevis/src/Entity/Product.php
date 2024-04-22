@@ -30,7 +30,7 @@ class Product
     private ?Category $category = null;
 
     #[ORM\ManyToOne(inversedBy: 'products')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: true)]
     private ?user $user = null;
 
     #[ORM\ManyToOne(inversedBy: 'entrepriseProducts')]

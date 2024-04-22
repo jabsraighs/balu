@@ -44,7 +44,6 @@ class ClientController extends AbstractController
         else {
             $userClients = $clientRepository->findBy(['userClient' => $user->getId()]);            
         }
-
         return $this->render('Front/user/client/index.html.twig', [
             'clients' => $userClients,
         ]);
@@ -81,12 +80,7 @@ class ClientController extends AbstractController
             else {
                 // If user does not have access, return an error message
                 $this->addFlash('error', 'You do not have access to create a client.');
-                return $this->redirectToRoute('front_dashboard'); // Assuming there's a dashboard route
             }
-            $client = $client->setUserClient($user);
-            dd($user,$entreprise,$user);
-            $entityManager->persist($client);
-            $entityManager->flush();
 
             return $this->redirectToRoute('front_user_client_index', [], Response::HTTP_SEE_OTHER);
         }

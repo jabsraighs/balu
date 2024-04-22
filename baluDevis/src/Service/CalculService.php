@@ -6,16 +6,16 @@ use App\Entity\User;
 use App\Entity\Invoice;
 
 class CalculService {
-    // Add methods for calculations and other operations related to quotes
+
     public function calculQuote(Quote $quote, User $user): Quote {
-        $quoteLines = $quote->getQuoteLines(); // Removed $this-> before $quote
+        $quoteLines = $quote->getQuoteLines(); 
         $totalTva = 0;
 
         // Calculate subTotal for each QuoteLine and total TVA
         foreach ($quoteLines as $quoteLine) {
             $subTotal = $quoteLine->getQuantity() * $quoteLine->getUnitPrice();
             $quoteLine->setSubTotal($subTotal);
-            $totalTva += $subTotal * $quote->getTva(); // Removed $this-> before $quote
+            $totalTva += $subTotal * $quote->getTva(); 
         }
 
         $totalAmount = 0;
@@ -23,10 +23,22 @@ class CalculService {
         foreach ($quoteLines as $quoteLine) {
             $totalAmount += $quoteLine->getSubTotal() + $totalTva;
         }
-        // Set totalAmount and totalTva for the Quote
-        $quote->setTotalTva($totalTva); // Removed $this-> before $quote
-        $quote->setTotalAmount($totalAmount); // Removed $this-> before $quote
-        $quote->setUserQuote($user);
+        if(in_array('ROLE_COMPTABLE',$user->getRoles())) {
+            $entreprise = $user->getEntreprise();
+            $quote->setEntreprise($entreprise);
+            $quote->setClient($quote->getClient()); 
+            $quote->setEntreprise($entreprise);
+            $entreprise->addEntrepriseClient($quote->getClient());
+            $quote->setTotalTva($totalTva); 
+            $quote->setTotalAmount($totalAmount);
+
+        } else {
+            // Set totalAmount and totalTva for the Quote
+            $quote->setTotalTva($totalTva); 
+            $quote->setTotalAmount($totalAmount); 
+            $quote->setUserQuote($user);
+        }
+       
 
         return $quote;
     }
@@ -48,9 +60,20 @@ class CalculService {
         foreach ($quoteLines as $quoteLine) {
             $totalAmount += $quoteLine->getSubTotal() + $totalTva ;
         }
+        if(in_array('ROLE_COMPTABLE',$user->getRoles())) {
+            $entreprise = $user->getEntreprise();
+            $invoice->setEntreprise($entreprise);
+            $invoice->setClient($invoice->getClient()); 
+            $invoice->setEntreprise($entreprise);
+            $entreprise->addEntrepriseClient($invoice->getClient());
+            $invoice->setTotalTva($totalTva);
+            $invoice->setTotalAmount($totalAmount);
+
+        } else {
         // Set totalAmount for the Invoice
-        $invoice->setTotalTva($totalTva);
-        $invoice->setTotalAmount($totalAmount);
-        $invoice->setUserInvoice($user);
+            $invoice->setTotalTva($totalTva);
+            $invoice->setTotalAmount($totalAmount);
+            $invoice->setUserInvoice($user);
+        }
     }
 }
