@@ -42,7 +42,7 @@ class CalculService {
 
         return $quote;
     }
-    public function calculInvoice (Invoice $invoice,User $user) {
+    public function calculInvoice (Invoice $invoice,User $user): invoice {
         foreach ($invoice->getQuoteLines() as $quoteLine) {
             // Calculate subTotal for each QuoteLine (ht per item)
             $subTotal = $quoteLine->getQuantity() * $quoteLine->getUnitPrice();
@@ -75,5 +75,6 @@ class CalculService {
             $invoice->setTotalAmount($totalAmount);
             $invoice->setUserInvoice($user);
         }
+        return $invoice;
     }
 }

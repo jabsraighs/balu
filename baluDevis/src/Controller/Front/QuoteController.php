@@ -59,18 +59,13 @@ class QuoteController extends AbstractController
         $form = $this->createForm(QuoteType::class,$quote, ['clients' => $clients]);
         $form->handleRequest($request);
             if ($form->isSubmitted() && $form->isValid()) {
-                if(in_array('ROLE_COMPTABLE',$user->getRoles())) {
+                
                     $calculService->calculQuote($quote,$user);
                     $entityManager->persist($quote);
                     $quoteName = $quote->generateName();
                     $quote = $quote->setName($quoteName);
-                } 
-                else {
-                    $calculService->calculQuote($quote,$user);
-                    $entityManager->persist($quote);
-                    $quoteName = $quote->generateName();
-                    $quote = $quote->setName($quoteName);
-                }
+                
+                
                 $entityManager->flush();
 
                 return $this->redirectToRoute('front_user_quote_index', [], Response::HTTP_SEE_OTHER);
@@ -131,20 +126,33 @@ class QuoteController extends AbstractController
             'form' => $form,
         ]);
     }
+    // taffer les invoices
     #[Route('/{id}/quote/invoice', name: '_quote_invoice', methods: ['GET', 'POST'])]
     public function genererFactureAuto(Request $request, Quote $quote, EntityManagerInterface $entityManager): Response{
         //instanciation
         $invoice = new Invoice();
         $user = $this->getUser();
         $invoice = $invoice->setQuote($quote);
-        //set les differents attributs de invoice
-        $invoice = $invoice->setUserInvoice($user);
-        $invoice = $invoice->setPaymentStatus('waiting');
-        $invoice = $invoice->setTva($quote->getTva());
-        $invoice = $invoice->setTotalTva($quote->getTotalTva());
-        $invoice = $invoice->setTotalAmount($quote->getTotalAmount());
-        $invoice = $invoice->setClient($quote->getClient());
-        $entityManager->persist($invoice);
+        if(in_array('ROLE_COMPTABLE',$user->getRoles())) {
+            $entreprise = $user->getEntreprise();
+            $invoice = $invoice->setEntreprise($entreprise);
+            $invoice = $invoice->setPaymentStatus('waiting');
+            $invoice = $invoice->setTva($quote->getTva());
+            $invoice = $invoice->setTotalTva($quote->getTotalTva());
+            $invoice = $invoice->setTotalAmount($quote->getTotalAmount());
+            $invoice = $invoice->setClient($quote->getClient());
+            $entityManager->persist($invoice);
+
+        } else {
+            $invoice = $invoice->setUserInvoice($user);
+            $invoice = $invoice->setPaymentStatus('waiting');
+            $invoice = $invoice->setTva($quote->getTva());
+            $invoice = $invoice->setTotalTva($quote->getTotalTva());
+            $invoice = $invoice->setTotalAmount($quote->getTotalAmount());
+            $invoice = $invoice->setClient($quote->getClient());
+            $entityManager->persist($invoice);
+        }
+    
         // necessaire pour getId of facture
         $invoiceName = $invoice->generateInvoiceName();
         $invoice = $invoice->setName($invoiceName);

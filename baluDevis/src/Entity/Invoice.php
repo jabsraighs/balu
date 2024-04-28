@@ -37,7 +37,7 @@ class Invoice
     private Collection $payments;
 
     #[ORM\ManyToOne(inversedBy: 'invoices')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: true)]
     private ?User $userInvoice = null;
 
     #[ORM\Column(length: 255)]
