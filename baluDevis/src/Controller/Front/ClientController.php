@@ -55,7 +55,7 @@ class ClientController extends AbstractController
         $client = new Client();
         $user = $this->getUser();
         $entreprise = $user->getEntreprise();
-        if ($entreprise === null) {
+        if (in_array('ROLE_COMPTABLE', $user->getRoles()) and $entreprise === null) {
              return $this->render('bundles\twigBundles\Exception\errorPartenaire.html.twig', [
                 'message' => 'An error occurred: Enterprise already exists. Please try again later or contact support.'
             ]);

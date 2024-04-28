@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20240422030306 extends AbstractMigration
+final class Version20240428204047 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -39,8 +39,8 @@ final class Version20240422030306 extends AbstractMigration
         $this->addSql('CREATE UNIQUE INDEX UNIQ_D19FA604A2002BA ON entreprise (user_entreprise_id)');
         $this->addSql('CREATE TABLE invoice (id BLOB NOT NULL --(DC2Type:uuid)
         , quote_id BLOB DEFAULT NULL --(DC2Type:uuid)
-        , user_invoice_id BLOB NOT NULL --(DC2Type:uuid)
-        , client_id BLOB NOT NULL --(DC2Type:uuid)
+        , user_invoice_id BLOB DEFAULT NULL --(DC2Type:uuid)
+        , client_id BLOB DEFAULT NULL --(DC2Type:uuid)
         , entreprise_id BLOB DEFAULT NULL --(DC2Type:uuid)
         , created_at DATE NOT NULL --(DC2Type:date_immutable)
         , due_date DATE NOT NULL --(DC2Type:date_immutable)
@@ -64,7 +64,7 @@ final class Version20240422030306 extends AbstractMigration
         $this->addSql('CREATE INDEX IDX_D34A04ADA4AEAFEA ON product (entreprise_id)');
         $this->addSql('CREATE TABLE quote (id BLOB NOT NULL --(DC2Type:uuid)
         , client_id BLOB DEFAULT NULL --(DC2Type:uuid)
-        , user_quote_id BLOB NOT NULL --(DC2Type:uuid)
+        , user_quote_id BLOB DEFAULT NULL --(DC2Type:uuid)
         , entreprise_id BLOB DEFAULT NULL --(DC2Type:uuid)
         , created_at DATE DEFAULT NULL --(DC2Type:date_immutable)
         , expiry_at DATE DEFAULT NULL --(DC2Type:date_immutable)

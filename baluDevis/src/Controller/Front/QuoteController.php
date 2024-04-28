@@ -36,7 +36,7 @@ class QuoteController extends AbstractController
         }
 
         else {
-            $userQuotes = $quoteRepository->findBy(['userClient' => $user->getId()]);            
+            $userQuotes = $quoteRepository->findBy(['userQuote' => $user->getId()]);            
         }
         return $this->render('Front/user/quote/index.html.twig', [
             'quotes' => $userQuotes,

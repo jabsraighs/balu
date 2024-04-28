@@ -3,7 +3,7 @@
 {% import '_components/_table.html.twig' as table %}
 
 {% set headerRows = [['Nom', 'Prénom','Email', 'Numéro de téléphone', 'Actions']] %}
-{% set keys = ['firstname', 'lastname','email', 'phone'] %}
+{% set keys = ['lastname', 'firstname','email', 'phone'] %}
 {% set links = [
 	{'routeName': 'front_user_client_show', type: 'show'},
 	{'routeName': 'front_user_client_edit', type: 'edit'},
