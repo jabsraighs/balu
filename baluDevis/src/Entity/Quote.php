@@ -48,11 +48,14 @@ class Quote
     private ?string $Description = null;
 
     #[ORM\ManyToOne(inversedBy: 'quotes')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: true)]
     private ?User $userQuote = null;
 
     #[ORM\Column(length: 255)]
     private ?string $name = null;
+
+    #[ORM\ManyToOne(inversedBy: 'entrepriseQuotes')]
+    private ?Entreprise $entreprise = null;
 
     public function __construct()
     {
@@ -260,6 +263,18 @@ class Quote
         $quoteName = "Devis n° {$datePart}_{$quoteIdPart}";
 
         return $quoteName;
+    }
+
+    public function getEntreprise(): ?Entreprise
+    {
+        return $this->entreprise;
+    }
+
+    public function setEntreprise(?Entreprise $entreprise): static
+    {
+        $this->entreprise = $entreprise;
+
+        return $this;
     }
 }
 

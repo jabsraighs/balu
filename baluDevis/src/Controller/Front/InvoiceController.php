@@ -25,11 +25,21 @@ class InvoiceController extends AbstractController
     {
 
         $user = $this->getUser();
-        $userInvoice = $invoiceRepository->findBy(
-            ['userInvoice' => $user],
-            ['id' => 'Desc']
-            );
+        $roles = $user->getRoles();
+        if (in_array('ROLE_COMPTABLE', $roles) or in_array('ROLE_USER_ENTREPRISE', $roles)) {
+            $entreprise = $user->getEntreprise();
+            if ($entreprise === null) {
+                return $this->render('bundles\twigBundles\Exception\errorPartenaire.html.twig', [
+                   'message' => 'An error occurred: Enterprise already exists. Please try again later or contact support.'
+               ]);
+           }
+            $userInvoice = $entreprise->getEntrepriseInvoices();
+        }
 
+        else {
+            $userInvoice = $invoiceRepository->findBy(['userInvoice' => $user],['id' => 'Desc']);          
+        }
+        
         return $this->render('Front/user/invoice/index.html.twig', [
             'invoices' => $userInvoice,
         ]);
@@ -40,10 +50,14 @@ class InvoiceController extends AbstractController
     {
         $user = $this->getUser();
         $invoice = new Invoice();
-        $clientsInvoice = $clientRepository->findBy(['userClient' => $user]);
         // Créer le formulaire et transmettre les clients
+        if(in_array('ROLE_COMPTABLE',$user->getRoles())) {
+            $clientsInvoice = $clientRepository->findBy(['entreprise' => $user]);
+        }
+        else {
+            $clientsInvoice = $clientRepository->findBy(['userClient' => $user]);
+        }
         $form = $this->createForm(InvoiceType::class,$invoice, ['client' => $clientsInvoice]);
-
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

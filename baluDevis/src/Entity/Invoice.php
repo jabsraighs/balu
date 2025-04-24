@@ -37,7 +37,7 @@ class Invoice
     private Collection $payments;
 
     #[ORM\ManyToOne(inversedBy: 'invoices')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: true)]
     private ?User $userInvoice = null;
 
     #[ORM\Column(length: 255)]
@@ -50,11 +50,14 @@ class Invoice
     private ?float $totalTva = null;
 
     #[ORM\ManyToOne(inversedBy: 'invoices')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: true)]
     private ?Client $client= null;
 
     #[ORM\OneToMany(mappedBy: 'invoice', targetEntity: QuoteLine::class ,  cascade: ['persist'])]
     private Collection $quoteLines;
+
+    #[ORM\ManyToOne(inversedBy: 'entrepriseInvoices')]
+    private ?Entreprise $entreprise = null;
 
     public function __construct()
     {
@@ -266,6 +269,18 @@ class Invoice
                 $quoteLine->setInvoice(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getEntreprise(): ?Entreprise
+    {
+        return $this->entreprise;
+    }
+
+    public function setEntreprise(?Entreprise $entreprise): static
+    {
+        $this->entreprise = $entreprise;
 
         return $this;
     }

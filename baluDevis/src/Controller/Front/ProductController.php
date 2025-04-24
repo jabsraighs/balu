@@ -18,9 +18,31 @@ class ProductController extends AbstractController
     public function index(ProductRepository $productRepository): Response
     {
         $user = $this->getUser();
+        $roles = $user->getRoles();
+        if (in_array('ROLE_COMPTABLE', $roles)) {
+            $entreprise = $user->getEntreprise();
+            if ($entreprise === null) {
+                return $this->render('bundles\twigBundles\Exception\errorPartenaire.html.twig', [
+                   'message' => 'An error occurred: Enterprise already exists. Please try again later or contact support.'
+               ]);
+           }
+           $userProducts = $entreprise->getEntrepriseProducts();
+        }
+        elseif (in_array('ROLE_USER_ENTREPRISE', $roles)) {
+            $entreprise = $user->getEntreprise();
+            if ($entreprise === null) {
+                return $this->render('bundles\twigBundles\Exception\errorPartenaire.html.twig', [
+                   'message' => 'An error occurred: Enterprise already exists. Please try again later or contact support.'
+               ]);
+           }
+            $userProducts = $entreprise->getEntrepriseProducts();
+        }
+        else {
+            $userProducts = $productRepository->findBy(['user' => $user->getId()]);            
+        }
         $products = $productRepository->findBy(['user' => $user]);
         return $this->render('Front/user/product/index.html.twig', [
-            'products' => $products,
+            'products' => $userProducts,
         ]);
     }
 
@@ -28,17 +50,37 @@ class ProductController extends AbstractController
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $product = new Product();
+        $user = $this->getUser();
+        if ($user->getEntreprise() === null && in_array('ROLE_COMPTABLE', $user->getRoles())) {
+             return $this->render('bundles\twigBundles\Exception\errorPartenaire.html.twig', [
+                'message' => 'An error occurred: Enterprise already exists. Please try again later or contact support.'
+            ]);
+        }
         $form = $this->createForm(ProductType::class, $product);
         $form->handleRequest($request);
-
         if ($form->isSubmitted() && $form->isValid()) {
-            $connectedUser = $this->getUser();
-            $product->setUser($connectedUser);
-            $entityManager->persist($product);
-            $entityManager->flush();
+            if (in_array('ROLE_COMPTABLE', $user->getRoles())) {
+                $entreprise = $user->getEntreprise();
+                $product->setEntreprise($user->getEntreprise());
+                $entreprise->addEntrepriseProduct($product);
+                $entityManager->persist($product);
+                $entityManager->flush();
+                return $this->redirectToRoute('front_user_product_index', [], Response::HTTP_SEE_OTHER);
+    
+            } elseif (in_array('ROLE_AUTO_ENTREPRENEUR', $user->getRoles()))  {
+                $product->setUser($user);
+                $entityManager->persist($product);
+                $entityManager->flush();
+                return $this->redirectToRoute('front_user_product_index', [], Response::HTTP_SEE_OTHER);
+            }
+            else {
+                // If user does not have access, return an error message
+                $this->addFlash('error', 'You do not have access to create a client.');
+            }
 
             return $this->redirectToRoute('front_user_product_index', [], Response::HTTP_SEE_OTHER);
         }
+       
 
         return $this->render('Front/user/product/new.html.twig', [
             'product' => $product,
@@ -61,9 +103,7 @@ class ProductController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $connectedUser = $this->getUser();
-            $product->setUser($connectedUser);
-            $entityManager->flush();
+            
 
             return $this->redirectToRoute('front_user_product_index', [], Response::HTTP_SEE_OTHER);
         }

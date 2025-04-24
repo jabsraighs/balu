@@ -14,6 +14,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 
 #[IsGranted("ROLE_USER")]
+
 class HomeController extends AbstractController
 {
     #[Route('/accueil', name: '_accueil',methods: ['GET'])]

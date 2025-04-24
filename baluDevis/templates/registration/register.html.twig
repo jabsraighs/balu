@@ -45,7 +45,13 @@
 
 				{{ form_widget(registrationForm.email, {"attr": {"class": "pl-8 rounded-md w-full border-primary-500"}}) }}
 			</div>
+			<div class="flex flex-col gap-1 w-full">
+				<div class="relative">
+					{{ form_label(registrationForm.roles, "Type d'Entreprise") }}
+				</div>
 
+				{{ form_widget(registrationForm.roles, {"attr": {"class": "pl-8 rounded-md w-full border-primary-500"}}) }}
+			</div>
 			<div class="flex flex-col gap-1 w-full">
 				<div class="relative">
 					<?xml version="1.0" encoding="utf-8"?>
@@ -96,6 +102,6 @@
 
 
 		{{ form_end(registrationForm) }}
-																																																	</form> #}
+																																																	</form> 
 	</div>
 {% endblock %}

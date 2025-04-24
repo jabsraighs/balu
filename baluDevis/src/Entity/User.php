@@ -52,6 +52,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Product::class)]
     private Collection $products;
 
+    #[ORM\ManyToOne(inversedBy: 'partenaires')]
+    private ?Entreprise $entreprise = null; 
+
+    #[ORM\OneToOne(mappedBy: 'userEntreprise', cascade: ['persist', 'remove'])]
+    private ?Entreprise $userCreateEntreprise = null;
+
     public function __construct(){
 
         $this->createdAt = new \DateTimeImmutable();
@@ -59,6 +65,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->quotes = new ArrayCollection();
         $this->invoices = new ArrayCollection();
         $this->products = new ArrayCollection();
+        
+
     }
     public function __toString(){
         return $this->getEmail(); // Replace with the appropriate property or method representing the string value.
@@ -282,4 +290,34 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+
+    public function getEntreprise(): ?Entreprise
+    {
+        return $this->entreprise;
+    }
+
+    public function setEntreprise(?Entreprise $entreprise): static
+    {
+        $this->entreprise = $entreprise;
+
+        return $this;
+    }
+
+    public function getUserCreateEntreprise(): ?Entreprise
+    {
+        return $this->userCreateEntreprise;
+    }
+
+    public function setUserCreateEntreprise(Entreprise $userCreateEntreprise): static
+    {
+        // set the owning side of the relation if necessary
+        if ($userCreateEntreprise->getUserEntreprise() !== $this) {
+            $userCreateEntreprise->setUserEntreprise($this);
+        }
+
+        $this->userCreateEntreprise = $userCreateEntreprise;
+
+        return $this;
+    }
+
 }

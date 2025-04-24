@@ -30,8 +30,11 @@ class Product
     private ?Category $category = null;
 
     #[ORM\ManyToOne(inversedBy: 'products')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: true)]
     private ?user $user = null;
+
+    #[ORM\ManyToOne(inversedBy: 'entrepriseProducts')]
+    private ?Entreprise $entreprise = null;
 
     public function getId(): ?Uuid
     {
@@ -94,6 +97,18 @@ class Product
     public function setUser(?user $user): static
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    public function getEntreprise(): ?Entreprise
+    {
+        return $this->entreprise;
+    }
+
+    public function setEntreprise(?Entreprise $entreprise): static
+    {
+        $this->entreprise = $entreprise;
 
         return $this;
     }

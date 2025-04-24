@@ -25,21 +25,19 @@ class UserType extends AbstractType
                 'label'=>'votre email',
                 'attr' => [
                     'class'=> 'mt-5',
-                    'placeholder' => 'Entrez votre email'
+                    'placeholder' => "Entrez l'email du partenaire"
                 ],
                 'required' => 'false'
             ])
-            ->add('roles',ChoiceType::class,[
-                'label' => 'Roles',
-                'choices' => [
-                    'user' => 'ROLE_USER'
-                    //'administrateur' => 'ROLE_ADMIN',
-                    // ... autres rôles
-                ],
-                'multiple' => true, // Activez cette option pour permettre plusieurs choix
-                'expanded' => true, // Activez cette option pour afficher les cases à cocher plutôt qu'un menu déroulant
+            // ->add('roles',ChoiceType::class,[
+            //     'label' => 'Roles',
+            //     'choices' => [
+            //         'user' => 'ROLE_USER'
+            //     ],
+            //     'multiple' => true, // Activez cette option pour permettre plusieurs choix
+            //     'expanded' => true, // Activez cette option pour afficher les cases à cocher plutôt qu'un menu déroulant
 
-            ])
+            // ])
           ->add('plainPassword', RepeatedType::class, [
                 // instead of being set onto the object directly,
                 // this is read and encoded in the controller
