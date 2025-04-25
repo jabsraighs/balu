@@ -1,41 +1,138 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Log in!{% endblock %}
+{% block title %}Connexion{% endblock %}
 
 {% block body %}
-    <form method="post">
-        {% if error %}
-            <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-        {% endif %}
+<div class="min-h-screen flex bg-gray-50 dark:bg-gray-900">
+  <div class="hidden lg:flex lg:w-1/2 bg-baluBlue-dark relative">
+    <div class="absolute inset-0 bg-gradient-to-b from-baluBlue-dark/80 to-baluBlue-dark">
+      <img
+        src="{{ asset('images/background.jpg') }}"
+        alt="Background pattern"
+        class="object-cover w-full h-full mix-blend-overlay opacity-30"
+      />
+    </div>
+    <div class="relative z-10 flex flex-col justify-center px-12 text-white">
+      <h1 class="text-4xl font-bold mb-6">
+        ACCÉDEZ À UN MONDE DE POSSIBILITÉS FREELANCE EN TOUTE SIMPLICITÉ.
+      </h1>
+      <p class="text-lg opacity-90">
+        Connectez-vous pour gérer vos devis avec facilité et gagnez du temps pour ce qui compte vraiment – votre travail créatif. Simplifiez votre quotidien freelance dès maintenant!
+      </p>
+    </div>
+  </div>
 
-        {% if app.user %}
-            <div class="mb-3">
-                You are logged in as {{ app.user.userIdentifier }}, <a href="{{ path('app_logout') }}">Logout</a>
+  {# Right side - Login form #}
+  <div class="w-full lg:w-1/2 flex items-center justify-center p-8">
+    <div class="w-full max-w-md">
+      <div class="text-center mb-8">
+        <img src="{{ asset('images/Logo.png') }}" alt="BaluDevis Logo" class="mx-auto h-16 mb-6" />
+        <h2 class="text-3xl font-bold text-baluBlue mb-2">Connexion</h2>
+        <p class="text-gray-600 dark:text-gray-400">
+          Entrez votre email et votre mot de passe pour accéder à votre compte
+        </p>
+      </div>
+
+      {% if app.user %}
+        <div class="mb-4 p-4 text-sm text-blue-800 bg-blue-100 rounded-lg">
+          Vous êtes connecté en tant que {{ app.user.userIdentifier }}, <a href="{{ path('app_logout') }}" class="font-bold underline">Se déconnecter</a>
+        </div>
+      {% endif %}
+
+      {% if error %}
+        <div class="mb-4 p-4 text-sm text-red-800 bg-red-100 rounded-lg" role="alert">
+          {{ error.messageKey|trans(error.messageData, 'security') }}
+        </div>
+      {% endif %}
+
+      <form method="post" class="space-y-6">
+        <div class="space-y-2">
+          <label for="username" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+            Email
+          </label>
+          <div class="relative">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+              </svg>
             </div>
-        {% endif %}
+            <input
+              id="username"
+              name="_username"
+              type="email"
+              value="{{ last_username }}"
+              autocomplete="email"
+              required
+              autofocus
+              class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-baluBlue focus:border-baluBlue dark:bg-gray-800 dark:border-gray-700 dark:text-white"
+              placeholder="votre-email@exemple.com"
+            />
+          </div>
+        </div>
 
-        <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
-        <label for="username">Email</label>
-        <input type="email" value="{{ last_username }}" name="_username" id="username" class="form-control" autocomplete="email" required autofocus>
-        <label for="password">Password</label>
-        <input type="password" name="_password" id="password" class="form-control" autocomplete="current-password" required>
-
-        <input type="hidden" name="_csrf_token"
-               value="{{ csrf_token('authenticate') }}"
-        >
-
-        {#
-            Uncomment this section and add a remember_me option below your firewall to activate remember me functionality.
-            See https://symfony.com/doc/current/security/remember_me.html
-
-            <div class="checkbox mb-3">
-                <input type="checkbox" name="_remember_me" id="_remember_me">
-                <label for="_remember_me">Remember me</label>
+        <div class="space-y-2">
+          <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+            Mot de passe
+          </label>
+          <div class="relative">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+              </svg>
             </div>
-        #}
+            <input
+              id="password"
+              name="_password"
+              type="password"
+              autocomplete="current-password"
+              required
+              class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-baluBlue focus:border-baluBlue dark:bg-gray-800 dark:border-gray-700 dark:text-white"
+              placeholder="••••••••"
+            />
+          </div>
+        </div>
 
-        <button class="btn btn-lg btn-primary" type="submit">
-            Sign in
-        </button>
-    </form>
+        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+        <div class="flex items-center justify-between">
+          <div class="flex items-center">
+            <input
+              id="_remember_me"
+              name="_remember_me"
+              type="checkbox"
+              class="h-4 w-4 text-baluBlue focus:ring-baluBlue border-gray-300 rounded dark:border-gray-700 dark:bg-gray-800"
+            />
+            <label for="_remember_me" class="ml-2 block text-sm text-gray-700 dark:text-gray-300">
+              Se souvenir de moi
+            </label>
+          </div>
+
+          <div class="text-sm">
+            <a href="#" class="font-medium text-baluBlue hover:text-baluBlue-light">
+              Mot de passe oublié?
+            </a>
+          </div>
+        </div>
+
+        <div>
+          <button
+            type="submit"
+            class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-baluBlue hover:bg-baluBlue-light focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-baluBlue"
+          >
+            Se connecter
+          </button>
+        </div>
+      </form>
+
+      <div class="mt-6 text-center">
+        <p class="text-sm text-gray-600 dark:text-gray-400">
+          Vous n'avez pas de compte? 
+          <a href="{{ path('app_register') }}" class="font-medium text-baluBlue hover:text-baluBlue-light">
+            S'inscrire
+          </a>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}
