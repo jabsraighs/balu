@@ -27,6 +27,8 @@ final class ClientController extends AbstractController{
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $client = new Client();
+        $client->setCompany($this->getUser()->getCompany());
+        $client->setCreatedAt(new \DateTimeImmutable());
         $form = $this->createForm(ClientType::class, $client);
         $form->handleRequest($request);
 
@@ -56,6 +58,10 @@ final class ClientController extends AbstractController{
     {
         $form = $this->createForm(ClientType::class, $client);
         $form->handleRequest($request);
+
+        if ($client->getCompany() !== $this->getUser()->getCompany()) {
+            throw $this->createAccessDeniedException();
+        }
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();

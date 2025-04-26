@@ -18,8 +18,11 @@ final class QuoteController extends AbstractController{
     #[Route(name: 'app_quote_index', methods: ['GET'])]
     public function index(QuoteRepository $quoteRepository): Response
     {
+        $user = $this->getUser();
+        $company = $user->getCompany();
+        
         return $this->render('quote/index.html.twig', [
-            'quotes' => $quoteRepository->findAll(),
+            'quotes' => $quoteRepository->findByCompany($company),
         ]);
     }
 

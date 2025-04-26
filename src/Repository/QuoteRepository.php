@@ -91,6 +91,19 @@ class QuoteRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    /**
+     * Find all quotes for a specific company
+     */
+    public function findByCompany(Company $company): array
+    {
+        return $this->createQueryBuilder('q')
+            ->andWhere('q.company = :company')
+            ->setParameter('company', $company)
+            ->orderBy('q.dateCreated', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
+
     //    /**
     //     * @return Quote[] Returns an array of Quote objects
     //     */

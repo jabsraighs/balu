@@ -15,14 +15,9 @@ class ClientType extends AbstractType
     {
         $builder
             ->add('name')
-            ->add('contactName')
             ->add('email')
             ->add('phone')
             ->add('address')
-            ->add('company', EntityType::class, [
-                'class' => Company::class,
-'choice_label' => 'id',
-            ])
         ;
     }
 
