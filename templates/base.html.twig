@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr" class="{% if app.request.cookies.get('theme') == 'dark' %}dark{% endif %}">
 	<head>
 		<meta charset="UTF-8"/>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -7,7 +7,7 @@
 		<meta name="description" content="BaluDevis - Simplify your freelance invoicing"/>
 		<meta name="author" content="BaluDevis"/>
 		<title>
-			{% block title %}Welcome!
+			{% block title %}BaluDevis
 			{% endblock %}
 		</title>
 		<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
@@ -24,6 +24,23 @@
 		<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
 	</head>
 	<body>
-		{% block body %}{% endblock %}
+    {% block body %}
+        {% if app.user %}
+            {% set userDisplay = {
+                name: app.user.fullname,
+                email: app.user.email,
+                avatarUrl: null
+            } %}
+
+            {% include '_components/layout.html.twig' with {
+                mobileMenuOpen: false,
+                sidebarCollapsed: false,
+                userDisplay: userDisplay,
+                content: block('page_content')
+            } %}
+        {% else %}
+            {% block page_content %}{% endblock %}
+        {% endif %}
+    {% endblock %}
 	</body>
 </html>

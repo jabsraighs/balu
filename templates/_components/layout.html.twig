@@ -1,0 +1,145 @@
+{% set mobileMenuOpen = false %}
+{% set sidebarCollapsed = false %}
+{% set userDisplay = {
+    name: app.user ? app.user.fullname : 'Utilisateur',
+    email: app.user ? app.user.email : ''
+} %}
+
+<body
+	class="min-h-screen bg-gray-50 dark:bg-gray-950">
+	{# Sidebar #}
+	{% include '_components/sidebar.html.twig' with {
+    mobileOpen: mobileMenuOpen,
+    isCollapsed: sidebarCollapsed
+  } %}
+
+	<div
+		class="transition-all duration-300 {{ sidebarCollapsed ? 'lg:pl-20' : 'lg:pl-64' }}">
+		{# Header #}
+		{% include '_components/header.html.twig' with {
+      user: userDisplay
+    } only %}
+
+		<main class="p-4 lg:p-6">
+			{% if pageTitle is defined and pageTitle or welcomeMessage is defined and welcomeMessage %}
+				<div class="mb-6">
+					{% if pageTitle is defined and pageTitle %}
+						<h1 class="text-2xl font-bold text-gray-900 dark:text-white">{{ pageTitle }}</h1>
+					{% endif %}
+					{% if welcomeMessage is defined and welcomeMessage %}
+						<p class="text-gray-500 dark:text-gray-400">{{ welcomeMessage }}</p>
+					{% endif %}
+				</div>
+			{% endif %}
+
+			{# Messages flash #}
+			{% for label, messages in app.flashes %}
+				{% for message in messages %}
+					<div class="mb-4 p-4 rounded-lg {% if label == 'success' %}bg-green-100 text-green-800{% elseif label == 'error' %}bg-red-100 text-red-800{% else %}bg-blue-100 text-blue-800{% endif %}">
+						{{ message }}
+					</div>
+				{% endfor %}
+			{% endfor %}
+
+			{{ content|raw }}
+		</main>
+	</div>
+
+	{% block javascripts %}
+		<script>
+			// JavaScript to handle sidebar toggle and mobile menu
+document.addEventListener('DOMContentLoaded', function () {
+let mobileMenuOpen = {{ mobileMenuOpen ? 'true' : 'false' }};
+let sidebarCollapsed = {{ sidebarCollapsed ? 'true' : 'false' }};
+
+// Toggle mobile menu
+const toggleMobileMenu = (isOpen) => {
+mobileMenuOpen = isOpen;
+// Update DOM elements based on mobileMenuOpen state
+const sidebar = document.querySelector('aside');
+const overlay = document.querySelector('.fixed.inset-0.z-40.bg-gray-600');
+
+if (sidebar && overlay) {
+if (mobileMenuOpen) {
+sidebar.classList.remove('-translate-x-full');
+overlay.classList.remove('hidden');
+overlay.classList.add('block');
+} else {
+sidebar.classList.add('-translate-x-full');
+overlay.classList.remove('block');
+overlay.classList.add('hidden');
+}
+}
+};
+
+// Toggle sidebar collapse
+const toggleSidebar = () => {
+sidebarCollapsed = ! sidebarCollapsed;
+// Update DOM elements based on sidebarCollapsed state
+const sidebar = document.querySelector('aside');
+const mainContent = document.querySelector('[class*="lg:pl-"]');
+
+if (sidebar && mainContent) {
+if (sidebarCollapsed) {
+sidebar.classList.remove('lg:w-64');
+sidebar.classList.add('lg:w-20');
+mainContent.classList.remove('lg:pl-64');
+mainContent.classList.add('lg:pl-20');
+
+// Hide text labels
+document.querySelectorAll('aside a span:not(:first-child), aside button span:not(:first-child)').forEach(function (el) {
+el.classList.add('lg:hidden');
+});
+
+// Center align logo on collapse
+const logoContainer = document.querySelector('aside a.flex.items-center.space-x-3');
+if (logoContainer) {
+logoContainer.classList.add('lg:justify-center');
+}
+} else {
+sidebar.classList.remove('lg:w-20');
+sidebar.classList.add('lg:w-64');
+mainContent.classList.remove('lg:pl-20');
+mainContent.classList.add('lg:pl-64');
+
+// Show text labels
+document.querySelectorAll('aside a span.lg\\:hidden, aside button span.lg\\:hidden').forEach(function (el) {
+el.classList.remove('lg:hidden');
+});
+
+// Restore logo alignment
+const logoContainer = document.querySelector('aside a.flex.items-center.space-x-3');
+if (logoContainer) {
+logoContainer.classList.remove('lg:justify-center');
+}
+}
+}
+};
+
+// Setup event listeners
+const mobileMenuButton = document.querySelector('.mobile-menu-button');
+if (mobileMenuButton) {
+mobileMenuButton.addEventListener('click', () => toggleMobileMenu(true));
+}
+
+const closeMobileButton = document.querySelector('.close-mobile-button');
+if (closeMobileButton) {
+closeMobileButton.addEventListener('click', () => toggleMobileMenu(false));
+}
+
+const collapseButton = document.querySelector('.collapse-sidebar-button');
+if (collapseButton) {
+collapseButton.addEventListener('click', toggleSidebar);
+}
+
+// Handle logout via dedicated class
+const logoutButton = document.querySelector('.logout-button');
+if (logoutButton) {
+logoutButton.addEventListener('click', function () {
+window.location.href = "{{ path('app_logout') }}";
+});
+}
+});
+		</script>
+	{% endblock %}
+</body></html>

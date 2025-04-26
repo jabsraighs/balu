@@ -49,6 +49,9 @@ class Quote
     #[ORM\OneToMany(targetEntity: QuoteLine::class, mappedBy: 'quote')]
     private Collection $quoteLines;
 
+    #[ORM\Column]
+    private ?\DateTimeImmutable $createdAt = null;
+
     public function __construct()
     {
         $this->quoteLines = new ArrayCollection();
@@ -181,6 +184,18 @@ class Quote
                 $quoteLine->setQuote(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTimeImmutable $createdAt): static
+    {
+        $this->createdAt = $createdAt;
 
         return $this;
     }

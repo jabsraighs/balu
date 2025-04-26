@@ -1,0 +1,177 @@
+<header class="sticky top-0 z-40 h-[64px] border-b bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-800">
+  <div class="flex items-center justify-between lg:justify-end md:justify-end sm:justify-end px-4 h-full lg:px-6">
+    <button
+      type="button"
+      class="lg:hidden p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-gray-200 dark:hover:bg-gray-800 mobile-menu-button"
+    >
+      <span class="sr-only">Ouvrir le menu</span>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-6 w-6">
+        <line x1="4" x2="20" y1="12" y2="12"/>
+        <line x1="4" x2="20" y1="6" y2="6"/>
+        <line x1="4" x2="20" y1="18" y2="18"/>
+      </svg>
+    </button>
+
+    <div class="flex items-center gap-4">
+      <button class="p-2 rounded-full text-gray-500 hover:text-gray-700 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-gray-200 dark:hover:bg-gray-800 theme-toggle">
+        <span class="sr-only">Changer de thème</span>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5 dark-icon hidden">
+          <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>
+        </svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5 light-icon">
+          <circle cx="12" cy="12" r="4"/>
+          <path d="M12 2v2"/>
+          <path d="M12 20v2"/>
+          <path d="m4.93 4.93 1.41 1.41"/>
+          <path d="m17.66 17.66 1.41 1.41"/>
+          <path d="M2 12h2"/>
+          <path d="M20 12h2"/>
+          <path d="m6.34 17.66-1.41 1.41"/>
+          <path d="m19.07 4.93-1.41 1.41"/>
+        </svg>
+      </button>
+      
+      <button class="p-2 rounded-full relative bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300">
+        <span class="sr-only">Notifications</span>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5">
+          <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/>
+          <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>
+        </svg>
+        <span class="absolute top-1 right-1 h-2 w-2 rounded-full bg-red-500"></span>
+      </button>
+      
+      <div class="relative user-menu-container">
+        <button
+          class="flex items-center space-x-3 focus:outline-none user-menu-toggle"
+          aria-expanded="false"
+          aria-haspopup="true"
+        >
+          <div class="flex-shrink-0">
+            {% if user.avatarUrl is defined and user.avatarUrl %}
+              <img
+                class="h-8 w-8 rounded-full object-cover"
+                src="{{ user.avatarUrl }}"
+                alt="Avatar de {{ user.name }}"
+              />
+            {% else %}
+              <div class="h-8 w-8 rounded-full bg-baluBlue text-white flex items-center justify-center font-medium">
+                {{ user.name|split(' ')|map(part => part|first)|join|upper }}
+              </div>
+            {% endif %}
+          </div>
+          <div class="hidden md:flex flex-col text-sm text-left">
+            <span class="font-medium text-gray-900 dark:text-white">{{ user.name }}</span>
+            <span class="text-gray-500 dark:text-gray-400 text-xs">{{ user.email }}</span>
+          </div>
+        </button>
+        
+        <div
+          class="absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 hidden user-menu-dropdown"
+          role="menu"
+          aria-orientation="vertical"
+          aria-labelledby="user-menu"
+        >
+          <a
+            href="{{ path('app_dashboard') }}"
+            class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800"
+            role="menuitem"
+          >
+            Mon profil
+          </a>
+          <a
+            href="{{ path('app_dashboard') }}"
+            class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800"
+            role="menuitem"
+          >
+            Paramètres
+          </a>
+          <a
+            href="{{ path('app_logout') }}"
+            class="block w-full text-left px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-800"
+            role="menuitem"
+          >
+            Déconnexion
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // User menu toggle
+    const userMenuToggle = document.querySelector('.user-menu-toggle');
+    const userMenuDropdown = document.querySelector('.user-menu-dropdown');
+    
+    if (userMenuToggle && userMenuDropdown) {
+      let userMenuOpen = false;
+      
+      const toggleUserMenu = () => {
+        userMenuOpen = !userMenuOpen;
+        
+        if (userMenuOpen) {
+          userMenuDropdown.classList.remove('hidden');
+          userMenuToggle.setAttribute('aria-expanded', 'true');
+        } else {
+          userMenuDropdown.classList.add('hidden');
+          userMenuToggle.setAttribute('aria-expanded', 'false');
+        }
+      };
+      
+      userMenuToggle.addEventListener('click', toggleUserMenu);
+      
+      // Close menu when clicking outside
+      document.addEventListener('click', function(event) {
+        const userMenuContainer = document.querySelector('.user-menu-container');
+        if (userMenuContainer && !userMenuContainer.contains(event.target) && userMenuOpen) {
+          toggleUserMenu();
+        }
+      });
+    }
+    
+    // Mobile menu button
+    const mobileMenuButton = document.querySelector('.mobile-menu-button');
+    if (mobileMenuButton) {
+      mobileMenuButton.addEventListener('click', function() {
+        // This fires the mobile menu open event that's handled in the layout.html.twig
+        const event = new CustomEvent('openMobileMenu');
+        document.dispatchEvent(event);
+      });
+    }
+
+    // Theme toggle
+    const themeToggle = document.querySelector('.theme-toggle');
+    const darkIcon = document.querySelector('.dark-icon');
+    const lightIcon = document.querySelector('.light-icon');
+    
+    if (themeToggle && darkIcon && lightIcon) {
+      // Check initial theme
+      if (localStorage.theme === 'dark' || 
+          (!('theme' in localStorage) && 
+           window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark');
+        darkIcon.classList.remove('hidden');
+        lightIcon.classList.add('hidden');
+      } else {
+        document.documentElement.classList.remove('dark');
+        darkIcon.classList.add('hidden');
+        lightIcon.classList.remove('hidden');
+      }
+      
+      themeToggle.addEventListener('click', function() {
+        if (document.documentElement.classList.contains('dark')) {
+          document.documentElement.classList.remove('dark');
+          localStorage.theme = 'light';
+          darkIcon.classList.add('hidden');
+          lightIcon.classList.remove('hidden');
+        } else {
+          document.documentElement.classList.add('dark');
+          localStorage.theme = 'dark';
+          darkIcon.classList.remove('hidden');
+          lightIcon.classList.add('hidden');
+        }
+      });
+    }
+  });
+</script>

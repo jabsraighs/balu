@@ -1,0 +1,116 @@
+{% if is_granted('ROLE_ADMIN') %}
+	{% set navItems = [
+        { path: 'app_dashboard', name: 'Tableau de bord', icon: 'layout-dashboard' },
+        { path: 'admin_users_index', name: 'Utilisateurs', icon: 'users' },
+        { path: 'admin_companies_index', name: 'Entreprises', icon: 'building' }
+    ] %}
+{% elseif is_granted('ROLE_ACCOUNTANT') %}
+	{% set navItems = [
+        { path: 'app_dashboard', name: 'Tableau de bord', icon: 'layout-dashboard' },
+        { path: 'reports_index', name: 'Rapports', icon: 'bar-chart' },
+        { path: 'payment_index', name: 'Paiements', icon: 'credit-card' }
+    ] %}
+{% else %}
+	{% set navItems = [
+        { path: 'app_dashboard', name: 'Tableau de bord', icon: 'layout-dashboard' },
+        { path: 'app_client_index', name: 'Clients', icon: 'users' },
+        { path: 'app_product_index', name: 'Produits', icon: 'package' },
+        { path: 'app_quote_index', name: 'Devis', icon: 'file-text' },
+        { path: 'app_invoice_index', name: 'Factures', icon: 'receipt' }
+    ] %}
+{% endif %}
+
+{% set currentRoute = app.request.attributes.get('_route') %}
+
+<div class="{{ mobileOpen ? 'block' : 'hidden' }} lg:hidden fixed inset-0 z-40 bg-gray-900/80 backdrop-blur-sm close-mobile-button"></div>
+
+<aside class="
+		    fixed inset-y-0 left-0 z-50
+		    {{ mobileOpen ? 'block' : 'hidden' }}
+		    lg:block
+		    {{ isCollapsed ? 'lg:w-20' : 'lg:w-64' }}
+		    bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800
+		    transition-all duration-300 transform {{ mobileOpen ? '' : 'lg:translate-x-0 -translate-x-full' }}
+		">
+	<div class="flex flex-col h-full">
+		<div class="h-[64px] flex items-center px-4 border-b border-gray-200 dark:border-gray-800">
+			<div class="flex items-center justify-between w-full">
+				{% if not isCollapsed %}
+					<a href="{{ path('app_dashboard') }}" class="flex items-center space-x-3">
+						<img src="{{ asset('images/Logo.png') }}" alt="BaluDevis Logo" class="h-8"/>
+					</a>
+				{% else %}
+					<span class="font-medium text-gray-900 dark:text-white">BaluDevis</span>
+				{% endif %}
+
+				<button class="lg:hidden close-mobile-button text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+					<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewbox="0 0 24 24" stroke="currentColor">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+					</svg>
+				</button>
+			</div>
+		</div>
+
+		<nav class="flex-1 pt-5 pb-4 overflow-y-auto">
+			<ul class="space-y-1 px-2">
+				{% for item in navItems %}
+					<li>
+						<a href="{{ path(item.path) }}" class="flex items-center px-3 py-3 text-sm font-medium rounded-md group transition-colors
+								                                {{ currentRoute starts with item.path
+								                                    ? 'bg-baluBlue text-white'
+								                                    : 'text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800'
+								                                }}">
+							<div class="flex items-center">
+								<span class="flex items-center justify-center h-5 w-5 {{ currentRoute starts with item.path
+										                                    ? 'text-white'
+										                                    : 'text-gray-500 dark:text-gray-400 group-hover:text-gray-700 dark:group-hover:text-gray-300'
+										                                }}">
+									{% if item.icon == 'layout-dashboard' %}
+										<svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg>
+									{% elseif item.icon == 'users' %}
+										<svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+									{% elseif item.icon == 'file-text' %}
+										<svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="16" x2="8" y1="13" y2="13"/><line x1="16" x2="8" y1="17" y2="17"/><line x1="10" x2="8" y1="9" y2="9"/></svg>
+									{% elseif item.icon == 'bar-chart' %}
+										<svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5"><line x1="12" x2="12" y1="20" y2="10"/><line x1="18" x2="18" y1="20" y2="4"/><line x1="6" x2="6" y1="20" y2="16"/></svg>
+									{% elseif item.icon == 'building' %}
+										<svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5"><rect width="16" height="20" x="4" y="2" rx="2" ry="2"/><path d="M9 22v-4h6v4"/><path d="M8 6h.01"/><path d="M16 6h.01"/><path d="M12 6h.01"/><path d="M12 10h.01"/><path d="M12 14h.01"/><path d="M16 10h.01"/><path d="M16 14h.01"/><path d="M8 10h.01"/><path d="M8 14h.01"/></svg>
+									{% elseif item.icon == 'credit-card' %}
+										<svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
+									{% elseif item.icon == 'package' %}
+										<svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5"><path d="m16.5 9.4-9-5.19M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.29 7 12 12 20.71 7"/><line x1="12" x2="12" y1="22" y2="12"/></svg>
+									{% elseif item.icon == 'receipt' %}
+										<svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5"><path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1Z"/><path d="M16 8h-6"/><path d="M16 12h-6"/><path d="M16 16h-6"/></svg>
+									{% else %}
+										<svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+									{% endif %}
+								</span>
+
+								{% if not isCollapsed %}
+									<span class="ml-3">{{ item.name }}</span>
+								{% endif %}
+							</div>
+						</a>
+					</li>
+				{% endfor %}
+			</ul>
+		</nav>
+
+		<div class="p-4 border-t border-gray-200 dark:border-gray-800">
+			<a href="{{ path('app_logout') }}" class="flex items-center w-full px-3 py-2 text-sm font-medium text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md transition-colors logout-button">
+				<svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg>
+				{% if not isCollapsed %}
+					<span class="ml-3">Déconnexion</span>
+				{% endif %}
+			</a>
+		</div>
+
+		<button class="hidden lg:flex absolute -right-3 top-[84px] h-6 w-6 items-center justify-center bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-full text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 collapse-sidebar-button">
+			{% if isCollapsed %}
+				<svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4"><polyline points="9 18 15 12 9 6"/></svg>
+			{% else %}
+				<svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4"><polyline points="15 18 9 12 15 6"/></svg>
+			{% endif %}
+		</button>
+	</div>
+</aside>
