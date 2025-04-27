@@ -46,7 +46,7 @@ class Quote
     /**
      * @var Collection<int, QuoteLine>
      */
-    #[ORM\OneToMany(targetEntity: QuoteLine::class, mappedBy: 'quote')]
+    #[ORM\OneToMany(targetEntity: QuoteLine::class, mappedBy: 'quote', cascade: ["persist", "remove"])]
     private Collection $quoteLines;
 
     #[ORM\Column]
@@ -179,7 +179,6 @@ class Quote
     public function removeQuoteLine(QuoteLine $quoteLine): static
     {
         if ($this->quoteLines->removeElement($quoteLine)) {
-            // set the owning side to null (unless already changed)
             if ($quoteLine->getQuote() === $this) {
                 $quoteLine->setQuote(null);
             }

@@ -111,15 +111,12 @@
         const modal = document.getElementById('deleteConfirmModal');
         const deleteForm = document.getElementById('deleteCategoryForm');
         
-        // Set the form action
         deleteForm.action = "{{ path('app_category_delete', {'id': 'CATEGORY_ID'}) }}".replace('CATEGORY_ID', categoryId);
         
-        // Show the modal
         modal.classList.remove('hidden');
     }
     
     document.addEventListener('DOMContentLoaded', function() {
-        // Close modal with X button
         const closeModal = document.getElementById('closeModal');
         if (closeModal) {
             closeModal.addEventListener('click', function() {
@@ -127,7 +124,6 @@
             });
         }
         
-        // Close modal with Cancel button
         const cancelDelete = document.getElementById('cancelDelete');
         if (cancelDelete) {
             cancelDelete.addEventListener('click', function() {
@@ -135,7 +131,6 @@
             });
         }
         
-        // Close modal by clicking outside
         const modal = document.getElementById('deleteConfirmModal');
         modal.addEventListener('click', function(event) {
             if (event.target === modal) {

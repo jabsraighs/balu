@@ -47,15 +47,12 @@
 
 	{% block javascripts %}
 		<script>
-			// JavaScript to handle sidebar toggle and mobile menu
-document.addEventListener('DOMContentLoaded', function () {
+			document.addEventListener('DOMContentLoaded', function () {
 let mobileMenuOpen = {{ mobileMenuOpen ? 'true' : 'false' }};
 let sidebarCollapsed = {{ sidebarCollapsed ? 'true' : 'false' }};
 
-// Toggle mobile menu
 const toggleMobileMenu = (isOpen) => {
 mobileMenuOpen = isOpen;
-// Update DOM elements based on mobileMenuOpen state
 const sidebar = document.querySelector('aside');
 const overlay = document.querySelector('.fixed.inset-0.z-40.bg-gray-600');
 
@@ -72,10 +69,8 @@ overlay.classList.add('hidden');
 }
 };
 
-// Toggle sidebar collapse
 const toggleSidebar = () => {
 sidebarCollapsed = ! sidebarCollapsed;
-// Update DOM elements based on sidebarCollapsed state
 const sidebar = document.querySelector('aside');
 const mainContent = document.querySelector('[class*="lg:pl-"]');
 
@@ -86,12 +81,10 @@ sidebar.classList.add('lg:w-20');
 mainContent.classList.remove('lg:pl-64');
 mainContent.classList.add('lg:pl-20');
 
-// Hide text labels
 document.querySelectorAll('aside a span:not(:first-child), aside button span:not(:first-child)').forEach(function (el) {
 el.classList.add('lg:hidden');
 });
 
-// Center align logo on collapse
 const logoContainer = document.querySelector('aside a.flex.items-center.space-x-3');
 if (logoContainer) {
 logoContainer.classList.add('lg:justify-center');
@@ -102,12 +95,10 @@ sidebar.classList.add('lg:w-64');
 mainContent.classList.remove('lg:pl-20');
 mainContent.classList.add('lg:pl-64');
 
-// Show text labels
 document.querySelectorAll('aside a span.lg\\:hidden, aside button span.lg\\:hidden').forEach(function (el) {
 el.classList.remove('lg:hidden');
 });
 
-// Restore logo alignment
 const logoContainer = document.querySelector('aside a.flex.items-center.space-x-3');
 if (logoContainer) {
 logoContainer.classList.remove('lg:justify-center');
@@ -116,7 +107,6 @@ logoContainer.classList.remove('lg:justify-center');
 }
 };
 
-// Setup event listeners
 const mobileMenuButton = document.querySelector('.mobile-menu-button');
 if (mobileMenuButton) {
 mobileMenuButton.addEventListener('click', () => toggleMobileMenu(true));
@@ -132,7 +122,6 @@ if (collapseButton) {
 collapseButton.addEventListener('click', toggleSidebar);
 }
 
-// Handle logout via dedicated class
 const logoutButton = document.querySelector('.logout-button');
 if (logoutButton) {
 logoutButton.addEventListener('click', function () {

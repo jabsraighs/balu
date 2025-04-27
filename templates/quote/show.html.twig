@@ -1,42 +1,110 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Quote{% endblock %}
+{% block title %}Devis #{{ quote.quoteNumber }}{% endblock %}
 
-{% block body %}
-    <h1>Quote</h1>
+{% block page_content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="mb-6 flex justify-between items-center">
+        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Devis #{{ quote.quoteNumber }}</h1>
+        <div class="flex space-x-2">
+            <a href="{{ path('app_quote_index') }}" class="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm hover:bg-gray-50 dark:hover:bg-gray-700">
+                Retour à la liste
+            </a>
+            <a href="{{ path('app_quote_edit', {'id': quote.id}) }}" class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-baluBlue hover:bg-baluBlue-light rounded-md shadow-sm">
+                Modifier
+            </a>
+        </div>
+    </div>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ quote.id }}</td>
-            </tr>
-            <tr>
-                <th>QuoteNumber</th>
-                <td>{{ quote.quoteNumber }}</td>
-            </tr>
-            <tr>
-                <th>Status</th>
-                <td>{{ quote.status }}</td>
-            </tr>
-            <tr>
-                <th>DateCreated</th>
-                <td>{{ quote.dateCreated ? quote.dateCreated|date('Y-m-d H:i:s') : '' }}</td>
-            </tr>
-            <tr>
-                <th>DateValidUntil</th>
-                <td>{{ quote.dateValidUntil ? quote.dateValidUntil|date('Y-m-d') : '' }}</td>
-            </tr>
-            <tr>
-                <th>TotalAmount</th>
-                <td>{{ quote.totalAmount }}</td>
-            </tr>
-        </tbody>
-    </table>
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden">
+        <div class="p-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div>
+                    <h2 class="text-lg font-medium text-gray-900 dark:text-white mb-3">Informations générales</h2>
+                    <div class="space-y-2">
+                        <div class="flex justify-between">
+                            <span class="text-gray-500 dark:text-gray-400">Numéro:</span>
+                            <span class="font-medium">{{ quote.quoteNumber }}</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-500 dark:text-gray-400">Statut:</span>
+                            <span class="font-medium">{{ quote.status }}</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-500 dark:text-gray-400">Date de création:</span>
+                            <span class="font-medium">{{ quote.dateCreated ? quote.dateCreated|date('d/m/Y') : 'N/A' }}</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-500 dark:text-gray-400">Valide jusqu'au:</span>
+                            <span class="font-medium">{{ quote.dateValidUntil ? quote.dateValidUntil|date('d/m/Y') : 'N/A' }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <h2 class="text-lg font-medium text-gray-900 dark:text-white mb-3">Client</h2>
+                    <div class="space-y-2">
+                        <div class="flex justify-between">
+                            <span class="text-gray-500 dark:text-gray-400">Nom:</span>
+                            <span class="font-medium">{{ quote.client.name }}</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-500 dark:text-gray-400">Email:</span>
+                            <span class="font-medium">{{ quote.client.email }}</span>
+                        </div>
+                        {% if quote.client.phone %}
+                        <div class="flex justify-between">
+                            <span class="text-gray-500 dark:text-gray-400">Téléphone:</span>
+                            <span class="font-medium">{{ quote.client.phone }}</span>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
 
-    <a href="{{ path('app_quote_index') }}">back to list</a>
+            <h2 class="text-lg font-medium text-gray-900 dark:text-white mb-3">Lignes de devis</h2>
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                    <thead>
+                        <tr>
+                            <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Produit / Description</th>
+                            <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Quantité</th>
+                            <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Prix unitaire</th>
+                            <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Remise %</th>
+                            <th scope="col" class="px-4 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Montant</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                        {% for line in quote.quoteLines %}
+                            <tr>
+                                <td class="px-4 py-3">
+                                    <div class="font-medium text-gray-900 dark:text-white">{{ line.productName }}</div>
+                                    <div class="text-sm text-gray-500 dark:text-gray-400">{{ line.description }}</div>
+                                </td>
+                                <td class="px-4 py-3 text-sm text-gray-500 dark:text-gray-400">{{ line.quantity }}</td>
+                                <td class="px-4 py-3 text-sm text-gray-500 dark:text-gray-400">{{ line.unitPrice|number_format(2, ',', ' ') }} €</td>
+                                <td class="px-4 py-3 text-sm text-gray-500 dark:text-gray-400">{{ line.discount }}%</td>
+                                <td class="px-4 py-3 text-right text-sm text-gray-500 dark:text-gray-400">
+                                    {{ (line.quantity * line.unitPrice * (1 - line.discount / 100))|number_format(2, ',', ' ') }} €
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="5" class="px-4 py-3 text-center text-gray-500 dark:text-gray-400">Aucune ligne trouvée</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
 
-    <a href="{{ path('app_quote_edit', {'id': quote.id}) }}">edit</a>
-
-    {{ include('quote/_delete_form.html.twig') }}
+            <div class="mt-4 flex justify-end">
+                <div class="w-64">
+                    <div class="flex justify-between py-2 border-t border-gray-200 dark:border-gray-700">
+                        <span class="font-medium">Total:</span>
+                        <span class="font-bold">{{ quote.totalAmount|number_format(2, ',', ' ') }} €</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

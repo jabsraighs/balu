@@ -1,13 +1,438 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Edit Quote{% endblock %}
-
-{% block body %}
-    <h1>Edit Quote</h1>
-
-    {{ include('quote/_form.html.twig', {'button_label': 'Update'}) }}
-
-    <a href="{{ path('app_quote_index') }}">back to list</a>
-
-    {{ include('quote/_delete_form.html.twig') }}
+{% block title %}Modifier le Devis #{{ quote.quoteNumber }}
 {% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+	<style>
+		.autocomplete-container {
+			position: relative;
+		}
+		.autocomplete-items {
+			position: absolute;
+			border: 1px solid #d4d4d4;
+			border-bottom: none;
+			border-top: none;
+			z-index: 1000;
+			top: 100%;
+			left: 0;
+			right: 0;
+			max-height: 200px;
+			overflow-y: auto;
+			background: white;
+		}
+		.table-container {
+			overflow: visible !important;
+		}
+		.autocomplete-items div {
+			padding: 10px;
+			cursor: pointer;
+			border-bottom: 1px solid #d4d4d4;
+		}
+	</style>
+{% endblock %}
+
+{% block page_content %}
+	<div class="container mx-auto px-4 py-8">
+		<div class="mb-6">
+			<h1 class="text-2xl font-bold text-gray-900 dark:text-white">Modifier le Devis #{{ quote.quoteNumber }}</h1>
+		</div>
+
+		<div class="mb-6">
+			<a href="{{ path('app_quote_index') }}" class="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-gray-700 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm hover:bg-gray-50 dark:hover:bg-gray-700">
+				<svg xmlns="http://www.w3.org/2000/svg" class="mr-2 h-4 w-4" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+					<path d="m12 19-7-7 7-7"></path>
+					<path d="M19 12H5"></path>
+				</svg>
+				Retour à la liste
+			</a>
+		</div>
+
+		<div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden">
+			<div class="p-6">
+				{{ form_start(form, {
+                'attr': {
+                    'class': 'space-y-6',
+                    'novalidate': 'novalidate',
+                    'id': 'quoteForm'
+                }
+            }) }}
+
+				<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+					<div>
+						{{ form_label(form.client, 'Client*', {'label_attr': {'class': 'block text-sm font-medium text-gray-700 dark:text-gray-300'}}) }}
+						{{ form_widget(form.client, {
+                        'attr': {
+                            'class': 'mt-1 block w-full p-2 border border-gray-300 dark:border-gray-700 rounded-md shadow-sm focus:ring-baluBlue focus:border-baluBlue bg-white dark:bg-gray-800 text-gray-900 dark:text-white'
+                        }
+                    }) }}
+						{{ form_errors(form.client, {'attr': {'class': 'text-red-500 text-sm mt-1'}}) }}
+					</div>
+
+					<div>
+						{{ form_label(form.quoteNumber, 'Numéro de devis*', {'label_attr': {'class': 'block text-sm font-medium text-gray-700 dark:text-gray-300'}}) }}
+						{{ form_widget(form.quoteNumber, {
+                        'attr': {
+                            'class': 'mt-1 block w-full p-2 border border-gray-300 dark:border-gray-700 rounded-md shadow-sm focus:ring-baluBlue focus:border-baluBlue bg-white dark:bg-gray-800 text-gray-900 dark:text-white'
+                        }
+                    }) }}
+						{{ form_errors(form.quoteNumber, {'attr': {'class': 'text-red-500 text-sm mt-1'}}) }}
+					</div>
+
+					<div>
+						{{ form_label(form.dateCreated, 'Date*', {'label_attr': {'class': 'block text-sm font-medium text-gray-700 dark:text-gray-300'}}) }}
+						{{ form_widget(form.dateCreated, {
+                        'attr': {
+                            'class': 'mt-1 block w-full p-2 border border-gray-300 dark:border-gray-700 rounded-md shadow-sm focus:ring-baluBlue focus:border-baluBlue bg-white dark:bg-gray-800 text-gray-900 dark:text-white datepicker'
+                        }
+                    }) }}
+						{{ form_errors(form.dateCreated, {'attr': {'class': 'text-red-500 text-sm mt-1'}}) }}
+					</div>
+
+					<div>
+						{{ form_label(form.dateValidUntil, 'Valide jusqu\'au*', {'label_attr': {'class': 'block text-sm font-medium text-gray-700 dark:text-gray-300'}}) }}
+                    {{ form_widget(form.dateValidUntil, {
+                        'attr': {
+                            'class': 'mt-1 block w-full p-2 border border-gray-300 dark:border-gray-700 rounded-md shadow-sm focus:ring-baluBlue focus:border-baluBlue bg-white dark:bg-gray-800 text-gray-900 dark:text-white datepicker'
+                        }
+                    }) }}
+                    {{ form_errors(form.dateValidUntil, {'attr': {'class': 'text-red-500 text-sm mt-1'}}) }}
+                </div>
+            </div>
+            
+            <div>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Lignes de devis*</label>
+                <div class="table-container">
+                    <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700" id="lineItemsTable">
+                        <thead>
+                            <tr>
+                                <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Produit / Description</th>
+                                <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Quantité</th>
+                                <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Prix unitaire</th>
+                                <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Remise %</th>
+                                <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Montant</th>
+                                <th scope="col" class="px-4 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700" id="lineItemsBody">
+                            {% for quoteItem in form.quoteLines %}
+                                <tr class="line-item">
+                                    <td class="px-4 py-2">
+                                        <div class="autocomplete-container">
+                                            <input type="text" class="description-input w-full p-2 border border-gray-300 dark:border-gray-700 rounded-md" placeholder="Tapez le nom d'un produit ou une description" value="{{ quoteItem.vars.data.productName }}">
+						{{ form_widget(quoteItem.productName, {
+                                                'attr': {
+                                                    'class': 'hidden product-name-input'
+                                                }
+                                            }) }}
+						{{ form_widget(quoteItem.productDescription, {
+                                                'attr': {
+                                                    'class': 'hidden product-description-input'
+                                                }
+                                            }) }}
+						{{ form_widget(quoteItem.description, {
+                                                'attr': {
+                                                    'class': 'hidden'
+                                                }
+                                            }) }}
+					</div>
+				</td>
+				<td class="px-4 py-2">
+					{{ form_widget(quoteItem.quantity, {
+                                            'attr': {
+                                                'class': 'w-full p-2 border border-gray-300 dark:border-gray-700 rounded-md quantity-input'
+                                            }
+                                        }) }}
+				</td>
+				<td class="px-4 py-2">
+					{{ form_widget(quoteItem.unitPrice, {
+                                            'attr': {
+                                                'class': 'w-full p-2 border border-gray-300 dark:border-gray-700 rounded-md unit-price-input'
+                                            }
+                                        }) }}
+				</td>
+				<td class="px-4 py-2">
+					{{ form_widget(quoteItem.discount, {
+                                            'attr': {
+                                                'class': 'w-full p-2 border border-gray-300 dark:border-gray-700 rounded-md discount-input'
+                                            }
+                                        }) }}
+				</td>
+				<td class="px-4 py-2">
+					<span class="w-full p-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-700 rounded-md amount-input">
+						{{ (quoteItem.vars.data.quantity * quoteItem.vars.data.unitPrice * (1 - quoteItem.vars.data.discount / 100))|number_format(2, ',', ' ') }}
+						€
+					</span>
+				</td>
+				<td class="px-4 py-2 text-right">
+					<button type="button" class="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300 delete-line-item">
+						<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+							<path d="M3 6h18"></path>
+							<path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
+							<path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
+						</svg>
+					</button>
+				</td>
+			</tr>
+		{% else %}
+			<tr class="line-item">
+				<td class="px-4 py-2">
+					<div class="autocomplete-container">
+						<input type="text" class="description-input w-full p-2 border border-gray-300 dark:border-gray-700 rounded-md" placeholder="Tapez le nom d'un produit ou une description">
+						<input type="hidden" name="quote[quoteLines][0][productName]" class="product-name-input">
+						<input type="hidden" name="quote[quoteLines][0][productDescription]" class="product-description-input">
+						<input type="hidden" name="quote[quoteLines][0][description]" class="description-hidden-input">
+					</div>
+				</td>
+				<td class="px-4 py-2">
+					<input type="number" name="quote[quoteLines][0][quantity]" value="1" required min="1" class="w-full p-2 border border-gray-300 dark:border-gray-700 rounded-md quantity-input">
+				</td>
+				<td class="px-4 py-2">
+					<input type="number" name="quote[quoteLines][0][unitPrice]" value="0" required min="0" step="0.01" class="w-full p-2 border border-gray-300 dark:border-gray-700 rounded-md unit-price-input">
+				</td>
+				<td class="px-4 py-2">
+					<input type="number" name="quote[quoteLines][0][discount]" value="0" min="0" max="100" class="w-full p-2 border border-gray-300 dark:border-gray-700 rounded-md discount-input">
+				</td>
+				<td class="px-4 py-2">
+					<span class="w-full p-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-700 rounded-md amount-input">0,00 €</span>
+				</td>
+				<td class="px-4 py-2 text-right">
+					<button type="button" class="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300 delete-line-item">
+						<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+							<path d="M3 6h18"></path>
+							<path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
+							<path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
+						</svg>
+					</button>
+				</td>
+			</tr>
+		{% endfor %}
+	</tbody>
+</table></div><div class="mt-4">
+<button type="button" id="addLineItem" class="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-md shadow-sm hover:bg-gray-50 dark:hover:bg-gray-700">
+	<svg xmlns="http://www.w3.org/2000/svg" class="mr-2 h-4 w-4" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+		<path d="M5 12h14"></path>
+		<path d="M12 5v14"></path>
+	</svg>
+	Ajouter une ligne
+</button></div><div class="mt-4 flex justify-end">
+<div class="w-64">
+	<div class="flex justify-between py-2 border-t border-gray-200 dark:border-gray-700">
+		<span class="font-medium">Sous-total:</span>
+		<span id="subtotal">{{ quote.totalAmount|number_format(2, ',', ' ') }}
+			€</span>
+	</div>
+	<div class="flex justify-between py-2 border-t border-gray-200 dark:border-gray-700">
+		<span class="font-medium">Total:</span>
+		<span id="total" class="font-bold">{{ quote.totalAmount|number_format(2, ',', ' ') }}
+			€</span>
+	</div>
+</div></div></div><div class="flex justify-end space-x-2"><a href="{{ path('app_quote_index') }}" class="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-gray-700 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm hover:bg-gray-50 dark:hover:bg-gray-700">
+Annuler</a><button type="submit" class="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-baluBlue hover:bg-baluBlue-light rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-baluBlue">
+Mettre à jour</button></div>{{ form_rest(form) }}{{ form_end(form) }}</div></div><div class="mt-6">{{ include('quote/_delete_form.html.twig') }}</div></div>{% endblock %}{% block javascripts %}{{ parent() }}<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script><script>document.addEventListener('DOMContentLoaded', function () {
+const lineItemsBody = document.getElementById('lineItemsBody');
+const addLineItemButton = document.getElementById('addLineItem');
+
+// Fix for the date fields - this is the key change
+const dateInputs = document.querySelectorAll('.datepicker');
+dateInputs.forEach(input => { // Store the original input
+const originalInput = input;
+
+// Create a hidden input that will hold the actual value in the correct format
+const hiddenInput = document.createElement('input');
+hiddenInput.type = 'hidden';
+hiddenInput.name = originalInput.name;
+hiddenInput.id = originalInput.id;
+
+// Change the original input's name to avoid duplicate submission
+originalInput.name = originalInput.name + '_display';
+originalInput.id = originalInput.id + '_display';
+
+// Insert the hidden input after the original input
+originalInput.parentNode.insertBefore(hiddenInput, originalInput.nextSibling);
+
+// Initialize flatpickr on the original input
+const picker = flatpickr(originalInput, {
+dateFormat: 'Y-m-d',
+altInput: true,
+altFormat: 'd/m/Y',
+allowInput: true,
+onClose: function (selectedDates, dateStr, instance) {
+if (selectedDates.length > 0) {
+const date = selectedDates[0];
+
+// Format date as yyyy-MM-dd for Symfony
+const year = date.getFullYear();
+const month = String(date.getMonth() + 1).padStart(2, '0');
+const day = String(date.getDate()).padStart(2, '0');
+// Set the value in the hidden input
+hiddenInput.value = `${year}-${month}-${day}`;
+}
+}
+});
+
+// If there's a pre-existing value, set it correctly
+if (originalInput.value) {
+const parts = originalInput.value.split('-');
+if (parts.length === 3) {
+const date = new Date(parts[0], parts[1] - 1, parts[2]);
+picker.setDate(date);
+
+// Also set the hidden input's initial value
+hiddenInput.value = originalInput.value;
+}
+}
+});
+
+const products = [{% for product in products %}
+{
+id: {{ product.id }},
+name: "{{ product.name }}",
+price: {{ product.unitPrice }},
+description: "{{ product.description }}"
+},{% endfor %}];
+
+function setupAutocomplete(input, productNameInput, productDescriptionInput) {
+let currentFocus;
+input.addEventListener("input", function (e) {
+const val = this.value;
+closeAllLists();
+if (! val) 
+return false;
+
+currentFocus = -1;
+const divList = document.createElement("DIV");
+divList.setAttribute("id", this.id + "autocomplete-list");
+divList.setAttribute("class", "autocomplete-items");
+this.parentNode.appendChild(divList);
+products.forEach(product => {
+if (product.name.substr(0, val.length).toUpperCase() === val.toUpperCase() || product.description.substr(0, val.length).toUpperCase() === val.toUpperCase()) {
+const divItem = document.createElement("DIV");
+divItem.innerHTML = "<strong>" + product.name.substr(0, val.length) + "</strong>";
+divItem.innerHTML += product.name.substr(val.length);
+divItem.innerHTML += "<input type='hidden' class='product-id' value='" + product.id + "'>";
+divItem.innerHTML += "<input type='hidden' class='product-description' value='" + product.description + "'>";
+divItem.addEventListener("click", function (e) {
+input.value = this.getElementsByTagName("strong")[0].innerText + ' ' + product.name.substr(val.length);
+productNameInput.value = this.getElementsByTagName("input")[0].value;
+productDescriptionInput.value = this.getElementsByTagName("input")[1].value;
+closeAllLists();
+});
+divList.appendChild(divItem);
+}
+});
+});
+
+input.addEventListener("keydown", function (e) {
+let x = document.getElementById(this.id + "autocomplete-list");
+if (x) 
+x = x.getElementsByTagName("div");
+
+if (e.keyCode === 40) {
+currentFocus++;
+addActive(x);
+} else if (e.keyCode === 38) {
+currentFocus--;
+addActive(x);
+} else if (e.keyCode === 13) {
+e.preventDefault();
+if (currentFocus > -1 && x) 
+x[currentFocus].click();
+
+}
+});
+
+function addActive(x) {
+if (! x) 
+return false;
+
+removeActive(x);
+if (currentFocus >= x.length) 
+currentFocus = 0;
+
+if (currentFocus < 0) 
+currentFocus = (x.length - 1);
+
+x[currentFocus].classList.add("autocomplete-active");
+}
+
+function removeActive(x) {
+for (let i = 0; i < x.length; i++) {
+x[i].classList.remove("autocomplete-active");
+}
+}
+
+function closeAllLists(elmnt) {
+const x = document.getElementsByClassName("autocomplete-items");
+for (let i = 0; i < x.length; i++) {
+if (elmnt !== x[i] && elmnt !== input) {
+x[i].parentNode.removeChild(x[i]);
+}
+}
+}
+
+document.addEventListener("click", function (e) {
+closeAllLists(e.target);
+});
+}
+
+function calculateLineItemAmount(row) {
+const quantity = row.querySelector('.quantity-input').value;
+const unitPrice = row.querySelector('.unit-price-input').value;
+const discount = row.querySelector('.discount-input').value;
+const amount = (quantity * unitPrice * (1 - discount / 100));
+row.querySelector('.amount-input').innerText = amount.toFixed(2).replace('.', ',') + ' €';
+}
+
+function addCalculationListeners(row) {
+row.querySelector('.quantity-input').addEventListener('input', function () {
+calculateLineItemAmount(row);
+updateTotals();
+});
+row.querySelector('.unit-price-input').addEventListener('input', function () {
+calculateLineItemAmount(row);
+updateTotals();
+});
+row.querySelector('.discount-input').addEventListener('input', function () {
+calculateLineItemAmount(row);
+updateTotals();
+});
+}
+
+function updateTotals() {
+let subtotal = 0;
+document.querySelectorAll('.line-item').forEach(row => {
+const amount = parseFloat(row.querySelector('.amount-input').innerText.replace(' €', '').replace(',', '.'));
+if (!isNaN(amount)) {
+subtotal += amount;
+}
+});
+document.getElementById('subtotal').innerText = subtotal.toFixed(2).replace('.', ',') + ' €';
+document.getElementById('total').innerText = subtotal.toFixed(2).replace('.', ',') + ' €';
+}
+
+products.forEach(product => {
+const inputs = document.querySelectorAll('.description-input');
+inputs.forEach(input => {
+setupAutocomplete(input, input.parentNode.querySelector('.product-name-input'), input.parentNode.querySelector('.product-description-input'));
+});
+});
+
+addLineItemButton.addEventListener('click', function () {
+const newRow = lineItemsBody.querySelector('.line-item').cloneNode(true);
+newRow.querySelectorAll('input').forEach(input => {
+input.value = '';
+});
+newRow.querySelector('.amount-input').innerText = '0,00 €';
+lineItemsBody.appendChild(newRow);
+addCalculationListeners(newRow);
+});
+
+document.querySelectorAll('.line-item').forEach(row => {
+addCalculationListeners(row);
+});
+
+updateTotals();
+});</script>{% endblock %}

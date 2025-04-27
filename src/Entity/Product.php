@@ -32,24 +32,6 @@ class Product
     #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
     private ?string $unitPrice = null;
 
-    /**
-     * @var Collection<int, QuoteLine>
-     */
-    #[ORM\OneToMany(targetEntity: QuoteLine::class, mappedBy: 'product')]
-    private Collection $quoteLines;
-
-    /**
-     * @var Collection<int, InvoiceLine>
-     */
-    #[ORM\OneToMany(targetEntity: InvoiceLine::class, mappedBy: 'product')]
-    private Collection $invoiceLines;
-
-    public function __construct()
-    {
-        $this->quoteLines = new ArrayCollection();
-        $this->invoiceLines = new ArrayCollection();
-    }
-
     public function getId(): ?int
     {
         return $this->id;
@@ -111,66 +93,6 @@ class Product
     public function setUnitPrice(string $unitPrice): static
     {
         $this->unitPrice = $unitPrice;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, QuoteLine>
-     */
-    public function getQuoteLines(): Collection
-    {
-        return $this->quoteLines;
-    }
-
-    public function addQuoteLine(QuoteLine $quoteLine): static
-    {
-        if (!$this->quoteLines->contains($quoteLine)) {
-            $this->quoteLines->add($quoteLine);
-            $quoteLine->setProduct($this);
-        }
-
-        return $this;
-    }
-
-    public function removeQuoteLine(QuoteLine $quoteLine): static
-    {
-        if ($this->quoteLines->removeElement($quoteLine)) {
-            // set the owning side to null (unless already changed)
-            if ($quoteLine->getProduct() === $this) {
-                $quoteLine->setProduct(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, InvoiceLine>
-     */
-    public function getInvoiceLines(): Collection
-    {
-        return $this->invoiceLines;
-    }
-
-    public function addInvoiceLine(InvoiceLine $invoiceLine): static
-    {
-        if (!$this->invoiceLines->contains($invoiceLine)) {
-            $this->invoiceLines->add($invoiceLine);
-            $invoiceLine->setProduct($this);
-        }
-
-        return $this;
-    }
-
-    public function removeInvoiceLine(InvoiceLine $invoiceLine): static
-    {
-        if ($this->invoiceLines->removeElement($invoiceLine)) {
-            // set the owning side to null (unless already changed)
-            if ($invoiceLine->getProduct() === $this) {
-                $invoiceLine->setProduct(null);
-            }
-        }
 
         return $this;
     }

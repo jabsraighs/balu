@@ -18,10 +18,6 @@ class InvoiceLine
     #[ORM\JoinColumn(nullable: false)]
     private ?Invoice $invoice = null;
 
-    #[ORM\ManyToOne(inversedBy: 'invoiceLines')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Product $product = null;
-
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $description = null;
 
@@ -33,6 +29,12 @@ class InvoiceLine
 
     #[ORM\Column]
     private ?float $discount = 0;
+
+    #[ORM\Column(length: 255)]
+    private ?string $productName = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $productDescription = null;
 
     public function getId(): ?int
     {
@@ -47,18 +49,6 @@ class InvoiceLine
     public function setInvoice(?Invoice $invoice): static
     {
         $this->invoice = $invoice;
-
-        return $this;
-    }
-
-    public function getProduct(): ?Product
-    {
-        return $this->product;
-    }
-
-    public function setProduct(?Product $product): static
-    {
-        $this->product = $product;
 
         return $this;
     }
@@ -107,6 +97,30 @@ class InvoiceLine
     public function setDiscount(float $discount): static
     {
         $this->discount = $discount;
+
+        return $this;
+    }
+
+    public function getProductName(): ?string
+    {
+        return $this->productName;
+    }
+
+    public function setProductName(string $productName): static
+    {
+        $this->productName = $productName;
+
+        return $this;
+    }
+
+    public function getProductDescription(): ?string
+    {
+        return $this->productDescription;
+    }
+
+    public function setProductDescription(string $productDescription): static
+    {
+        $this->productDescription = $productDescription;
 
         return $this;
     }

@@ -1,212 +1,194 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Devis{% endblock %}
+{% block title %}Devis
+{% endblock %}
 
 {% block page_content %}
-<div class="container mx-auto px-4 py-8">
-    <div class="mb-6">
-        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Devis</h1>
-    </div>
-    
-    <div class="flex justify-between items-center mb-6">
-        <div>
-            <h2 class="text-xl font-semibold text-gray-900 dark:text-white">Tous les devis</h2>
-            <p class="text-gray-500 dark:text-gray-400">Gérez et suivez vos devis</p>
-        </div>
-        <a href="{{ path('app_quote_new') }}" class="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-baluBlue hover:bg-baluBlue-light rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-baluBlue">
-            <svg xmlns="http://www.w3.org/2000/svg" class="mr-2 h-4 w-4" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M5 12h14"></path>
-                <path d="M12 5v14"></path>
-            </svg>
-            Créer un devis
-        </a>
-    </div>
-    
-    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden">
-        <div class="relative w-full overflow-auto">
-            <table class="w-full caption-bottom text-sm">
-                <thead>
-                    <tr class="border-b transition-colors hover:bg-muted/50">
-                        <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Client</th>
-                        <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Numéro</th>
-                        <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Date</th>
-                        <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Valide jusqu'au</th>
-                        <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Montant</th>
-                        <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Statut</th>
-                        <th class="h-12 px-4 text-right align-middle font-medium text-muted-foreground">Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for quote in quotes %}
-                        <tr class="border-b transition-colors hover:bg-muted/50">
-                            <td class="p-4 align-middle flex items-center">
-                                <div class="h-8 w-8 flex-shrink-0 mr-3">
-                                    <div class="h-8 w-8 rounded-full bg-baluBlue text-white flex items-center justify-center font-medium text-xs">
-                                        {{ quote.client.fullname|first|upper }}
-                                    </div>
-                                </div>
-                                <div>
-                                    <div class="font-medium text-gray-900 dark:text-white">{{ quote.client.fullname }}</div>
-                                    <div class="text-sm text-gray-500">{{ quote.client.companyName }}</div>
-                                </div>
-                            </td>
-                            <td class="p-4 align-middle">{{ quote.quoteNumber }}</td>
-                            <td class="p-4 align-middle">{{ quote.dateCreated ? quote.dateCreated|date('d/m/Y') : '' }}</td>
-                            <td class="p-4 align-middle">{{ quote.dateValidUntil ? quote.dateValidUntil|date('d/m/Y') : '' }}</td>
-                            <td class="p-4 align-middle">{{ quote.totalAmount|number_format(2, ',', ' ') }} €</td>
-                            <td class="p-4 align-middle">
-                                {% if quote.status == 'pending' %}
-                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-800/30 dark:text-yellow-500">
-                                        En attente
-                                    </span>
-                                {% elseif quote.status == 'accepted' %}
-                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-800/30 dark:text-green-500">
-                                        Accepté
-                                    </span>
-                                {% elseif quote.status == 'rejected' %}
-                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800 dark:bg-red-800/30 dark:text-red-500">
-                                        Refusé
-                                    </span>
-                                {% elseif quote.status == 'draft' %}
-                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-800/30 dark:text-blue-500">
-                                        Brouillon
-                                    </span>
-                                {% else %}
-                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-800/30 dark:text-gray-500">
-                                        {{ quote.status|capitalize }}
-                                    </span>
-                                {% endif %}
-                            </td>
-                            <td class="p-4 align-middle text-right">
-                                <div class="flex justify-end space-x-2">
-                                    <a 
-                                        href="{{ path('app_quote_show', {'id': quote.id}) }}" 
-                                        class="inline-flex items-center justify-center px-3 py-1 text-xs font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-baluBlue dark:bg-gray-800 dark:border-gray-700 dark:text-gray-200 dark:hover:bg-gray-700"
-                                    >
-                                        Voir
-                                    </a>
-                                    <a 
-                                        href="{{ path('app_quote_edit', {'id': quote.id}) }}" 
-                                        class="inline-flex items-center justify-center px-3 py-1 text-xs font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-baluBlue dark:bg-gray-800 dark:border-gray-700 dark:text-gray-200 dark:hover:bg-gray-700"
-                                    >
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                            <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"></path>
-                                            <path d="m15 5 4 4"></path>
-                                        </svg>
-                                        Modifier
-                                    </a>
-                                    <button 
-                                        type="button" 
-                                        class="inline-flex items-center justify-center px-3 py-1 text-xs font-medium text-red-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 dark:bg-gray-800 dark:border-gray-700 dark:text-red-400 dark:hover:bg-gray-700"
-                                        data-quote-id="{{ quote.id }}"
-                                        data-bs-toggle="modal" 
-                                        data-bs-target="#deleteConfirmModal"
-                                    >
-                                        Supprimer
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                    {% else %}
-                        <tr>
-                            <td colspan="7" class="p-4 align-middle text-center text-gray-500 dark:text-gray-400">Aucun devis trouvé</td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    </div>
-    
-    {# Delete Confirmation Modal - Version Tailwind #}
-    <div id="deleteConfirmModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center hidden">
-        <div class="bg-white dark:bg-gray-800 rounded-lg max-w-md w-full mx-auto">
-            <div class="p-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
-                <h5 class="text-lg font-semibold text-gray-900 dark:text-white">Supprimer le devis</h5>
-                <button type="button" class="text-gray-400 hover:text-gray-500 dark:hover:text-gray-300" id="closeModal">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <line x1="18" y1="6" x2="6" y2="18"></line>
-                        <line x1="6" y1="6" x2="18" y2="18"></line>
-                    </svg>
-                </button>
-            </div>
-            <div class="p-4 border-b border-gray-200 dark:border-gray-700">
-                <p class="text-gray-700 dark:text-gray-300">Êtes-vous sûr de vouloir supprimer ce devis ? Cette action ne peut pas être annulée.</p>
-            </div>
-            <div class="p-4 flex justify-end gap-2">
-                <button type="button" id="cancelDelete" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600 dark:hover:bg-gray-600">
-                    Annuler
-                </button>
-                <form id="deleteQuoteForm" method="POST" action="">
-                    <input type="hidden" name="_method" value="DELETE">
-                    <button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-700 focus:outline-none dark:bg-red-700 dark:hover:bg-red-800">
-                        Supprimer
-                    </button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
+	<div class="container mx-auto px-4 py-8">
+		<div class="mb-6">
+			<h1 class="text-2xl font-bold text-gray-900 dark:text-white">Devis</h1>
+		</div>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Handle delete confirmation modal
-        const deleteModal = document.getElementById('deleteConfirmModal');
-        const deleteButtons = document.querySelectorAll('[data-quote-id]');
-        const closeModalButton = document.getElementById('closeModal');
-        const cancelDeleteButton = document.getElementById('cancelDelete');
-        
-        // Function to show modal
-        function showModal() {
-            deleteModal.classList.remove('hidden');
-        }
-        
-        // Function to hide modal
-        function hideModal() {
-            deleteModal.classList.add('hidden');
-        }
-        
-        // Open modal when delete button is clicked
-        deleteButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                const quoteId = this.getAttribute('data-quote-id');
-                const deleteForm = document.getElementById('deleteQuoteForm');
-                deleteForm.action = "{{ path('app_quote_delete', {'id': 'QUOTE_ID'}) }}".replace('QUOTE_ID', quoteId);
-                showModal();
-            });
-        });
-        
-        // Close modal with close button
-        if (closeModalButton) {
-            closeModalButton.addEventListener('click', hideModal);
-        }
-        
-        // Close modal with cancel button
-        if (cancelDeleteButton) {
-            cancelDeleteButton.addEventListener('click', hideModal);
-        }
-        
-        // Close modal when clicking outside
-        deleteModal.addEventListener('click', function(event) {
-            if (event.target === deleteModal) {
-                hideModal();
-            }
-        });
-        
-        // Flash messages handling
-        const flashMessages = document.querySelectorAll('.alert-dismissible');
-        flashMessages.forEach(function(flashMessage) {
-            const closeButton = flashMessage.querySelector('.btn-close');
-            if (closeButton) {
-                closeButton.addEventListener('click', function() {
-                    flashMessage.remove();
-                });
-            }
-            
-            // Auto-hide flash messages after 5 seconds
-            setTimeout(function() {
-                flashMessage.remove();
-            }, 5000);
-        });
-    });
-</script>
+		<div class="flex justify-between items-center mb-6">
+			<div>
+				<h2 class="text-xl font-semibold text-gray-900 dark:text-white">Tous les devis</h2>
+				<p class="text-gray-500 dark:text-gray-400">Gérez et suivez vos devis</p>
+			</div>
+			<a href="{{ path('app_quote_new') }}" class="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-baluBlue hover:bg-baluBlue-light rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-baluBlue">
+				<svg xmlns="http://www.w3.org/2000/svg" class="mr-2 h-4 w-4" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+					<path d="M5 12h14"></path>
+					<path d="M12 5v14"></path>
+				</svg>
+				Créer un devis
+			</a>
+		</div>
+
+		<div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden">
+			<div class="relative w-full overflow-auto">
+				<table class="w-full caption-bottom text-sm">
+					<thead>
+						<tr class="border-b transition-colors hover:bg-muted/50">
+							<th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Client</th>
+							<th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Numéro</th>
+							<th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Date</th>
+							<th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Valide jusqu'au</th>
+							<th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Montant</th>
+							<th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Statut</th>
+							<th class="h-12 px-4 text-right align-middle font-medium text-muted-foreground">Actions</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for quote in quotes %}
+							<tr class="border-b transition-colors hover:bg-muted/50">
+								<td class="p-4 align-middle flex items-center">
+									<div class="h-8 w-8 flex-shrink-0 mr-3">
+										<div class="h-8 w-8 rounded-full bg-baluBlue text-white flex items-center justify-center font-medium text-xs">
+											{{ quote.client.name|first|upper }}
+										</div>
+									</div>
+									<div>
+										<div class="font-medium text-gray-900 dark:text-white">{{ quote.client.name }}</div>
+										<div class="text-sm text-gray-500">{{ quote.client.company.name }}</div>
+									</div>
+								</td>
+								<td class="p-4 align-middle">{{ quote.quoteNumber }}</td>
+								<td class="p-4 align-middle">{{ quote.dateCreated ? quote.dateCreated|date('d/m/Y') : '' }}</td>
+								<td class="p-4 align-middle">{{ quote.dateValidUntil ? quote.dateValidUntil|date('d/m/Y') : '' }}</td>
+								<td class="p-4 align-middle">{{ quote.totalAmount|number_format(2, ',', ' ') }}
+									€</td>
+								<td class="p-4 align-middle">
+									{% if quote.status == 'pending' %}
+										<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-800/30 dark:text-yellow-500">
+											En attente
+										</span>
+									{% elseif quote.status == 'accepted' %}
+										<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-800/30 dark:text-green-500">
+											Accepté
+										</span>
+									{% elseif quote.status == 'rejected' %}
+										<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800 dark:bg-red-800/30 dark:text-red-500">
+											Refusé
+										</span>
+									{% elseif quote.status == 'draft' %}
+										<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-800/30 dark:text-blue-500">
+											Brouillon
+										</span>
+									{% else %}
+										<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-800/30 dark:text-gray-500">
+											{{ quote.status|capitalize }}
+										</span>
+									{% endif %}
+								</td>
+								<td class="p-4 align-middle text-right">
+									<div class="flex justify-end space-x-2">
+										<a href="{{ path('app_quote_show', {'id': quote.id}) }}" class="inline-flex items-center justify-center px-3 py-1 text-xs font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-baluBlue dark:bg-gray-800 dark:border-gray-700 dark:text-gray-200 dark:hover:bg-gray-700">
+											Voir
+										</a>
+										<a href="{{ path('app_quote_edit', {'id': quote.id}) }}" class="inline-flex items-center justify-center px-3 py-1 text-xs font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-baluBlue dark:bg-gray-800 dark:border-gray-700 dark:text-gray-200 dark:hover:bg-gray-700">
+											<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+												<path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"></path>
+												<path d="m15 5 4 4"></path>
+											</svg>
+											Modifier
+										</a>
+										<button type="button" class="inline-flex items-center justify-center px-3 py-1 text-xs font-medium text-red-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 dark:bg-gray-800 dark:border-gray-700 dark:text-red-400 dark:hover:bg-gray-700" data-quote-id="{{ quote.id }}" data-bs-toggle="modal" data-bs-target="#deleteConfirmModal">
+											Supprimer
+										</button>
+									</div>
+								</td>
+							</tr>
+						{% else %}
+							<tr>
+								<td colspan="7" class="p-4 align-middle text-center text-gray-500 dark:text-gray-400">Aucun devis trouvé</td>
+							</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			</div>
+		</div>
+
+		<div id="deleteConfirmModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center hidden">
+			<div class="bg-white dark:bg-gray-800 rounded-lg max-w-md w-full mx-auto">
+				<div class="p-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
+					<h5 class="text-lg font-semibold text-gray-900 dark:text-white">Supprimer le client</h5>
+					<button type="button" class="text-gray-400 hover:text-gray-500 dark:hover:text-gray-300" id="closeModal">
+						<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+							<line x1="18" y1="6" x2="6" y2="18"></line>
+							<line x1="6" y1="6" x2="18" y2="18"></line>
+						</svg>
+					</button>
+				</div>
+				<div class="p-4 border-b border-gray-200 dark:border-gray-700">
+					<p class="text-gray-700 dark:text-gray-300">Êtes-vous sûr de vouloir supprimer ce client ? Cette action ne peut pas être annulée.</p>
+				</div>
+				<div class="p-4 flex justify-end gap-2">
+					<button type="button" id="cancelDelete" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600 dark:hover:bg-gray-600">
+						Annuler
+					</button>
+					<form id="deleteQuoteForm" method="POST" action="">
+						<input type="hidden" name="_token" id="csrf_token_placeholder" value="">
+						<button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-700 focus:outline-none dark:bg-red-700 dark:hover:bg-red-800">
+							Supprimer
+						</button>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script>
+		window.csrfTokens = {
+{% for quote in quotes %}
+"{{ quote.id }}" : "{{ csrf_token('delete' ~ quote.id) }}",{% endfor %}
+};
+
+function openDeleteModal(quoteId) {
+const modal = document.getElementById('deleteConfirmModal');
+const deleteForm = document.getElementById('deleteQuoteForm');
+const csrfTokenInput = document.getElementById('csrf_token_placeholder');
+
+deleteForm.action = "{{ path('app_quote_delete', {'id': 'QUOTE_ID'}) }}".replace('QUOTE_ID', quoteId);
+
+csrfTokenInput.value = csrfTokens[quoteId];
+
+modal.classList.remove('hidden');
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+const closeModal = document.getElementById('closeModal');
+if (closeModal) {
+closeModal.addEventListener('click', function () {
+document.getElementById('deleteConfirmModal').classList.add('hidden');
+});
+}
+
+const cancelDelete = document.getElementById('cancelDelete');
+if (cancelDelete) {
+cancelDelete.addEventListener('click', function () {
+document.getElementById('deleteConfirmModal').classList.add('hidden');
+});
+}
+
+const modal = document.getElementById('deleteConfirmModal');
+modal.addEventListener('click', function (event) {
+if (event.target === modal) {
+modal.classList.add('hidden');
+}
+});
+
+const flashMessages = document.querySelectorAll('.alert-dismissible');
+flashMessages.forEach(function (flashMessage) {
+const closeButton = flashMessage.querySelector('.btn-close');
+if (closeButton) {
+closeButton.addEventListener('click', function () {
+flashMessage.remove();
+});
+}
+
+setTimeout(function () {
+flashMessage.remove();
+}, 5000);
+});
+});
+	</script>
 {% endblock %}

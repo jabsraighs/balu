@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Quote;
 use App\Form\QuoteType;
+use App\Repository\ProductRepository;
 use App\Repository\QuoteRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -27,13 +28,32 @@ final class QuoteController extends AbstractController{
     }
 
     #[Route('/new', name: 'app_quote_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(Request $request, EntityManagerInterface $entityManager, ProductRepository $productRepository): Response
     {
+        $user = $this->getUser();
+        $company = $user->getCompany();
+        
         $quote = new Quote();
+        $quote->setCompany($company);
+        $quote->setCustomer($user);
+        $quote->setCreatedAt(new \DateTimeImmutable());
+        
         $form = $this->createForm(QuoteType::class, $quote);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            foreach ($quote->getQuoteLines() as $quoteLine) {
+                if (!$quoteLine->getProductName()) {
+                    $quoteLine->setProductName('Produit personnalisé');
+                }
+                if (!$quoteLine->getProductDescription()) {
+                    $quoteLine->setProductDescription('Description par défaut');
+                }
+            }
+            
+            $totalAmount = $this->calculateTotalAmount($quote);
+            $quote->setTotalAmount($totalAmount);
+            
             $entityManager->persist($quote);
             $entityManager->flush();
 
@@ -43,6 +63,7 @@ final class QuoteController extends AbstractController{
         return $this->render('quote/new.html.twig', [
             'quote' => $quote,
             'form' => $form,
+            'products' => $productRepository->findByCompany($company),
         ]);
     }
 
@@ -55,12 +76,25 @@ final class QuoteController extends AbstractController{
     }
 
     #[Route('/{id}/edit', name: 'app_quote_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Quote $quote, EntityManagerInterface $entityManager): Response
+    public function edit(Request $request, Quote $quote, EntityManagerInterface $entityManager, ProductRepository $productRepository): Response
     {
         $form = $this->createForm(QuoteType::class, $quote);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            
+            foreach ($quote->getQuoteLines() as $quoteLine) {
+                if (!$quoteLine->getProductName()) {
+                    $quoteLine->setProductName('Produit personnalisé');
+                }
+                if (!$quoteLine->getProductDescription()) {
+                    $quoteLine->setProductDescription('Description par défaut');
+                }
+            }
+            
+            $totalAmount = $this->calculateTotalAmount($quote);
+            $quote->setTotalAmount($totalAmount);
+            
             $entityManager->flush();
 
             return $this->redirectToRoute('app_quote_index', [], Response::HTTP_SEE_OTHER);
@@ -69,7 +103,27 @@ final class QuoteController extends AbstractController{
         return $this->render('quote/edit.html.twig', [
             'quote' => $quote,
             'form' => $form,
+            'products' => $productRepository->findByCompany($quote->getCompany()),
         ]);
+    }
+
+    /**
+     * Calculate the total amount of a quote based on all quote lines
+     */
+    private function calculateTotalAmount(Quote $quote): float
+    {
+        $total = 0;
+        
+        foreach ($quote->getQuoteLines() as $quoteLine) {
+            $quantity = $quoteLine->getQuantity();
+            $unitPrice = $quoteLine->getUnitPrice();
+            $discount = $quoteLine->getDiscount();
+            
+            $lineAmount = $quantity * $unitPrice * (1 - $discount / 100);
+            $total += $lineAmount;
+        }
+        
+        return round($total, 2);
     }
 
     #[Route('/{id}', name: 'app_quote_delete', methods: ['POST'])]

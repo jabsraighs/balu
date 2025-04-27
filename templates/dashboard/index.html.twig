@@ -109,10 +109,10 @@
                 <div class="flex items-center justify-between p-4 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
                     <div class="flex items-center space-x-4">
                         <div class="flex-shrink-0 h-10 w-10 rounded-full bg-baluBlue text-white flex items-center justify-center font-medium">
-                            {{ invoice.client.fullname|first }}
+                            {{ invoice.client.name|first }}
                         </div>
                         <div>
-                            <p class="font-medium text-gray-900 dark:text-white">{{ invoice.client.fullname }}</p>
+                            <p class="font-medium text-gray-900 dark:text-white">{{ invoice.client.name }}</p>
                             <p class="text-sm text-gray-500 dark:text-gray-400">{{ invoice.createdAt|date('d/m/Y') }}</p>
                         </div>
                     </div>
@@ -150,10 +150,10 @@
                 <div class="flex items-center justify-between p-4 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
                     <div class="flex items-center space-x-4">
                         <div class="flex-shrink-0 h-10 w-10 rounded-full bg-baluBlue text-white flex items-center justify-center font-medium">
-                            {{ quote.client.fullname|first }}
+                            {{ quote.client.name|first }}
                         </div>
                         <div>
-                            <p class="font-medium text-gray-900 dark:text-white">{{ quote.client.fullname }}</p>
+                            <p class="font-medium text-gray-900 dark:text-white">{{ quote.client.name }}</p>
                             <p class="text-sm text-gray-500 dark:text-gray-400">{{ quote.createdAt|date('d/m/Y') }}</p>
                         </div>
                     </div>

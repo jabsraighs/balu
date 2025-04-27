@@ -3,11 +3,11 @@
 namespace App\Form;
 
 use App\Entity\Client;
-use App\Entity\Company;
 use App\Entity\Quote;
-use App\Entity\User;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -17,25 +17,33 @@ class QuoteType extends AbstractType
     {
         $builder
             ->add('quoteNumber')
-            ->add('status')
-            ->add('dateCreated', null, [
-                'widget' => 'single_text'
+            ->add('dateCreated', DateType::class, [
+                'widget' => 'single_text',
+                'html5' => false,
+                'input' => 'datetime_immutable',
             ])
-            ->add('dateValidUntil', null, [
-                'widget' => 'single_text'
-            ])
-            ->add('totalAmount')
-            ->add('company', EntityType::class, [
-                'class' => Company::class,
-'choice_label' => 'id',
+            ->add('dateValidUntil', DateType::class, [
+                'widget' => 'single_text',
+                'html5' => false,
+                'input' => 'datetime_immutable',
+                'attr' => [
+                    'class' => 'datepicker',
+                    'data-date-format' => 'Y-m-d'
+                ],
+                'format' => 'yyyy-MM-dd',
             ])
             ->add('client', EntityType::class, [
                 'class' => Client::class,
-'choice_label' => 'id',
+                'choice_label' => 'name',
+                'placeholder' => 'Sélectionner un client'
             ])
-            ->add('customer', EntityType::class, [
-                'class' => User::class,
-'choice_label' => 'id',
+            ->add('quoteLines', CollectionType::class, [
+                'entry_type' => QuoteLineType::class,
+                'allow_add' => true,
+                'allow_delete' => true,
+                'by_reference' => false,
+                'prototype' => true,
+                'label' => false
             ])
         ;
     }

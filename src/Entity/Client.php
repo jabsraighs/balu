@@ -153,7 +153,6 @@ class Client
     public function removeQuote(Quote $quote): static
     {
         if ($this->quotes->removeElement($quote)) {
-            // set the owning side to null (unless already changed)
             if ($quote->getClient() === $this) {
                 $quote->setClient(null);
             }
@@ -183,7 +182,6 @@ class Client
     public function removeInvoice(Invoice $invoice): static
     {
         if ($this->invoices->removeElement($invoice)) {
-            // set the owning side to null (unless already changed)
             if ($invoice->getClient() === $this) {
                 $invoice->setClient(null);
             }

@@ -132,7 +132,6 @@ class Company
     public function removeClient(Client $client): static
     {
         if ($this->clients->removeElement($client)) {
-            // set the owning side to null (unless already changed)
             if ($client->getCompany() === $this) {
                 $client->setCompany(null);
             }
@@ -162,7 +161,6 @@ class Company
     public function removeCategory(Category $category): static
     {
         if ($this->categories->removeElement($category)) {
-            // set the owning side to null (unless already changed)
             if ($category->getCompany() === $this) {
                 $category->setCompany(null);
             }
@@ -192,7 +190,6 @@ class Company
     public function removeProduct(Product $product): static
     {
         if ($this->products->removeElement($product)) {
-            // set the owning side to null (unless already changed)
             if ($product->getCompany() === $this) {
                 $product->setCompany(null);
             }
@@ -222,7 +219,6 @@ class Company
     public function removeQuote(Quote $quote): static
     {
         if ($this->quotes->removeElement($quote)) {
-            // set the owning side to null (unless already changed)
             if ($quote->getCompany() === $this) {
                 $quote->setCompany(null);
             }
@@ -252,7 +248,6 @@ class Company
     public function removeUser(User $user): static
     {
         if ($this->users->removeElement($user)) {
-            // set the owning side to null (unless already changed)
             if ($user->getCompany() === $this) {
                 $user->setCompany(null);
             }
@@ -282,7 +277,6 @@ class Company
     public function removeInvoice(Invoice $invoice): static
     {
         if ($this->invoices->removeElement($invoice)) {
-            // set the owning side to null (unless already changed)
             if ($invoice->getCompany() === $this) {
                 $invoice->setCompany(null);
             }
