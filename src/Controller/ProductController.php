@@ -27,6 +27,7 @@ final class ProductController extends AbstractController{
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $product = new Product();
+        $product->setCompany($this->getUser()->getCompany());
         $form = $this->createForm(ProductType::class, $product);
         $form->handleRequest($request);
 
@@ -56,6 +57,10 @@ final class ProductController extends AbstractController{
     {
         $form = $this->createForm(ProductType::class, $product);
         $form->handleRequest($request);
+
+        if ($product->getCompany() !== $this->getUser()->getCompany()) {
+            throw $this->createAccessDeniedException();
+        }
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
