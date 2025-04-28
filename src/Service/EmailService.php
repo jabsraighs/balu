@@ -5,6 +5,7 @@ namespace App\Service;
 use App\Entity\Invoice;
 use App\Entity\Quote;
 use Knp\Snappy\Pdf;
+use App\Entity\Invitation;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
@@ -42,28 +43,28 @@ class EmailService
         $pdfHtml = $this->twig->render('quote/pdf.html.twig', [
             'quote' => $quote
         ]);
-        
-        $pdfContent = $this->pdf->getOutputFromHtml($pdfHtml);
-        
+
+        // $pdfContent = $this->pdf->getOutputFromHtml($pdfHtml);
+
         // Variables par défaut
         $variables = [
             'quote' => $quote,
             'app_url' => $this->params->get('app_url'),
             'company_name' => $quote->getCompany()->getName(),
         ];
-        
+
         // Ajouter les variables personnalisées
         $variables = array_merge($variables, $customVars);
-        
+
         $emailHtml = $this->twig->render('quote/email.html.twig', $variables);
-        
+
         $email = (new Email())
             ->from($this->params->get('app_email_from'))
             ->to($quote->getClient()->getEmail())
             ->subject('Devis #' . $quote->getQuoteNumber())
-            ->html($emailHtml)
-            ->attach($pdfContent, 'devis-'.$quote->getQuoteNumber().'.pdf', 'application/pdf');
-        
+            ->html($emailHtml);
+            // ->attach($pdfContent, 'devis-' . $quote->getQuoteNumber() . '.pdf', 'application/pdf');
+
         try {
             $this->mailer->send($email);
             return true;
@@ -72,7 +73,7 @@ class EmailService
             return false;
         }
     }
-    
+
     /**
      * Envoie un email avec une facture en pièce jointe
      */
@@ -81,28 +82,28 @@ class EmailService
         $pdfHtml = $this->twig->render('invoice/pdf.html.twig', [
             'invoice' => $invoice
         ]);
-        
+
         $pdfContent = $this->pdf->getOutputFromHtml($pdfHtml);
-        
+
         // Variables par défaut
         $variables = [
             'invoice' => $invoice,
             'app_url' => $this->params->get('app_url'),
             'company_name' => $invoice->getCompany()->getName(),
         ];
-        
+
         // Ajouter les variables personnalisées
         $variables = array_merge($variables, $customVars);
-        
+
         $emailHtml = $this->twig->render('invoice/email.html.twig', $variables);
-        
+
         $email = (new Email())
             ->from($this->params->get('app_email_from'))
             ->to($invoice->getClient()->getEmail())
             ->subject('Facture #' . $invoice->getInvoiceNumber())
             ->html($emailHtml)
-            ->attach($pdfContent, 'facture-'.$invoice->getInvoiceNumber().'.pdf', 'application/pdf');
-        
+            ->attach($pdfContent, 'facture-' . $invoice->getInvoiceNumber() . '.pdf', 'application/pdf');
+
         try {
             $this->mailer->send($email);
             return true;
@@ -111,7 +112,7 @@ class EmailService
             return false;
         }
     }
-    
+
     /**
      * Envoie une relance pour les factures impayées
      */
@@ -122,15 +123,47 @@ class EmailService
             'is_reminder' => true,
             'days_late' => $this->getDaysLate($invoice)
         ];
-        
+
         return $this->sendInvoiceEmail($invoice, $customVars);
     }
-    
+
     private function getDaysLate(Invoice $invoice): int
     {
         $today = new \DateTime();
         $dueDate = $invoice->getDateDue();
-        
+
         return $today->diff($dueDate)->days;
+    }
+
+    /**
+     * Envoie un email d'invitation à rejoindre une entreprise
+     */
+    public function sendInvitationEmail(Invitation $invitation): bool
+    {
+        $company = $invitation->getCompany();
+
+        // Variables pour le template
+        $variables = [
+            'invitation' => $invitation,
+            'company' => $company,
+            'app_url' => $this->params->get('app_url'),
+        ];
+
+        $emailHtml = $this->twig->render('invitation/email.html.twig', $variables);
+
+        $email = (new Email())
+            ->from($this->params->get('app_email_from'))
+            ->to($invitation->getEmail())
+            ->subject('Invitation à rejoindre ' . $company->getName())
+            ->html($emailHtml);
+
+        try {
+            $this->mailer->send($email);
+            return true;
+        } catch (TransportExceptionInterface $e) {
+            // Log l'erreur avec plus de détails
+            error_log("Erreur d'envoi d'email: " . $e->getMessage());
+            return false;
+        }
     }
 }

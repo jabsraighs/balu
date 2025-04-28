@@ -186,16 +186,18 @@ final class QuoteController extends AbstractController
         $html = $this->renderView('quote/pdf.html.twig', [
             'quote' => $quote
         ]);
-        $pdf = $knpSnappyPdf->getOutputFromHtml($html);
+        // $pdf = $knpSnappyPdf->getOutputFromHtml($html);
         
         $email = (new Email())
             ->from('baludevis@support.com')
             ->to($quote->getClient()->getEmail())
             ->subject('Devis #' . $quote->getQuoteNumber())
             ->html($this->renderView('quote/email.html.twig', [
-                'quote' => $quote
-            ]))
-            ->attach($pdf, 'devis-'.$quote->getQuoteNumber().'.pdf', 'application/pdf');
+                'quote' => $quote,
+                'app_url' => $this->getParameter('app_url'),
+                'company_name' => $quote->getCompany()->getName(),
+            ]));
+            // ->attach($pdf, 'devis-'.$quote->getQuoteNumber().'.pdf', 'application/pdf');
         
         $mailer->send($email);
         

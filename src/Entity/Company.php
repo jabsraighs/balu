@@ -60,6 +60,12 @@ class Company
     #[ORM\OneToMany(targetEntity: Invoice::class, mappedBy: 'company')]
     private Collection $invoices;
 
+    /**
+     * @var Collection<int, Invitation>
+     */
+    #[ORM\OneToMany(targetEntity: Invitation::class, mappedBy: 'company')]
+    private Collection $invitations;
+
     public function __construct()
     {
         $this->clients = new ArrayCollection();
@@ -68,6 +74,7 @@ class Company
         $this->quotes = new ArrayCollection();
         $this->users = new ArrayCollection();
         $this->invoices = new ArrayCollection();
+        $this->invitations = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -279,6 +286,36 @@ class Company
         if ($this->invoices->removeElement($invoice)) {
             if ($invoice->getCompany() === $this) {
                 $invoice->setCompany(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Invitation>
+     */
+    public function getInvitations(): Collection
+    {
+        return $this->invitations;
+    }
+
+    public function addInvitation(Invitation $invitation): static
+    {
+        if (!$this->invitations->contains($invitation)) {
+            $this->invitations->add($invitation);
+            $invitation->setCompany($this);
+        }
+
+        return $this;
+    }
+
+    public function removeInvitation(Invitation $invitation): static
+    {
+        if ($this->invitations->removeElement($invitation)) {
+            // set the owning side to null (unless already changed)
+            if ($invitation->getCompany() === $this) {
+                $invitation->setCompany(null);
             }
         }
 
