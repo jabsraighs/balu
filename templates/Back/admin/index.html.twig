@@ -72,7 +72,7 @@
                     </div>
                 </div>
 	</div>	
-{% elseif is_granted('ROLE_COMPANY') and app.user.isVerified == true%}
+{% elseif is_granted('ROLE_AUTO_ENTREPRENEUR') and app.user.isVerified == true%}
 	<div class="flex flex-col gap-7">
 		<div>
 			<h1 class="text-4xl text-secondary-500 font-extrabold">Tableau de bord Auto Entrepreneur</h1>
@@ -139,7 +139,7 @@
                     </div>
                 </div>
 	</div>		
-	{% elseif is_granted('ROLE_ACCOUNTANT') and app.user.isVerified == true%}
+	{% elseif is_granted('ROLE_COMPTABLE') and app.user.isVerified == true%}
 	<div class="flex flex-col gap-7">
 		<div>
 			<h1 class="text-4xl text-secondary-500 font-extrabold">Tableau de bord Entreprise</h1>

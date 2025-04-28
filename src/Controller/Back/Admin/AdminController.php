@@ -1,27 +1,36 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\Back\Admin;
 
+use App\Entity\User;
 use App\Repository\ClientRepository;
 use App\Repository\InvoiceRepository;
 use App\Repository\QuoteRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
-
-final class DashboardController extends AbstractController{
-    #[Route('/', name: 'app_dashboard')]
-    #[IsGranted('IS_AUTHENTICATED_FULLY')]
-    public function index(InvoiceRepository $invoiceRepository, QuoteRepository $quoteRepository, ClientRepository $clientRepository): Response
-    {
+#[Route('/', name: 'app_dashboard')]
+#[IsGranted('IS_AUTHENTICATED_FULLY')]
+class AdminController extends AbstractController
+{
+    #[Route('/', name: '')]
+    public function index(InvoiceRepository $invoiceRepository,QuoteRepository $quoteRepository, ClientRepository $clientRepository) {
         $user  = $this->getUser();
         $roles = $user->getRoles();
 
         if (in_array('ROLE_ADMIN', $roles, true)) {
+            $invoices = $invoiceRepository->findAll();
+            $quotes= $quoteRepository->findAll();
+            $clients = $clientRepository->findAll();
+            dd($invoices, $quotes, $clients);
             return $this->render('Back/admin/index.html.twig', [
                 'user' => $user,
+                'quotes' => $quotes,
+                'invoices' => $invoices,
+                'clients' => $clients
             ]);
+            
         }
 
         if (in_array('ROLE_ACCOUNTANT', $roles, true)) {
@@ -29,7 +38,6 @@ final class DashboardController extends AbstractController{
                 'user' => $user,
             ]);
         }
-
         return $this->render('Back/admin/index.html.twig', [
             'invoiceStats' => [
                 'totalAmount' => $invoiceRepository->getTotalAmount(),
@@ -47,9 +55,11 @@ final class DashboardController extends AbstractController{
                 'totalCount' => $clientRepository->getTotalCount(),
                 'newCount' => $clientRepository->getNewClientsCount(),
             ],
-            'recentInvoices' => $invoiceRepository->findRecent(5),
+            'Invoices' => $invoiceRepository->findRecent(5),
             'recentQuotes' => $quoteRepository->findRecent(5),
             'user' => $user,
+            'invoices' => $invoiceRepository->findRecent(5)
         ]);
     }
 }
+
