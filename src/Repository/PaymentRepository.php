@@ -46,6 +46,39 @@ class PaymentRepository extends ServiceEntityRepository
             ->getSingleScalarResult();
     }
 
+    /**
+     * Trouver tous les paiements d'une entreprise
+     */
+    public function findByCompany(Company $company): array
+    {
+        return $this->createQueryBuilder('p')
+            ->join('p.invoice', 'i')
+            ->andWhere('i.company = :company')
+            ->setParameter('company', $company)
+            ->orderBy('p.datePaid', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * Somme des paiements reçus pour une période
+     */
+    public function sumPaymentsByPeriod(Company $company, \DateTimeInterface $startDate, \DateTimeInterface $endDate): float
+    {
+        $result = $this->createQueryBuilder('p')
+            ->select('SUM(p.amount)')
+            ->join('p.invoice', 'i')
+            ->andWhere('i.company = :company')
+            ->andWhere('p.datePaid BETWEEN :startDate AND :endDate')
+            ->setParameter('company', $company)
+            ->setParameter('startDate', $startDate)
+            ->setParameter('endDate', $endDate)
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        return $result ? (float) $result : 0;
+    }
+
     //    /**
     //     * @return Payment[] Returns an array of Payment objects
     //     */

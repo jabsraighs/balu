@@ -1,182 +1,286 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Tableau de bord{% endblock %}
+{% block title %}Tableau de bord
+{% endblock %}
 
 {% block page_content %}
-<div class="container mx-auto px-4 py-8">
-    <div class="mb-6">
-        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Tableau de bord</h1>
-        <p class="text-gray-500 dark:text-gray-400">Bienvenue, {{ app.user.fullname }}</p>
-    </div>
-    
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        <div class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm p-6">
-            <div class="flex items-center justify-between mb-4">
-                <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Chiffre d'affaires</h3>
-                <span class="p-2 bg-blue-100 dark:bg-blue-900/30 text-baluBlue rounded-full">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <rect width="18" height="18" x="3" y="3" rx="2" />
-                        <path d="M8 13.5v-3a1.5 1.5 0 0 1 3 0v3" />
-                        <path d="M11 13.5v-3a1.5 1.5 0 0 1 3 0v3" />
-                        <path d="M14 13.5v-3a1.5 1.5 0 0 1 3 0v3" />
-                    </svg>
-                </span>
-            </div>
-            <div class="text-2xl font-bold">{{ invoiceStats.totalAmount|number_format(2, ',', ' ') }} €</div>
-            <div class="text-sm text-green-500 mt-2 flex items-center">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"></polyline><polyline points="16 7 22 7 22 13"></polyline></svg>
-                <span>+{{ invoiceStats.percentIncrease|number_format(1) }}% ce mois</span>
-            </div>
-        </div>
+	<div class="container mx-auto px-4 py-8">
+		<div class="mb-6">
+			<h1 class="text-2xl font-bold text-gray-900 dark:text-white">Tableau de bord</h1>
+			<p class="text-gray-500 dark:text-gray-400">Bienvenue,
+				{{ app.user.fullname }}</p>
+		</div>
 
-        <div class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm p-6">
-            <div class="flex items-center justify-between mb-4">
-                <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Factures en attente</h3>
-                <span class="p-2 bg-yellow-100 dark:bg-yellow-900/30 text-yellow-600 dark:text-yellow-400 rounded-full">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" />
-                        <polyline points="14 2 14 8 20 8" />
-                        <path d="M16 13H8" />
-                        <path d="M16 17H8" />
-                        <path d="M10 9H8" />
-                    </svg>
-                </span>
-            </div>
-            <div class="text-2xl font-bold">{{ invoiceStats.pendingCount }}</div>
-            <div class="text-sm text-yellow-500 mt-2">{{ invoiceStats.pendingAmount|number_format(2, ',', ' ') }} € en attente</div>
-        </div>
+		<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+			<div class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm p-6">
+				<div class="flex items-center justify-between mb-4">
+					<h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Chiffre d'affaires</h3>
+					<span class="p-2 bg-blue-100 dark:bg-blue-900/30 text-baluBlue rounded-full">
+						<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+							<rect width="18" height="18" x="3" y="3" rx="2"/>
+							<path d="M8 13.5v-3a1.5 1.5 0 0 1 3 0v3"/>
+							<path d="M11 13.5v-3a1.5 1.5 0 0 1 3 0v3"/>
+							<path d="M14 13.5v-3a1.5 1.5 0 0 1 3 0v3"/>
+						</svg>
+					</span>
+				</div>
+				<div class="text-2xl font-bold">{{ invoiceStats.totalAmount|number_format(2, ',', ' ') }}
+					€</div>
+				<div class="text-sm text-green-500 mt-2 flex items-center">
+					<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+						<polyline points="22 7 13.5 15.5 8.5 10.5 2 17"></polyline>
+						<polyline points="16 7 22 7 22 13"></polyline>
+					</svg>
+					<span>+{{ invoiceStats.percentIncrease|number_format(1) }}% ce mois</span>
+				</div>
+			</div>
 
-        <div class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm p-6">
-            <div class="flex items-center justify-between mb-4">
-                <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Devis</h3>
-                <span class="p-2 bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 rounded-full">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
-                        <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
-                        <line x1="12" y1="22.08" x2="12" y2="12"></line>
-                    </svg>
-                </span>
-            </div>
-            <div class="text-2xl font-bold">{{ quoteStats.totalCount }}</div>
-            <div class="text-sm text-purple-500 mt-2">Taux de conversion: {{ quoteStats.conversionRate|number_format(1) }}%</div>
-        </div>
+			<div class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm p-6">
+				<div class="flex items-center justify-between mb-4">
+					<h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Factures en attente</h3>
+					<span class="p-2 bg-yellow-100 dark:bg-yellow-900/30 text-yellow-600 dark:text-yellow-400 rounded-full">
+						<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+							<path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/>
+							<polyline points="14 2 14 8 20 8"/>
+							<path d="M16 13H8"/>
+							<path d="M16 17H8"/>
+							<path d="M10 9H8"/>
+						</svg>
+					</span>
+				</div>
+				<div class="text-2xl font-bold">{{ invoiceStats.pendingCount }}</div>
+				<div class="text-sm text-yellow-500 mt-2">{{ invoiceStats.pendingAmount|number_format(2, ',', ' ') }}
+					€ en attente</div>
+			</div>
 
-        <div class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm p-6">
-            <div class="flex items-center justify-between mb-4">
-                <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Clients</h3>
-                <span class="p-2 bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 rounded-full">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                        <circle cx="9" cy="7" r="4"></circle>
-                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                    </svg>
-                </span>
-            </div>
-            <div class="text-2xl font-bold">{{ clientStats.totalCount }}</div>
-            <div class="text-sm text-green-500 mt-2">{{ clientStats.newCount }} nouveaux ce mois</div>
-        </div>
-    </div>
-    
-    <div class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm p-6 mb-8">
-        <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-6">Évolution du chiffre d'affaires</h2>
-        
-        <div class="h-72">
-            <div class="flex items-end h-64 justify-between border-b border-gray-200 dark:border-gray-700">
-                {% for month in invoiceStats.monthlyRevenue %}
-                <div class="flex flex-col items-center w-full">
-                    <div class="bg-baluBlue rounded-t w-12 mx-auto transition-all duration-300 hover:bg-baluBlue-light" 
-                         style="height: {{ (month.amount / invoiceStats.maxMonthlyRevenue * 100)|number_format(0) }}%">
-                    </div>
-                    <span class="text-xs mt-2 text-gray-500 dark:text-gray-400">{{ month.label }}</span>
-                </div>
-                {% endfor %}
-            </div>
-        </div>
-    </div>
-    
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <div class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm p-6">
-            <div class="flex items-center justify-between mb-6">
-                <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Factures récentes</h2>
-                <a href="{{ path('app_invoice_index') }}" class="text-sm text-baluBlue hover:text-baluBlue-light transition-colors">
-                    Voir tout
-                </a>
-            </div>
-            
-            <div class="space-y-4">
-                {% for invoice in recentInvoices %}
-                <div class="flex items-center justify-between p-4 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                    <div class="flex items-center space-x-4">
-                        <div class="flex-shrink-0 h-10 w-10 rounded-full bg-baluBlue text-white flex items-center justify-center font-medium">
-                            {{ invoice.client.name|first }}
-                        </div>
-                        <div>
-                            <p class="font-medium text-gray-900 dark:text-white">{{ invoice.client.name }}</p>
-                            <p class="text-sm text-gray-500 dark:text-gray-400">{{ invoice.createdAt|date('d/m/Y') }}</p>
-                        </div>
-                    </div>
-                    <div class="text-right">
-                        <p class="font-medium text-gray-900 dark:text-white">{{ invoice.totalAmount|number_format(2, ',', ' ') }} €</p>
-                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
-                            {% if invoice.status == 'paid' %}
-                                bg-green-100 text-green-800 dark:bg-green-800/30 dark:text-green-500
-                            {% elseif invoice.status == 'pending' %}
-                                bg-yellow-100 text-yellow-800 dark:bg-yellow-800/30 dark:text-yellow-500
-                            {% elseif invoice.status == 'draft' %}
-                                bg-blue-100 text-blue-800 dark:bg-blue-800/30 dark:text-blue-500
-                            {% elseif invoice.status == 'cancelled' %}
-                                bg-red-100 text-red-800 dark:bg-red-800/30 dark:text-red-500
-                            {% endif %}
-                        ">
-                            {{ invoice.status|capitalize }}
-                        </span>
-                    </div>
-                </div>
-                {% endfor %}
-            </div>
-        </div>
-        
-        <div class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm p-6">
-            <div class="flex items-center justify-between mb-6">
-                <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Devis récents</h2>
-                <a href="{{ path('app_quote_index') }}" class="text-sm text-baluBlue hover:text-baluBlue-light transition-colors">
-                    Voir tout
-                </a>
-            </div>
-            
-            <div class="space-y-4">
-                {% for quote in recentQuotes %}
-                <div class="flex items-center justify-between p-4 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                    <div class="flex items-center space-x-4">
-                        <div class="flex-shrink-0 h-10 w-10 rounded-full bg-baluBlue text-white flex items-center justify-center font-medium">
-                            {{ quote.client.name|first }}
-                        </div>
-                        <div>
-                            <p class="font-medium text-gray-900 dark:text-white">{{ quote.client.name }}</p>
-                            <p class="text-sm text-gray-500 dark:text-gray-400">{{ quote.createdAt|date('d/m/Y') }}</p>
-                        </div>
-                    </div>
-                    <div class="text-right">
-                        <p class="font-medium text-gray-900 dark:text-white">{{ quote.totalAmount|number_format(2, ',', ' ') }} €</p>
-                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
-                            {% if quote.status == 'accepted' %}
-                                bg-green-100 text-green-800 dark:bg-green-800/30 dark:text-green-500
-                            {% elseif quote.status == 'pending' %}
-                                bg-yellow-100 text-yellow-800 dark:bg-yellow-800/30 dark:text-yellow-500
-                            {% elseif quote.status == 'draft' %}
-                                bg-blue-100 text-blue-800 dark:bg-blue-800/30 dark:text-blue-500
-                            {% elseif quote.status == 'rejected' %}
-                                bg-red-100 text-red-800 dark:bg-red-800/30 dark:text-red-500
-                            {% endif %}
-                        ">
-                            {{ quote.status|capitalize }}
-                        </span>
-                    </div>
-                </div>
-                {% endfor %}
-            </div>
-        </div>
-    </div>
-</div>
+			<div class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm p-6">
+				<div class="flex items-center justify-between mb-4">
+					<h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Devis</h3>
+					<span class="p-2 bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 rounded-full">
+						<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+							<path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+							<polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+							<line x1="12" y1="22.08" x2="12" y2="12"></line>
+						</svg>
+					</span>
+				</div>
+				<div class="text-2xl font-bold">{{ quoteStats.totalCount }}</div>
+				<div class="text-sm text-purple-500 mt-2">Taux de conversion:
+					{{ quoteStats.conversionRate|number_format(1) }}%</div>
+			</div>
+
+			<div class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm p-6">
+				<div class="flex items-center justify-between mb-4">
+					<h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Clients</h3>
+					<span class="p-2 bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 rounded-full">
+						<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+							<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+							<circle cx="9" cy="7" r="4"></circle>
+							<path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+							<path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+						</svg>
+					</span>
+				</div>
+				<div class="text-2xl font-bold">{{ clientStats.totalCount }}</div>
+				<div class="text-sm text-green-500 mt-2">{{ clientStats.newCount }}
+					nouveaux ce mois</div>
+			</div>
+		</div>
+
+		<div class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm p-6 mb-8">
+			<h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-6">Évolution du chiffre d'affaires</h2>
+
+			<div class="h-72">
+				<div class="flex items-end h-64 justify-between border-b border-gray-200 dark:border-gray-700">
+					{% for month in invoiceStats.monthlyRevenue %}
+						<div class="flex flex-col items-center w-full">
+							<div class="bg-baluBlue rounded-t w-12 mx-auto transition-all duration-300 hover:bg-baluBlue-light" style="height: {{ (month.amount / invoiceStats.maxMonthlyRevenue * 100)|number_format(0) }}%"></div>
+							<span class="text-xs mt-2 text-gray-500 dark:text-gray-400">{{ month.label }}</span>
+						</div>
+					{% endfor %}
+				</div>
+			</div>
+		</div>
+
+		<div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+			<div class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm p-6">
+				<div class="flex items-center justify-between mb-6">
+					<h2 class="text-lg font-semibold text-gray-900 dark:text-white">Factures récentes</h2>
+					<a href="{{ path('app_invoice_index') }}" class="text-sm text-baluBlue hover:text-baluBlue-light transition-colors">
+						Voir tout
+					</a>
+				</div>
+
+				<div class="space-y-4">
+					{% for invoice in recentInvoices %}
+						<div class="flex items-center justify-between p-4 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+							<div class="flex items-center space-x-4">
+								<div class="flex-shrink-0 h-10 w-10 rounded-full bg-baluBlue text-white flex items-center justify-center font-medium">
+									{{ invoice.client.name|first }}
+								</div>
+								<div>
+									<p class="font-medium text-gray-900 dark:text-white">{{ invoice.client.name }}</p>
+									<p class="text-sm text-gray-500 dark:text-gray-400">{{ invoice.createdAt|date('d/m/Y') }}</p>
+								</div>
+							</div>
+							<div class="text-right">
+								<p class="font-medium text-gray-900 dark:text-white">{{ invoice.totalAmount|number_format(2, ',', ' ') }}
+									€</p>
+								<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
+																				                            {% if invoice.status == 'paid' %}
+																				                                bg-green-100 text-green-800 dark:bg-green-800/30 dark:text-green-500
+																				                            {% elseif invoice.status == 'pending' %}
+																				                                bg-yellow-100 text-yellow-800 dark:bg-yellow-800/30 dark:text-yellow-500
+																				                            {% elseif invoice.status == 'draft' %}
+																				                                bg-blue-100 text-blue-800 dark:bg-blue-800/30 dark:text-blue-500
+																				                            {% elseif invoice.status == 'cancelled' %}
+																				                                bg-red-100 text-red-800 dark:bg-red-800/30 dark:text-red-500
+																				                            {% endif %}
+																				                        ">
+									{{ invoice.status|capitalize }}
+								</span>
+							</div>
+						</div>
+					{% endfor %}
+				</div>
+			</div>
+
+			<div class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm p-6">
+				<div class="flex items-center justify-between mb-6">
+					<h2 class="text-lg font-semibold text-gray-900 dark:text-white">Devis récents</h2>
+					<a href="{{ path('app_quote_index') }}" class="text-sm text-baluBlue hover:text-baluBlue-light transition-colors">
+						Voir tout
+					</a>
+				</div>
+
+				<div class="space-y-4">
+					{% for quote in recentQuotes %}
+						<div class="flex items-center justify-between p-4 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+							<div class="flex items-center space-x-4">
+								<div class="flex-shrink-0 h-10 w-10 rounded-full bg-baluBlue text-white flex items-center justify-center font-medium">
+									{{ quote.client.name|first }}
+								</div>
+								<div>
+									<p class="font-medium text-gray-900 dark:text-white">{{ quote.client.name }}</p>
+									<p class="text-sm text-gray-500 dark:text-gray-400">{{ quote.createdAt|date('d/m/Y') }}</p>
+								</div>
+							</div>
+							<div class="text-right">
+								<p class="font-medium text-gray-900 dark:text-white">{{ quote.totalAmount|number_format(2, ',', ' ') }}
+									€</p>
+								<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
+																				                            {% if quote.status == 'accepted' %}
+																				                                bg-green-100 text-green-800 dark:bg-green-800/30 dark:text-green-500
+																				                            {% elseif quote.status == 'pending' %}
+																				                                bg-yellow-100 text-yellow-800 dark:bg-yellow-800/30 dark:text-yellow-500
+																				                            {% elseif quote.status == 'draft' %}
+																				                                bg-blue-100 text-blue-800 dark:bg-blue-800/30 dark:text-blue-500
+																				                            {% elseif quote.status == 'rejected' %}
+																				                                bg-red-100 text-red-800 dark:bg-red-800/30 dark:text-red-500
+																				                            {% endif %}
+																				                        ">
+									{{ quote.status|capitalize }}
+								</span>
+							</div>
+						</div>
+					{% endfor %}
+				</div>
+			</div>
+		</div>
+
+		<div class="grid grid-cols-1 lg:grid-cols-1 gap-8 mt-8">
+			<div class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm p-6 mb-8">
+				<div class="flex items-center justify-between mb-6">
+					<h2 class="text-lg font-semibold text-gray-900 dark:text-white">Suivi des paiements</h2>
+					<a href="{{ path('app_payment_index') }}" class="text-sm text-baluBlue hover:text-baluBlue-light transition-colors">
+						Voir tous les paiements
+					</a>
+				</div>
+
+				<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+					<div class="bg-green-50 dark:bg-green-900/20 rounded-lg p-4">
+						<div class="text-sm font-medium text-green-600 dark:text-green-400 mb-1">Paiements reçus (ce mois)</div>
+						<div class="text-2xl font-bold text-gray-900 dark:text-white">{{ invoiceStats.paidThisMonth|number_format(2, ',', ' ') }}
+							€</div>
+					</div>
+					<div class="bg-yellow-50 dark:bg-yellow-900/20 rounded-lg p-4">
+						<div class="text-sm font-medium text-yellow-600 dark:text-yellow-400 mb-1">En attente de paiement</div>
+						<div class="text-2xl font-bold text-gray-900 dark:text-white">{{ invoiceStats.pendingAmount|number_format(2, ',', ' ') }}
+							€</div>
+					</div>
+					<div class="bg-red-50 dark:bg-red-900/20 rounded-lg p-4">
+						<div class="text-sm font-medium text-red-600 dark:text-red-400 mb-1">Paiements en retard</div>
+						<div class="text-2xl font-bold text-gray-900 dark:text-white">{{ invoiceStats.overdueAmount|number_format(2, ',', ' ') }}
+							€</div>
+					</div>
+				</div>
+
+				<div class="mt-6">
+					<h3 class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-3">Derniers paiements reçus</h3>
+					<div class="overflow-x-auto">
+						<table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+							<thead>
+								<tr>
+									<th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Client</th>
+									<th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Facture</th>
+									<th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Date</th>
+									<th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Méthode</th>
+									<th scope="col" class="px-4 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Montant</th>
+								</tr>
+							</thead>
+							<tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+								{% for payment in recentPayments %}
+									<tr>
+										<td class="px-4 py-3 whitespace-nowrap">
+											<div class="flex items-center">
+												<div class="flex-shrink-0 h-8 w-8 rounded-full bg-baluBlue text-white flex items-center justify-center font-medium text-xs">
+													{{ payment.invoice.client.name|first }}
+												</div>
+												<div class="ml-3">
+													<div class="text-sm font-medium text-gray-900 dark:text-white">{{ payment.invoice.client.name }}</div>
+												</div>
+											</div>
+										</td>
+										<td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+											<a href="{{ path('app_invoice_show', {'id': payment.invoice.id}) }}" class="text-baluBlue hover:underline">
+												{{ payment.invoice.invoiceNumber }}
+											</a>
+										</td>
+										<td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+											{{ payment.datePaid|date('d/m/Y') }}
+										</td>
+										<td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+											{% if payment.method == 'card' %}
+												Carte bancaire
+											{% elseif payment.method == 'bank_transfer' %}
+												Virement bancaire
+											{% elseif payment.method == 'cash' %}
+												Espèces
+											{% elseif payment.method == 'check' %}
+												Chèque
+											{% elseif payment.method == 'paypal' %}
+												PayPal
+											{% else %}
+												{{ payment.method|capitalize }}
+											{% endif %}
+										</td>
+										<td class="px-4 py-3 whitespace-nowrap text-sm text-right font-medium text-gray-900 dark:text-white">
+											{{ payment.amount|number_format(2, ',', ' ') }}
+											€
+										</td>
+									</tr>
+								{% else %}
+									<tr>
+										<td colspan="5" class="px-4 py-3 text-center text-gray-500 dark:text-gray-400">Aucun paiement récent</td>
+									</tr>
+								{% endfor %}
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+	</div>
 {% endblock %}

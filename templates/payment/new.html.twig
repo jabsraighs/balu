@@ -1,11 +1,66 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}New Payment{% endblock %}
+{% block title %}Nouveau paiement{% endblock %}
 
-{% block body %}
-    <h1>Create new Payment</h1>
-
-    {{ include('payment/_form.html.twig') }}
-
-    <a href="{{ path('app_payment_index') }}">back to list</a>
+{% block page_content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="mb-6 flex justify-between items-center">
+        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Ajouter un paiement</h1>
+        <a href="{{ path('app_invoice_show', {'id': invoice.id}) }}" class="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm hover:bg-gray-50 dark:hover:bg-gray-700">
+            Retour à la facture
+        </a>
+    </div>
+    
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden">
+        <div class="p-6">
+            <div class="mb-6">
+                <h2 class="text-lg font-medium text-gray-900 dark:text-white mb-3">Détails de la facture</h2>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <span class="text-gray-500 dark:text-gray-400">Numéro de facture:</span>
+                        <span class="font-medium ml-2">{{ invoice.invoiceNumber }}</span>
+                    </div>
+                    <div>
+                        <span class="text-gray-500 dark:text-gray-400">Client:</span>
+                        <span class="font-medium ml-2">{{ invoice.client.name }}</span>
+                    </div>
+                    <div>
+                        <span class="text-gray-500 dark:text-gray-400">Montant total:</span>
+                        <span class="font-medium ml-2">{{ invoice.totalAmount|number_format(2, ',', ' ') }} €</span>
+                    </div>
+                    <div>
+                        <span class="text-gray-500 dark:text-gray-400">Reste à payer:</span>
+                        <span class="font-medium ml-2">{{ form.vars.options.remaining_amount|number_format(2, ',', ' ') }} €</span>
+                    </div>
+                </div>
+            </div>
+            
+            {{ form_start(form, {'attr': {'class': 'space-y-4'}}) }}
+                <div>
+                    {{ form_label(form.amount, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'}}) }}
+                    {{ form_widget(form.amount, {'attr': {'class': 'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-baluBlue focus:ring focus:ring-baluBlue focus:ring-opacity-50 dark:bg-gray-700 dark:border-gray-600 dark:text-white'}}) }}
+                    {{ form_errors(form.amount, {'attr': {'class': 'text-red-500 text-sm mt-1'}}) }}
+                </div>
+                
+                <div>
+                    {{ form_label(form.datePaid, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'}}) }}
+                    {{ form_widget(form.datePaid, {'attr': {'class': 'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-baluBlue focus:ring focus:ring-baluBlue focus:ring-opacity-50 dark:bg-gray-700 dark:border-gray-600 dark:text-white'}}) }}
+                    {{ form_errors(form.datePaid, {'attr': {'class': 'text-red-500 text-sm mt-1'}}) }}
+                </div>
+                
+                <div>
+                    {{ form_label(form.method, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'}}) }}
+                    {{ form_widget(form.method, {'attr': {'class': 'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-baluBlue focus:ring focus:ring-baluBlue focus:ring-opacity-50 dark:bg-gray-700 dark:border-gray-600 dark:text-white'}}) }}
+                    {{ form_errors(form.method, {'attr': {'class': 'text-red-500 text-sm mt-1'}}) }}
+                </div>
+                
+                <div class="flex justify-end pt-4">
+                    <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-baluBlue hover:bg-baluBlue-light focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-baluBlue">
+                        Enregistrer le paiement
+                    </button>
+                </div>
+            {{ form_end(form) }}
+        </div>
+    </div>
+</div>
 {% endblock %}

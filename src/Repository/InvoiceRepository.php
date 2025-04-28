@@ -45,6 +45,22 @@ class InvoiceRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    public function getOverdueAmount(): float
+    {
+        $today = new \DateTime();
+
+        $qb = $this->createQueryBuilder('i')
+            ->select('SUM(i.totalAmount)')
+            ->where('i.status = :status')
+            ->andWhere('i.dateDue < :today')
+            ->setParameter('status', 'pending')
+            ->setParameter('today', $today);
+
+        $result = $qb->getQuery()->getSingleScalarResult();
+
+        return $result ? (float) $result : 0.0;
+    }
+
     public function sumTotalByDateRange(Company $company, \DateTimeInterface $from, \DateTimeInterface $to): float
     {
         return (float) $this->createQueryBuilder('i')

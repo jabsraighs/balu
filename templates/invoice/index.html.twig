@@ -1,209 +1,201 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Factures{% endblock %}
+{% block title %}Factures
+{% endblock %}
 
 {% block page_content %}
-<div class="min-h-screen bg-gray-50 dark:bg-gray-950">
-    <div class="mb-6">
-        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Factures</h1>
-    </div>
-    
-    <div class="flex justify-between items-center mb-6">
-        <div>
-            <h2 class="text-xl font-semibold text-gray-900 dark:text-white">Toutes les factures</h2>
-            <p class="text-gray-500 dark:text-gray-400">Gérez et suivez les factures clients</p>
-        </div>
-        <a href="{{ path('app_invoice_new') }}" class="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-baluBlue hover:bg-baluBlue-light rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-baluBlue">
-            <svg xmlns="http://www.w3.org/2000/svg" class="mr-2 h-4 w-4" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M5 12h14"></path>
-                <path d="M12 5v14"></path>
-            </svg>
-            Nouvelle facture
-        </a>
-    </div>
-    
-    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden">
-        <div class="relative w-full overflow-auto">
-            <table class="w-full caption-bottom text-sm">
-                <thead>
-                    <tr class="border-b transition-colors hover:bg-muted/50">
-                        <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Client</th>
-                        <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground">№ Facture</th>
-                        <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Statut</th>
-                        <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Date d'échéance</th>
-                        <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Date de paiement</th>
-                        <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Montant</th>
-                        <th class="h-12 px-4 text-right align-middle font-medium text-muted-foreground">Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for invoice in invoices %}
-                        <tr class="border-b transition-colors hover:bg-muted/50">
-                            <td class="p-4 align-middle flex items-center">
-                                <div class="h-8 w-8 flex-shrink-0 mr-3">
-                                    <div class="h-8 w-8 rounded-full bg-baluBlue text-white flex items-center justify-center font-medium text-xs">
-                                        {{ invoice.client.name|split(' ')|map(part => part|first)|join|upper }}
-                                    </div>
-                                </div>
-                                <div class="font-medium text-gray-900 dark:text-white">{{ invoice.client.name }}</div>
-                            </td>
-                            <td class="p-4 align-middle">{{ invoice.invoiceNumber }}</td>
-                            <td class="p-4 align-middle">
-                                {% if invoice.status == 'paid' %}
-                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-800/30 dark:text-green-500">
-                                        Payée
-                                    </span>
-                                {% elseif invoice.status == 'pending' %}
-                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-800/30 dark:text-yellow-500">
-                                        En attente
-                                    </span>
-                                {% elseif invoice.status == 'overdue' %}
-                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800 dark:bg-red-800/30 dark:text-red-500">
-                                        En retard
-                                    </span>
-                                {% else %}
-                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-800/30 dark:text-gray-500">
-                                        {{ invoice.status|capitalize }}
-                                    </span>
-                                {% endif %}
-                            </td>
-                            <td class="p-4 align-middle">{{ invoice.dateDue ? invoice.dateDue|date('d/m/Y') : 'N/A' }}</td>
-                            <td class="p-4 align-middle">{{ invoice.datePaid ? invoice.datePaid|date('d/m/Y') : 'N/A' }}</td>
-                            <td class="p-4 align-middle">{{ invoice.totalAmount|number_format(2, ',', ' ') }} €</td>
-                            <td class="p-4 align-middle text-right">
-                                <div class="flex justify-end space-x-2">
-                                    <a 
-                                        href="{{ path('app_invoice_show', {'id': invoice.id}) }}" 
-                                        class="inline-flex items-center justify-center px-3 py-1 text-xs font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-baluBlue dark:bg-gray-800 dark:border-gray-700 dark:text-gray-200 dark:hover:bg-gray-700"
-                                    >
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                            <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path>
-                                            <circle cx="12" cy="12" r="3"></circle>
-                                        </svg>
-                                        Voir
-                                    </a>
-                                    <a 
-                                        href="{{ path('app_invoice_edit', {'id': invoice.id}) }}" 
-                                        class="inline-flex items-center justify-center px-3 py-1 text-xs font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-baluBlue dark:bg-gray-800 dark:border-gray-700 dark:text-gray-200 dark:hover:bg-gray-700"
-                                    >
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                            <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"></path>
-                                            <path d="m15 5 4 4"></path>
-                                        </svg>
-                                        Modifier
-                                    </a>
-                                    <button 
-                                        type="button" 
-                                        class="inline-flex items-center justify-center px-3 py-1 text-xs font-medium text-red-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 dark:bg-gray-800 dark:border-gray-700 dark:text-red-400 dark:hover:bg-gray-700"
-                                        onclick="openDeleteModal('{{ invoice.id }}')"
-                                    >
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                            <path d="M3 6h18"></path>
-                                            <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
-                                            <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
-                                        </svg>
-                                        Supprimer
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                    {% else %}
-                        <tr>
-                            <td colspan="7" class="p-4 text-center text-gray-500 dark:text-gray-400">Aucune facture trouvée</td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    </div>
-    
-    {# Delete Confirmation Modal #}
-    <div id="deleteConfirmModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center hidden">
-        <div class="bg-white dark:bg-gray-800 rounded-lg max-w-md w-full mx-auto">
-            <div class="p-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
-                <h5 class="text-lg font-semibold text-gray-900 dark:text-white">Supprimer la facture</h5>
-                <button type="button" class="text-gray-400 hover:text-gray-500 dark:hover:text-gray-300" id="closeModal">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <line x1="18" y1="6" x2="6" y2="18"></line>
-                        <line x1="6" y1="6" x2="18" y2="18"></line>
-                    </svg>
-                </button>
-            </div>
-            <div class="p-4 border-b border-gray-200 dark:border-gray-700">
-                <p class="text-gray-700 dark:text-gray-300">Êtes-vous sûr de vouloir supprimer cette facture ? Cette action ne peut pas être annulée.</p>
-            </div>
-            <div class="p-4 flex justify-end gap-2">
-                <button type="button" id="cancelDelete" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600 dark:hover:bg-gray-600">
-                    Annuler
-                </button>
-                <form id="deleteInvoiceForm" method="POST" action="">
-                    <input type="hidden" name="_token" id="csrf_token_placeholder" value="">
-                    <button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-700 focus:outline-none dark:bg-red-700 dark:hover:bg-red-800">
-                        Supprimer
-                    </button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
+	<div class="min-h-screen bg-gray-50 dark:bg-gray-950">
+		<div class="mb-6">
+			<h1 class="text-2xl font-bold text-gray-900 dark:text-white">Factures</h1>
+		</div>
 
-<script>
-    window.csrfTokens = {
-        {% for invoice in invoices %}
-            "{{ invoice.id }}": "{{ csrf_token('delete' ~ invoice.id) }}",
-        {% endfor %}
-    };
+		<div class="flex justify-between items-center mb-6">
+			<div>
+				<h2 class="text-xl font-semibold text-gray-900 dark:text-white">Toutes les factures</h2>
+				<p class="text-gray-500 dark:text-gray-400">Gérez et suivez les factures clients</p>
+			</div>
+			{% if is_granted('ROLE_ADMIN') %}
+				<a href="{{ path('app_invoice_new') }}" class="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-baluBlue hover:bg-baluBlue-light rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-baluBlue">
+					<svg xmlns="http://www.w3.org/2000/svg" class="mr-2 h-4 w-4" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+						<path d="M5 12h14"></path>
+						<path d="M12 5v14"></path>
+					</svg>
+					Nouvelle facture
+				</a>
+			{% endif %}
+		</div>
 
-    function openDeleteModal(invoiceId) {
-        const modal = document.getElementById('deleteConfirmModal');
-        const deleteForm = document.getElementById('deleteInvoiceForm');
-        const csrfTokenInput = document.getElementById('csrf_token_placeholder');
+		<div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden">
+			<div class="relative w-full overflow-auto">
+				<table class="w-full caption-bottom text-sm">
+					<thead>
+						<tr class="border-b transition-colors hover:bg-muted/50">
+							<th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Client</th>
+							<th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground">№ Facture</th>
+							<th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Statut</th>
+							<th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Date d'échéance</th>
+							<th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Date de paiement</th>
+							<th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Montant</th>
+							<th class="h-12 px-4 text-right align-middle font-medium text-muted-foreground">Actions</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for invoice in invoices %}
+							<tr class="border-b transition-colors hover:bg-muted/50">
+								<td class="p-4 align-middle flex items-center">
+									<div class="h-8 w-8 flex-shrink-0 mr-3">
+										<div class="h-8 w-8 rounded-full bg-baluBlue text-white flex items-center justify-center font-medium text-xs">
+											{{ invoice.client.name|split(' ')|map(part => part|first)|join|upper }}
+										</div>
+									</div>
+									<div class="font-medium text-gray-900 dark:text-white">{{ invoice.client.name }}</div>
+								</td>
+								<td class="p-4 align-middle">{{ invoice.invoiceNumber }}</td>
+								<td class="p-4 align-middle">
+									{% if invoice.status == 'paid' %}
+										<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-800/30 dark:text-green-500">
+											Payée
+										</span>
+									{% elseif invoice.status == 'pending' %}
+										<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-800/30 dark:text-yellow-500">
+											En attente
+										</span>
+									{% elseif invoice.status == 'overdue' %}
+										<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800 dark:bg-red-800/30 dark:text-red-500">
+											En retard
+										</span>
+									{% else %}
+										<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-800/30 dark:text-gray-500">
+											{{ invoice.status|capitalize }}
+										</span>
+									{% endif %}
+								</td>
+								<td class="p-4 align-middle">{{ invoice.dateDue ? invoice.dateDue|date('d/m/Y') : 'N/A' }}</td>
+								<td class="p-4 align-middle">{{ invoice.datePaid ? invoice.datePaid|date('d/m/Y') : 'N/A' }}</td>
+								<td class="p-4 align-middle">{{ invoice.totalAmount|number_format(2, ',', ' ') }}
+									€</td>
+								<td class="p-4 align-middle text-right">
+									<div class="flex justify-end space-x-2">
+										<a href="{{ path('app_invoice_show', {'id': invoice.id}) }}" class="inline-flex items-center justify-center px-3 py-1 text-xs font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-baluBlue dark:bg-gray-800 dark:border-gray-700 dark:text-gray-200 dark:hover:bg-gray-700">
+											<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+												<path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path>
+												<circle cx="12" cy="12" r="3"></circle>
+											</svg>
+											Voir
+										</a>
+										<a href="{{ path('app_invoice_edit', {'id': invoice.id}) }}" class="inline-flex items-center justify-center px-3 py-1 text-xs font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-baluBlue dark:bg-gray-800 dark:border-gray-700 dark:text-gray-200 dark:hover:bg-gray-700">
+											<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+												<path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"></path>
+												<path d="m15 5 4 4"></path>
+											</svg>
+											Modifier
+										</a>
+										<button type="button" class="inline-flex items-center justify-center px-3 py-1 text-xs font-medium text-red-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 dark:bg-gray-800 dark:border-gray-700 dark:text-red-400 dark:hover:bg-gray-700" onclick="openDeleteModal('{{ invoice.id }}')">
+											<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+												<path d="M3 6h18"></path>
+												<path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
+												<path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
+											</svg>
+											Supprimer
+										</button>
+									</div>
+								</td>
+							</tr>
+						{% else %}
+							<tr>
+								<td colspan="7" class="p-4 text-center text-gray-500 dark:text-gray-400">Aucune facture trouvée</td>
+							</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			</div>
+		</div>
 
-        deleteForm.action = "{{ path('app_invoice_delete', {'id': 'INVOICE_ID'}) }}".replace('INVOICE_ID', invoiceId);
-        csrfTokenInput.value = csrfTokens[invoiceId];
+		{# Delete Confirmation Modal #}
+		<div id="deleteConfirmModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center hidden">
+			<div class="bg-white dark:bg-gray-800 rounded-lg max-w-md w-full mx-auto">
+				<div class="p-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
+					<h5 class="text-lg font-semibold text-gray-900 dark:text-white">Supprimer la facture</h5>
+					<button type="button" class="text-gray-400 hover:text-gray-500 dark:hover:text-gray-300" id="closeModal">
+						<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+							<line x1="18" y1="6" x2="6" y2="18"></line>
+							<line x1="6" y1="6" x2="18" y2="18"></line>
+						</svg>
+					</button>
+				</div>
+				<div class="p-4 border-b border-gray-200 dark:border-gray-700">
+					<p class="text-gray-700 dark:text-gray-300">Êtes-vous sûr de vouloir supprimer cette facture ? Cette action ne peut pas être annulée.</p>
+				</div>
+				<div class="p-4 flex justify-end gap-2">
+					<button type="button" id="cancelDelete" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600 dark:hover:bg-gray-600">
+						Annuler
+					</button>
+					<form id="deleteInvoiceForm" method="POST" action="">
+						<input type="hidden" name="_token" id="csrf_token_placeholder" value="">
+						<button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-700 focus:outline-none dark:bg-red-700 dark:hover:bg-red-800">
+							Supprimer
+						</button>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
 
-        modal.classList.remove('hidden');
-    }
+	<script>
+		window.csrfTokens = {
+{% for invoice in invoices %}
+"{{ invoice.id }}" : "{{ csrf_token('delete' ~ invoice.id) }}",{% endfor %}
+};
 
-    document.addEventListener('DOMContentLoaded', function () {
-        // Close modal with X button
-        const closeModal = document.getElementById('closeModal');
-        if (closeModal) {
-            closeModal.addEventListener('click', function () {
-                document.getElementById('deleteConfirmModal').classList.add('hidden');
-            });
-        }
+function openDeleteModal(invoiceId) {
+const modal = document.getElementById('deleteConfirmModal');
+const deleteForm = document.getElementById('deleteInvoiceForm');
+const csrfTokenInput = document.getElementById('csrf_token_placeholder');
 
-        // Close modal with Cancel button
-        const cancelDelete = document.getElementById('cancelDelete');
-        if (cancelDelete) {
-            cancelDelete.addEventListener('click', function () {
-                document.getElementById('deleteConfirmModal').classList.add('hidden');
-            });
-        }
+deleteForm.action = "{{ path('app_invoice_delete', {'id': 'INVOICE_ID'}) }}".replace('INVOICE_ID', invoiceId);
+csrfTokenInput.value = csrfTokens[invoiceId];
 
-        // Close modal when clicking outside
-        const modal = document.getElementById('deleteConfirmModal');
-        modal.addEventListener('click', function (event) {
-            if (event.target === modal) {
-                modal.classList.add('hidden');
-            }
-        });
+modal.classList.remove('hidden');
+}
 
-        // Auto-dismiss flash messages
-        const flashMessages = document.querySelectorAll('.alert-dismissible');
-        flashMessages.forEach(function (flashMessage) {
-            const closeButton = flashMessage.querySelector('.btn-close');
-            if (closeButton) {
-                closeButton.addEventListener('click', function () {
-                    flashMessage.remove();
-                });
-            }
+document.addEventListener('DOMContentLoaded', function () { // Close modal with X button
+const closeModal = document.getElementById('closeModal');
+if (closeModal) {
+closeModal.addEventListener('click', function () {
+document.getElementById('deleteConfirmModal').classList.add('hidden');
+});
+}
 
-            setTimeout(function () {
-                flashMessage.remove();
-            }, 5000);
-        });
-    });
-</script>
+// Close modal with Cancel button
+const cancelDelete = document.getElementById('cancelDelete');
+if (cancelDelete) {
+cancelDelete.addEventListener('click', function () {
+document.getElementById('deleteConfirmModal').classList.add('hidden');
+});
+}
+
+// Close modal when clicking outside
+const modal = document.getElementById('deleteConfirmModal');
+modal.addEventListener('click', function (event) {
+if (event.target === modal) {
+modal.classList.add('hidden');
+}
+});
+
+// Auto-dismiss flash messages
+const flashMessages = document.querySelectorAll('.alert-dismissible');
+flashMessages.forEach(function (flashMessage) {
+const closeButton = flashMessage.querySelector('.btn-close');
+if (closeButton) {
+closeButton.addEventListener('click', function () {
+flashMessage.remove();
+});
+}
+
+setTimeout(function () {
+flashMessage.remove();
+}, 5000);
+});
+});
+	</script>
 {% endblock %}
