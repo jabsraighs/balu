@@ -1,38 +1,180 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Invoice{% endblock %}
-
-{% block body %}
-    <h1>Invoice</h1>
-
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ invoice.id }}</td>
-            </tr>
-            <tr>
-                <th>InvoiceNumber</th>
-                <td>{{ invoice.invoiceNumber }}</td>
-            </tr>
-            <tr>
-                <th>Status</th>
-                <td>{{ invoice.status }}</td>
-            </tr>
-            <tr>
-                <th>DateDue</th>
-                <td>{{ invoice.dateDue ? invoice.dateDue|date('Y-m-d') : '' }}</td>
-            </tr>
-            <tr>
-                <th>DatePaid</th>
-                <td>{{ invoice.datePaid ? invoice.datePaid|date('Y-m-d H:i:s') : '' }}</td>
-            </tr>
-        </tbody>
-    </table>
-
-    <a href="{{ path('app_invoice_index') }}">back to list</a>
-
-    <a href="{{ path('app_invoice_edit', {'id': invoice.id}) }}">edit</a>
-
-    {{ include('invoice/_delete_form.html.twig') }}
+{% block title %}Facture #{{ invoice.invoiceNumber }}
 {% endblock %}
+
+{% block page_content %}
+    <div class="container mx-auto px-4 py-8">
+        <div class="mb-6 flex justify-between items-center">
+            <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Facture #{{ invoice.invoiceNumber }}</h1>
+            <div class="flex space-x-2">
+                <a href="{{ path('app_invoice_index') }}" class="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm hover:bg-gray-50 dark:hover:bg-gray-700">
+                    Retour à la liste
+                </a>
+                <div class="dropdown relative">
+                    <button class="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm hover:bg-gray-50 dark:hover:bg-gray-700">
+                        Actions
+                        <svg xmlns="http://www.w3.org/2000/svg" class="ml-2 h-4 w-4" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </button>
+                    <div class="dropdown-menu absolute right-0 mt-2 hidden bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md shadow-lg z-10">
+                        <a href="{{ path('app_invoice_edit', {'id': invoice.id}) }}" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
+                            Modifier
+                        </a>
+                        {# <a href="{{ path('app_invoice_pdf', {'id': invoice.id}) }}" target="_blank" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
+                            Télécharger PDF
+                        </a> #}
+                        <a href="{{ path('app_invoice_send_email', {'id': invoice.id}) }}" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
+                            Envoyer par email
+                        </a>
+                        {# <a href="#" class="block px-4 py-2 text-sm text-green-700 dark:text-green-500 hover:bg-gray-100 dark:hover:bg-gray-700">
+                            Marquer comme payée
+                        </a> #}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden">
+            <div class="p-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                    <div>
+                        <h2 class="text-lg font-medium text-gray-900 dark:text-white mb-3">Informations générales</h2>
+                        <div class="space-y-2">
+                            <div class="flex justify-between">
+                                <span class="text-gray-500 dark:text-gray-400">Numéro:</span>
+                                <span class="font-medium">{{ invoice.invoiceNumber }}</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-500 dark:text-gray-400">Statut:</span>
+                                <td class="p-4 align-middle">
+                                    {% if invoice.status == 'pending' %}
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-800/30 dark:text-yellow-500">
+                                            En attente
+                                        </span>
+                                    {% elseif invoice.status == 'paid' %}
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-800/30 dark:text-green-500">
+                                            Payée
+                                        </span>
+                                    {% elseif invoice.status == 'canceled' %}
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800 dark:bg-red-800/30 dark:text-red-500">
+                                            Annulée
+                                        </span>
+                                    {% elseif invoice.status == 'overdue' %}
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-orange-100 text-orange-800 dark:bg-orange-800/30 dark:text-orange-500">
+                                            En retard
+                                        </span>
+                                    {% else %}
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-800/30 dark:text-gray-500">
+                                            {{ invoice.status|capitalize }}
+                                        </span>
+                                    {% endif %}
+                                </td>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-500 dark:text-gray-400">Date de création:</span>
+                                <span class="font-medium">{{ invoice.createdAt ? invoice.createdAt|date('d/m/Y') : 'N/A' }}</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-500 dark:text-gray-400">Date d'échéance:</span>
+                                <span class="font-medium">{{ invoice.dateDue ? invoice.dateDue|date('d/m/Y') : 'N/A' }}</span>
+                            </div>
+                            {% if invoice.datePaid %}
+                            <div class="flex justify-between">
+                                <span class="text-gray-500 dark:text-gray-400">Date de paiement:</span>
+                                <span class="font-medium">{{ invoice.datePaid|date('d/m/Y') }}</span>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div>
+                        <h2 class="text-lg font-medium text-gray-900 dark:text-white mb-3">Client</h2>
+                        <div class="space-y-2">
+                            <div class="flex justify-between">
+                                <span class="text-gray-500 dark:text-gray-400">Nom:</span>
+                                <span class="font-medium">{{ invoice.client.name }}</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-500 dark:text-gray-400">Email:</span>
+                                <span class="font-medium">{{ invoice.client.email }}</span>
+                            </div>
+                            {% if invoice.client.phone %}
+                                <div class="flex justify-between">
+                                    <span class="text-gray-500 dark:text-gray-400">Téléphone:</span>
+                                    <span class="font-medium">{{ invoice.client.phone }}</span>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <h2 class="text-lg font-medium text-gray-900 dark:text-white mb-3">Lignes de facture</h2>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                        <thead>
+                            <tr>
+                                <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Produit / Description</th>
+                                <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Quantité</th>
+                                <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Prix unitaire</th>
+                                <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Remise %</th>
+                                <th scope="col" class="px-4 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Montant</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                            {% for line in invoice.invoiceLines %}
+                                <tr>
+                                    <td class="px-4 py-3">
+                                        <div class="font-medium text-gray-900 dark:text-white">{{ line.productName }}</div>
+                                        <div class="text-sm text-gray-500 dark:text-gray-400">{{ line.description }}</div>
+                                    </td>
+                                    <td class="px-4 py-3 text-sm text-gray-500 dark:text-gray-400">{{ line.quantity }}</td>
+                                    <td class="px-4 py-3 text-sm text-gray-500 dark:text-gray-400">{{ line.unitPrice|number_format(2, ',', ' ') }}
+                                        €</td>
+                                    <td class="px-4 py-3 text-sm text-gray-500 dark:text-gray-400">{{ line.discount }}%</td>
+                                    <td class="px-4 py-3 text-right text-sm text-gray-500 dark:text-gray-400">
+                                        {{ (line.quantity * line.unitPrice * (1 - line.discount / 100))|number_format(2, ',', ' ') }}
+                                        €
+                                    </td>
+                                </tr>
+                            {% else %}
+                                <tr>
+                                    <td colspan="5" class="px-4 py-3 text-center text-gray-500 dark:text-gray-400">Aucune ligne trouvée</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="mt-4 flex justify-end">
+                    <div class="w-64">
+                        <div class="flex justify-between py-2 border-t border-gray-200 dark:border-gray-700">
+                            <span class="font-medium">Total:</span>
+                            <span class="font-bold">{{ invoice.totalAmount|number_format(2, ',', ' ') }}
+                                €</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endblock %}
+
+    {% block javascripts %}
+        {{ parent() }}
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const dropdown = document.querySelector('.dropdown');
+
+                dropdown.addEventListener('click', function () {
+                    const menu = this.querySelector('.dropdown-menu');
+                    menu.classList.toggle('hidden');
+                });
+
+                // Fermer le menu quand on clique en dehors
+                document.addEventListener('click', function (event) {
+                    if (!dropdown.contains(event.target)) {
+                        dropdown.querySelector('.dropdown-menu').classList.add('hidden');
+                    }
+                });
+            });
+        </script>
+    {% endblock %}

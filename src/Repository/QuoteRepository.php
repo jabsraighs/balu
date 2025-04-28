@@ -104,6 +104,24 @@ class QuoteRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    /**
+     * Récupère les devis qui expirent dans les 7 prochains jours
+     */
+    public function findExpiringQuotes(): array
+    {
+        $today = new \DateTime();
+        $sevenDaysLater = (new \DateTime())->modify('+7 days');
+
+        return $this->createQueryBuilder('q')
+            ->andWhere('q.status = :status')
+            ->andWhere('q.dateValidUntil BETWEEN :today AND :sevenDaysLater')
+            ->setParameter('status', 'pending')
+            ->setParameter('today', $today)
+            ->setParameter('sevenDaysLater', $sevenDaysLater)
+            ->orderBy('q.dateValidUntil', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
     //    /**
     //     * @return Quote[] Returns an array of Quote objects
     //     */

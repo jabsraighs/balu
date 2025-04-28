@@ -103,7 +103,8 @@
                     {{ form_label(form.dateCreated, 'Date*', {'label_attr': {'class': 'block text-sm font-medium text-gray-700 dark:text-gray-300'}}) }}
                     {{ form_widget(form.dateCreated, {
                         'attr': {
-                            'class': 'mt-1 block w-full p-2 border border-gray-300 dark:border-gray-700 rounded-md shadow-sm focus:ring-baluBlue focus:border-baluBlue bg-white dark:bg-gray-800 text-gray-900 dark:text-white datepicker'
+                            'class': 'mt-1 block w-full p-2 border border-gray-300 dark:border-gray-700 rounded-md shadow-sm focus:ring-baluBlue focus:border-baluBlue bg-white dark:bg-gray-800 text-gray-900 dark:text-white datepicker',
+                            "type": "date"
                         }
                     }) }}
                     {{ form_errors(form.dateCreated, {'attr': {'class': 'text-red-500 text-sm mt-1'}}) }}
@@ -113,7 +114,8 @@
                     {{ form_label(form.dateValidUntil, 'Valide jusqu\'au*', {'label_attr': {'class': 'block text-sm font-medium text-gray-700 dark:text-gray-300'}}) }}
                     {{ form_widget(form.dateValidUntil, {
                         'attr': {
-                            'class': 'mt-1 block w-full p-2 border border-gray-300 dark:border-gray-700 rounded-md shadow-sm focus:ring-baluBlue focus:border-baluBlue bg-white dark:bg-gray-800 text-gray-900 dark:text-white datepicker'
+                            'class': 'mt-1 block w-full p-2 border border-gray-300 dark:border-gray-700 rounded-md shadow-sm focus:ring-baluBlue focus:border-baluBlue bg-white dark:bg-gray-800 text-gray-900 dark:text-white datepicker',
+                            "type": "date"
                         }
                     }) }}
                     {{ form_errors(form.dateValidUntil, {'attr': {'class': 'text-red-500 text-sm mt-1'}}) }}

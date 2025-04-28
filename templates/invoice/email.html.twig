@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+        .header { margin-bottom: 20px; }
+        .footer { margin-top: 30px; font-size: 0.9em; color: #777; }
+        .button { display: inline-block; padding: 10px 20px; background-color: #4F46E5; color: white; 
+                 text-decoration: none; border-radius: 4px; margin-top: 20px; }
+        .highlight { color: #4F46E5; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Facture #{{ invoice.invoiceNumber }}</h1>
+        </div>
+        
+        <p>Bonjour {{ invoice.client.name }},</p>
+        
+        <p>Vous trouverez ci-joint votre facture #{{ invoice.invoiceNumber }} d'un montant de 
+           <span class="highlight">{{ invoice.totalAmount|number_format(2, ',', ' ') }} €</span>.</p>
+        
+        <p>Date d'échéance: <strong>{{ invoice.dateDue|date('d/m/Y') }}</strong></p>
+        
+        <p>Merci de votre confiance et n'hésitez pas à nous contacter pour toute question.</p>
+        
+        <a href="{{ app_url }}/invoice/{{ invoice.id }}" class="button">Voir la facture en ligne</a>
+        
+        <div class="footer">
+            <p>Cordialement,<br>
+            L'équipe {{ invoice.company.name }}</p>
+            
+            <p>{{ invoice.company.address|nl2br }}</p>
+            {% if invoice.company.siret %}
+            <p>SIRET: {{ invoice.company.siret }}</p>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

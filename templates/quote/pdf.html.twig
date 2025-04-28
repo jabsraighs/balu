@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Devis #{{ quote.quoteNumber }}</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        .header { margin-bottom: 30px; }
+        .company-info { float: left; }
+        .quote-info { float: right; text-align: right; }
+        .client-info { margin-top: 50px; margin-bottom: 30px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th { background-color: #f5f5f5; text-align: left; padding: 8px; }
+        td { padding: 8px; border-bottom: 1px solid #ddd; }
+        .total { text-align: right; margin-top: 20px; font-weight: bold; }
+        .footer { margin-top: 50px; font-size: 12px; color: #666; }
+        .clearfix:after { content: ""; display: table; clear: both; }
+    </style>
+</head>
+<body>
+    <div class="header clearfix">
+        <div class="company-info">
+            <h1>{{ quote.company.name }}</h1>
+            {% if quote.company.address %}
+            <p>{{ quote.company.address }}</p>
+            {% endif %}
+            {% if quote.company.siret %}
+            <p>SIRET : {{ quote.company.siret }}</p>
+            {% endif %}
+        </div>
+        <div class="quote-info">
+            <h2>Devis #{{ quote.quoteNumber }}</h2>
+            <p>Date : {{ quote.dateCreated|date('d/m/Y') }}</p>
+            <p>Valable jusqu'au : {{ quote.dateValidUntil|date('d/m/Y') }}</p>
+        </div>
+    </div>
+    
+    <div class="client-info">
+        <h3>Client</h3>
+        <p>{{ quote.client.name }}</p>
+        {% if quote.client.company %}
+        <p>{{ quote.client.company.name }}</p>
+        {% endif %}
+        {% if quote.client.address %}
+        <p>{{ quote.client.address }}</p>
+        {% endif %}
+        {% if quote.client.email %}
+        <p>Email : {{ quote.client.email }}</p>
+        {% endif %}
+    </div>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Description</th>
+                <th>Quantité</th>
+                <th>Prix unitaire</th>
+                <th>Remise</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for line in quote.quoteLines %}
+            <tr>
+                <td>
+                    <strong>{{ line.productName }}</strong><br>
+                    {{ line.description }}
+                </td>
+                <td>{{ line.quantity }}</td>
+                <td>{{ line.unitPrice|number_format(2, ',', ' ') }} €</td>
+                <td>{{ line.discount }}%</td>
+                <td>{{ (line.quantity * line.unitPrice * (1 - line.discount / 100))|number_format(2, ',', ' ') }} €</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+    <div class="total">
+        <p>Total : {{ quote.totalAmount|number_format(2, ',', ' ') }} €</p>
+    </div>
+    
+    <div class="footer">
+        <p>Pour toute question concernant ce devis, veuillez nous contacter.</p>
+    </div>
+</body>
+</html>

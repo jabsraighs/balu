@@ -155,40 +155,49 @@ modal.classList.remove('hidden');
 }
 
 document.addEventListener('DOMContentLoaded', function () {
-const closeModal = document.getElementById('closeModal');
-if (closeModal) {
-closeModal.addEventListener('click', function () {
-document.getElementById('deleteConfirmModal').classList.add('hidden');
-});
-}
+    const closeModal = document.getElementById('closeModal');
+    if (closeModal) {
+        closeModal.addEventListener('click', function () {
+            document.getElementById('deleteConfirmModal').classList.add('hidden');
+        });
+    }
 
-const cancelDelete = document.getElementById('cancelDelete');
-if (cancelDelete) {
-cancelDelete.addEventListener('click', function () {
-document.getElementById('deleteConfirmModal').classList.add('hidden');
-});
-}
+    const cancelDelete = document.getElementById('cancelDelete');
+    if (cancelDelete) {
+        cancelDelete.addEventListener('click', function () {
+            document.getElementById('deleteConfirmModal').classList.add('hidden');
+        });
+    }
 
-const modal = document.getElementById('deleteConfirmModal');
-modal.addEventListener('click', function (event) {
-if (event.target === modal) {
-modal.classList.add('hidden');
-}
-});
+    const modal = document.getElementById('deleteConfirmModal');
+    modal.addEventListener('click', function (event) {
+        if (event.target === modal) {
+            modal.classList.add('hidden');
+        }
+    });
 
-const flashMessages = document.querySelectorAll('.alert-dismissible');
-flashMessages.forEach(function (flashMessage) {
-const closeButton = flashMessage.querySelector('.btn-close');
-if (closeButton) {
-closeButton.addEventListener('click', function () {
-flashMessage.remove();
-});
-}
+    // NOUVEAU CODE: Gérer les boutons de suppression
+    const deleteButtons = document.querySelectorAll('[data-quote-id]');
+    deleteButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const quoteId = this.getAttribute('data-quote-id');
+            openDeleteModal(quoteId);
+        });
+    });
 
-setTimeout(function () {
-flashMessage.remove();
-}, 5000);
-});
+    const flashMessages = document.querySelectorAll('.alert-dismissible');
+    flashMessages.forEach(function (flashMessage) {
+        const closeButton = flashMessage.querySelector('.btn-close');
+        if (closeButton) {
+            closeButton.addEventListener('click', function () {
+                flashMessage.remove();
+            });
+        }
+
+        setTimeout(function () {
+            flashMessage.remove();
+        }, 5000);
+    });
 });
 	</script>
 {% endblock %}

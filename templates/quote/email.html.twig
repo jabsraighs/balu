@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+        .header { margin-bottom: 20px; }
+        .footer { margin-top: 30px; font-size: 0.9em; color: #777; }
+        .button { display: inline-block; padding: 10px 20px; background-color: #4F46E5; color: white; 
+                 text-decoration: none; border-radius: 4px; margin-top: 20px; }
+        .highlight { color: #4F46E5; font-weight: bold; }
+        .note { background-color: #f8f9fa; padding: 15px; border-left: 4px solid #4F46E5; margin: 20px 0; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Devis #{{ quote.quoteNumber }}</h1>
+        </div>
+        
+        <p>Bonjour {{ quote.client.name }},</p>
+        
+        <p>Veuillez trouver ci-joint notre devis #{{ quote.quoteNumber }} d'un montant de 
+           <span class="highlight">{{ quote.totalAmount|number_format(2, ',', ' ') }} €</span>.</p>
+        
+        <p>Ce devis est valable jusqu'au <strong>{{ quote.dateValidUntil|date('d/m/Y') }}</strong>.</p>
+        
+        <div class="note">
+            <p>Pour accepter ce devis, vous pouvez répondre directement à cet email ou nous contacter par téléphone.</p>
+        </div>
+        
+        <a href="{{ app_url }}/quote/{{ quote.id }}" class="button">Consulter le devis en ligne</a>
+        
+        <div class="footer">
+            <p>Cordialement,<br>
+            L'équipe {{ quote.company.name }}</p>
+            
+            <p>{{ quote.company.address|nl2br }}</p>
+            {% if quote.company.siret %}
+            <p>SIRET: {{ quote.company.siret }}</p>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

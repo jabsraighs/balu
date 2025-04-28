@@ -31,7 +31,7 @@ class Invoice
     /**
      * @var Collection<int, InvoiceLine>
      */
-    #[ORM\OneToMany(targetEntity: InvoiceLine::class, mappedBy: 'invoice')]
+    #[ORM\OneToMany(targetEntity: InvoiceLine::class, mappedBy: 'invoice', cascade: ["persist", "remove"])]
     private Collection $invoiceLines;
 
     /**

@@ -31,6 +31,20 @@ class InvoiceRepository extends ServiceEntityRepository
             ->getSingleScalarResult();
     }
 
+    public function findOverdueInvoices(): array
+    {
+        $today = new \DateTime();
+
+        return $this->createQueryBuilder('i')
+            ->andWhere('i.status = :status')
+            ->andWhere('i.dateDue < :today')
+            ->setParameter('status', 'pending')
+            ->setParameter('today', $today)
+            ->orderBy('i.dateDue', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
     public function sumTotalByDateRange(Company $company, \DateTimeInterface $from, \DateTimeInterface $to): float
     {
         return (float) $this->createQueryBuilder('i')
@@ -180,13 +194,13 @@ class InvoiceRepository extends ServiceEntityRepository
     {
         $monthlyRevenue = $this->getMonthlyRevenue();
         $max = 0;
-    
+
         foreach ($monthlyRevenue as $month) {
             if ($month['amount'] > $max) {
                 $max = $month['amount'];
             }
         }
-    
+
         return max(ceil($max / 1000) * 1000, 1);
     }
 

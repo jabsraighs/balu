@@ -6,9 +6,12 @@ use App\Entity\Invoice;
 use App\Form\InvoiceType;
 use App\Repository\InvoiceRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Knp\Snappy\Pdf;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
@@ -78,5 +81,29 @@ final class InvoiceController extends AbstractController{
         }
 
         return $this->redirectToRoute('app_invoice_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+        #[Route('/{id}/send-email', name: 'app_invoice_send_email', methods: ['GET'])]
+    public function sendEmail(Invoice $invoice, Pdf $knpSnappyPdf, MailerInterface $mailer): Response
+    {
+        $html = $this->renderView('invoice/pdf.html.twig', [
+            'invoice' => $invoice
+        ]);
+        $pdf = $knpSnappyPdf->getOutputFromHtml($html);
+        
+        $email = (new Email())
+            ->from($this->getParameter('app_email_from'))
+            ->to($invoice->getClient()->getEmail())
+            ->subject('Facture #' . $invoice->getInvoiceNumber())
+            ->html($this->renderView('invoice/email.html.twig', [
+                'invoice' => $invoice
+            ]))
+            ->attach($pdf, 'facture-'.$invoice->getInvoiceNumber().'.pdf', 'application/pdf');
+        
+        $mailer->send($email);
+        
+        $this->addFlash('success', 'La facture a été envoyée par email avec succès.');
+        
+        return $this->redirectToRoute('app_invoice_show', ['id' => $invoice->getId()]);
     }
 }
