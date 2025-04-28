@@ -17,13 +17,18 @@ class DomPdfService
     }
 
     public function generatePdfFromHtml($htmlContent)
-    {
-        $this->dompdf->loadHtml($htmlContent);
+        {
+            // Toujours convertir explicitement en UTF-8
+            $htmlContent = mb_convert_encoding($htmlContent, 'UTF-8', 'ASCII');
 
-        // (Optionnel) Configurez les options de Dompdf ici
+            $this->dompdf->set_option('isHtml5ParserEnabled', true);
+            $this->dompdf->set_option('isUnicode', true);
 
-        $this->dompdf->render();
+            $this->dompdf->loadHtml($htmlContent);
+            $this->dompdf->render();
 
-        return $this->dompdf->output();
-    }
+            return $this->dompdf->output();
+        }
+
+    
 }

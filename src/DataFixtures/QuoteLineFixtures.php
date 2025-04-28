@@ -31,13 +31,13 @@ class QuoteLineFixtures extends Fixture implements DependentFixtureInterface
             $product = $products[array_rand($products)]; // Sélection d'un produit aléatoire
 
             $quoteLine = new QuoteLine();
-            $quoteLine->setQuote($quote) // Associe cette ligne au devis
-                ->setProductName($product->getName()) // Nom du produit
-                ->setProductDescription($product->getDescription()) // Description du produit
-                ->setUnitPrice($faker->randomFloat(2, 10, 500)) // Prix unitaire aléatoire
-                ->setQuantity($faker->numberBetween(1, 10)) // Quantité aléatoire
-                ->setDiscount($faker->randomFloat(2, 0, 50)) // Remise aléatoire
-                ->setDescription($faker->paragraph()); // Description de la ligne de devis
+            $quoteLine->setQuote($quote)
+                ->setProductName(substr($product->getName(), 0, 255))
+                ->setProductDescription(substr($product->getDescription(), 0, 255))
+                ->setUnitPrice($faker->randomFloat(2, 10, 500))
+                ->setQuantity($faker->numberBetween(1, 10))
+                ->setDiscount($faker->randomFloat(2, 0, 50))
+                ->setDescription(substr($faker->paragraph(), 0, 255));
 
             $manager->persist($quoteLine); // Persiste la ligne de devis
         }

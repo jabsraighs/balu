@@ -40,7 +40,7 @@ class EmailCommand extends Command
 
         // Retrieve entities from the database where date_due is similar to the current date
         $entities = $this->entityManager->getRepository(Invoice::class)
-            ->findBy(['dueDate' => $currentDate, 'paymentStatus' => 'en cours']);
+            ->findBy(['dateDue' => $currentDate, 'paymentStatus' => 'en cours']);
 
         // Iterate through entities and send emails
         foreach ($entities as $entity) {

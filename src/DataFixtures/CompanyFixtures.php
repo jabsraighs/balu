@@ -34,13 +34,16 @@ class CompanyFixtures extends Fixture implements DependentFixtureInterface
                 $manager->persist($user);
             }
 
-            // Tu peux aussi ajouter d'autres utilisateurs (partenaires)
+          
             foreach ($users as $partenaire) {
-                if (!in_array('ROLE_ACCOUNTANT', $partenaire->getRoles()) && !in_array('ROLE_COMPANY', $partenaire->getRoles())) {
-                    $partenaire->setRoles(['ROLE_COMPANY_ENTREPRISE']);
+                if (!in_array('ROLE_ADMIN', $partenaire->getRoles()) &&
+                    !in_array('ROLE_ACCOUNTANT', $partenaire->getRoles()) &&
+                    !in_array('ROLE_COMPANY', $partenaire->getRoles())) {
+                    
+                    $partenaire->setRoles(['ROLE_COMPANY']);
                     $partenaire->setCompany($company);
                     $company->addUser($partenaire);
-
+            
                     $manager->persist($partenaire);
                 }
             }

@@ -2,6 +2,7 @@
 
 namespace App\Controller\Back\Admin;
 
+use App\Service\DomPdfService;
 use App\Entity\Invoice;
 use App\Form\InvoiceType;
 use App\Repository\InvoiceRepository;
@@ -12,7 +13,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-#[Route('/user/invoice',name: '_user')]
+#[Route('/user/invoice',name: 'app_dashboard')]
 #[isGranted("ROLE_ADMIN")]
 class InvoiceController extends AbstractController
 {
@@ -46,7 +47,8 @@ class InvoiceController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: '_invoice_show', methods: ['GET'])]
+    #[Route('/{id<\d+>}', name: '_invoice_show', methods: ['GET'])]
+    
     public function show(Invoice $invoice): Response
     {
         return $this->render('Back/admin/user/invoice/show.html.twig', [
@@ -81,5 +83,25 @@ class InvoiceController extends AbstractController
         }
 
         return $this->redirectToRoute('back_admin_user_invoice_index', [], Response::HTTP_SEE_OTHER);
+    }
+    #[Route('/generate/pdf/{id}', name: '_invoice_generate_pdf')]
+    public function generatePdf(DomPdfService $dompdfService,Invoice $invoice): Response
+    {
+        $client = $invoice->getClient()->getEmail();
+        $htmlContent = $this->renderView('Back/Admin/user/invoice/generatePdf.html.twig', [
+            // Pass any necessary data to the HTML template here
+            'invoice' => $invoice,
+            'client' => $client
+        ]);
+
+        // Generate PDF from HTML content
+        $pdfContent = $dompdfService->generatePdfFromHtml($htmlContent);
+        // Create a response with the PDF content
+        $response = new Response($pdfContent);
+        // Set headers for PDF content
+        $response->headers->set('Content-Type', 'application/pdf');
+        $response->headers->set('Content-Disposition', 'inline; filename="generated.pdf"');
+
+        return $response;
     }
 }

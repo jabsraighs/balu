@@ -3,6 +3,7 @@
 namespace App\Controller\Back\Admin;
 
 use App\Entity\User;
+use App\Form\RegistrationFormType;
 use App\Form\UserType;
 use App\Repository\ClientRepository;
 use App\Repository\UserRepository;
@@ -16,7 +17,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 #[isGranted("ROLE_ADMIN")]
-#[Route('/user',name: '_user')]
+#[Route('/',name: 'app_dashboard_user')]
 class UserController extends AbstractController
 {
     #[Route('/', name: '_index', methods: ['GET'])]
@@ -32,7 +33,7 @@ class UserController extends AbstractController
     public function new(Request $request,HasherUserPasswordHasherInterface $userPasswordHasher,EntityManagerInterface $entityManager): Response
     {
         $user = new User();
-        $form = $this->createForm(UserType::class, $user);
+        $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -77,7 +78,7 @@ class UserController extends AbstractController
     #[Route('/{id}/edit', name: '_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, User $user, EntityManagerInterface $entityManager): Response
     {
-        $form = $this->createForm(UserType::class, $user);
+        $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

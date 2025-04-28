@@ -1,8 +1,8 @@
 {% if is_granted('ROLE_ADMIN') %}
 	{% set navItems = [
         { path: 'app_dashboard', name: 'Tableau de bord', icon: 'layout-dashboard' },
-        { path: 'admin_users_index', name: 'Utilisateurs', icon: 'users' },
-        { path: 'admin_companies_index', name: 'Entreprises', icon: 'building' }
+        { path: 'app_dashboard_user_index', name: 'Utilisateurs', icon: 'users' },
+       
     ] %}
 {% elseif is_granted('ROLE_ACCOUNTANT') %}
 	{% set navItems = [

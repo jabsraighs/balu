@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-#[Route('/user/client',name: '_user')]
+#[Route('/user/client',name: 'app_dashboard')]
 #[isGranted("ROLE_ADMIN")]
 
 class ClientController extends AbstractController

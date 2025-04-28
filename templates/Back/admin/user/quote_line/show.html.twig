@@ -22,9 +22,9 @@
         </tbody>
     </table>
 
-    <a href="{{ path('front_user_quote_line_index') }}">back to list</a>
+    <a href="{{ path('app_client_quote_line_index') }}">back to list</a>
 
-    <a href="{{ path('front_user_quote_line_edit', {'id': quote_line.id}) }}">edit</a>
+    <a href="{{ path('app_client_quote_line_edit', {'id': quote_line.id}) }}">edit</a>
 
-    {{ include('Front/user/quote_line/_delete_form.html.twig') }}
+    {{ include('invoicequote_line/_delete_form.html.twig') }}
 {% endblock %}

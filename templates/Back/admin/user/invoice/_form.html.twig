@@ -4,17 +4,17 @@
 		<div class="flex flex-col gap-2 w-full">
 			<div class="flex flex-col gap-1 w-full">
 				<div class="relative">
-					{{ form_label(form.dueDate, "description") }}
+					{{ form_label(form.dateDue, "description") }}
 				</div>
 
-				{{ form_widget(form.dueDate, {"attr": {"class": "pl-2 rounded-md w-full border-primary-500"}}) }}
+				{{ form_widget(form.dateDue, {"attr": {"class": "pl-2 rounded-md w-full border-primary-500"}}) }}
 			</div>
 			<div class="flex flex-col gap-1 w-full">
 				<div class="relative">
-					{{ form_label(form.paymentStatus, "Status du Paiement") }}
+					{{ form_label(form.status, "Status du Paiement") }}
 				</div>
 
-				{{ form_widget(form.paymentStatus, {"attr": {"class": "pl-2 rounded-md w-full border-primary-500"}}) }}
+				{{ form_widget(form.status, {"attr": {"class": "pl-2 rounded-md w-full border-primary-500"}}) }}
 			</div>
 
 			<div class="flex flex-col gap-1 w-full">

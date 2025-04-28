@@ -23,12 +23,29 @@ class AdminController extends AbstractController
             $invoices = $invoiceRepository->findAll();
             $quotes= $quoteRepository->findAll();
             $clients = $clientRepository->findAll();
-            dd($invoices, $quotes, $clients);
+            
             return $this->render('Back/admin/index.html.twig', [
                 'user' => $user,
                 'quotes' => $quotes,
                 'invoices' => $invoices,
-                'clients' => $clients
+                'clients' => $clients,
+                'invoiceStats' => [
+                    'totalAmount' => $invoiceRepository->getTotalAmount(),
+                    'pendingCount' => $invoiceRepository->getPendingCount(),
+                    'pendingAmount' => $invoiceRepository->getPendingAmount(),
+                    'percentIncrease' => $invoiceRepository->getMonthlyIncreasePercentage(),
+                    'monthlyRevenue' => $invoiceRepository->getMonthlyRevenue(),
+                    'maxMonthlyRevenue' => $invoiceRepository->getMaxMonthlyRevenue(),
+                ],
+                'quoteStats' => [
+                    'totalCount' => $quoteRepository->getTotalCount(),
+                    'conversionRate' => $quoteRepository->getConversionRate(),
+                ],
+                'clientStats' => [
+                    'totalCount' => $clientRepository->getTotalCount(),
+                    'newCount' => $clientRepository->getNewClientsCount(),
+                ],
+                'recentQuotes' => $quoteRepository->findRecent(5),
             ]);
             
         }

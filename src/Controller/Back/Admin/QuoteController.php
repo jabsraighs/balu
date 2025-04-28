@@ -16,7 +16,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 #[isGranted("ROLE_ADMIN")]
-#[Route('/user/quote',name: '_user')]
+#[Route('/user/quote',name: 'app_dashboard')]
 class QuoteController extends AbstractController
 {
     #[Route('/', name: '_quote_index', methods: ['GET'])]
