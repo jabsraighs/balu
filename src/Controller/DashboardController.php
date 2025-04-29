@@ -30,8 +30,34 @@ final class DashboardController extends AbstractController{
         ->getResult();
 
         if (in_array('ROLE_ADMIN', $roles, true)) {
-            return $this->render('dashboard/admin.html.twig', [
-                'user' => $user,
+            return $this->render('dashboard/index.html.twig', [
+                'invoiceStats' => [
+                'totalAmount' => $invoiceRepository->getTotalAmount(),
+                'pendingCount' => $invoiceRepository->getPendingCount(),
+                'pendingAmount' => $invoiceRepository->getPendingAmount(),
+                'percentIncrease' => $invoiceRepository->getMonthlyIncreasePercentage(),
+                'monthlyRevenue' => $invoiceRepository->getMonthlyRevenue(),
+                'maxMonthlyRevenue' => $invoiceRepository->getMaxMonthlyRevenue(),
+                'overdueAmount' => $invoiceRepository->getOverdueAmount(),
+                'paidThisMonth' => $paymentRepository->sumPaymentsByPeriod(
+                    $company,
+                    new \DateTime('first day of this month'),
+                    new \DateTime('last day of this month')
+                )
+            ],
+            'recentPayments' => $recentPayments,
+            'quoteStats' => [
+                'totalCount' => $quoteRepository->getTotalCount(),
+                'conversionRate' => $quoteRepository->getConversionRate(),
+            ],
+            'clientStats' => [
+                'totalCount' => $clientRepository->getTotalCount(),
+                'newCount' => $clientRepository->getNewClientsCount(),
+            ],
+            'recentInvoices' => $invoiceRepository->findRecent(5),
+            'recentQuotes' => $quoteRepository->findRecent(5),
+            'user' => $user,
+
             ]);
         }
 

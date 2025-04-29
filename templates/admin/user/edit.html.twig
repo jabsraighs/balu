@@ -1,0 +1,214 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier Entreprise{% endblock %}
+
+{% block page_content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="mb-6">
+        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Modifier Entreprise</h1>
+    </div>
+    
+    <div class="mb-6">
+        <a href="{{ path('app_admin_user_index') }}" class="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-gray-700 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm hover:bg-gray-50 dark:hover:bg-gray-700">
+            <svg xmlns="http://www.w3.org/2000/svg" class="mr-2 h-4 w-4" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="m12 19-7-7 7-7"></path>
+                <path d="M19 12H5"></path>
+            </svg>
+            Retour
+        </a>
+    </div>
+    
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden">
+        <div class="p-6">
+            {{ form_start(form, {
+                'attr': {
+                    'class': 'space-y-6',
+                    'novalidate': 'novalidate'
+                }
+            }) }}
+                
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    {{ form_label(form.fullname, 'Nom complet*', {'label_attr': {'class': 'block text-sm font-medium text-gray-700 dark:text-gray-300'}}) }}
+                    {{ form_widget(form.fullname, {
+                        'attr': {
+                            'class': 'mt-1 block w-full p-2 border border-gray-300 dark:border-gray-700 rounded-md shadow-sm focus:ring-baluBlue focus:border-baluBlue bg-white dark:bg-gray-800 text-gray-900 dark:text-white',
+                        }
+                    }) }}
+                    {{ form_errors(form.fullname, {'attr': {'class': 'text-red-500 text-sm mt-1'}}) }}
+                </div>
+                
+                <div>
+                    {{ form_label(form.email, 'Email*', {'label_attr': {'class': 'block text-sm font-medium text-gray-700 dark:text-gray-300'}}) }}
+                    {{ form_widget(form.email, {
+                        'attr': {
+                            'class': 'mt-1 block w-full p-2 border border-gray-300 dark:border-gray-700 rounded-md shadow-sm focus:ring-baluBlue focus:border-baluBlue bg-white dark:bg-gray-800 text-gray-900 dark:text-white',
+                        }
+                    }) }}
+                    {{ form_errors(form.email, {'attr': {'class': 'text-red-500 text-sm mt-1'}}) }}
+                </div>
+                
+                <div>
+                    {{ form_label(form.plainPassword, 'Nouveau mot de passe', {'label_attr': {'class': 'block text-sm font-medium text-gray-700 dark:text-gray-300'}}) }}
+                    {{ form_widget(form.plainPassword, {
+                        'attr': {
+                            'class': 'mt-1 block w-full p-2 border border-gray-300 dark:border-gray-700 rounded-md shadow-sm focus:ring-baluBlue focus:border-baluBlue bg-white dark:bg-gray-800 text-gray-900 dark:text-white',
+                        }
+                    }) }}
+                    <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Laissez vide pour conserver le mot de passe actuel</p>
+                    {{ form_errors(form.plainPassword, {'attr': {'class': 'text-red-500 text-sm mt-1'}}) }}
+                </div>
+                
+                <div>
+                    {{ form_label(form.roles, 'Rôles*', {'label_attr': {'class': 'block text-sm font-medium text-gray-700 dark:text-gray-300'}}) }}
+                    {{ form_widget(form.roles, {
+                        'attr': {
+                            'class': 'mt-1 block w-full p-2 border border-gray-300 dark:border-gray-700 rounded-md shadow-sm focus:ring-baluBlue focus:border-baluBlue bg-white dark:bg-gray-800 text-gray-900 dark:text-white',
+                        }
+                    }) }}
+                    {{ form_errors(form.roles, {'attr': {'class': 'text-red-500 text-sm mt-1'}}) }}
+                </div>
+                
+                <div>
+                    {{ form_label(form.company, 'Entreprise', {'label_attr': {'class': 'block text-sm font-medium text-gray-700 dark:text-gray-300'}}) }}
+                    {{ form_widget(form.company, {
+                        'attr': {
+                            'class': 'mt-1 block w-full p-2 border border-gray-300 dark:border-gray-700 rounded-md shadow-sm focus:ring-baluBlue focus:border-baluBlue bg-white dark:bg-gray-800 text-gray-900 dark:text-white',
+                        }
+                    }) }}
+                    {{ form_errors(form.company, {'attr': {'class': 'text-red-500 text-sm mt-1'}}) }}
+                </div>
+                
+                <div class="md:col-span-2">
+                    {{ form_label(form.isVerified, 'Compte vérifié', {'label_attr': {'class': 'block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'}}) }}
+                    <div class="flex items-center space-x-4">
+                        {{ form_widget(form.isVerified, {
+                            'attr': {
+                                'class': 'flex space-x-4',
+                            }
+                        }) }}
+                    </div>
+                    {{ form_errors(form.isVerified, {'attr': {'class': 'text-red-500 text-sm mt-1'}}) }}
+                </div>
+            </div>
+            
+            <div class="flex justify-between mt-6">
+                
+                <div class="flex space-x-2">
+                    <a 
+                        href="{{ path('app_admin_user_index') }}" 
+                        class="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-gray-700 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm hover:bg-gray-50 dark:hover:bg-gray-700"
+                    >
+                        Annuler
+                    </a>
+                    <button 
+                        type="submit" 
+                        class="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-baluBlue hover:bg-baluBlue-light rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-baluBlue"
+                    >
+                        Mettre à jour
+                    </button>
+                </div>
+            </div>
+            
+            {{ form_rest(form) }}
+            {{ form_end(form) }}
+        </div>
+    </div>
+    
+    <div id="deleteConfirmModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center hidden">
+        <div class="bg-white dark:bg-gray-800 rounded-lg max-w-md w-full mx-auto">
+            <div class="p-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
+                <h5 class="text-lg font-semibold text-gray-900 dark:text-white">Supprimer l'entreprise</h5>
+                <button type="button" class="text-gray-400 hover:text-gray-500 dark:hover:text-gray-300" id="closeModal">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="p-4 border-b border-gray-200 dark:border-gray-700">
+                <p class="text-gray-700 dark:text-gray-300">Êtes-vous sûr de vouloir supprimer ce user ? Cette action ne peut pas être annulée.</p>
+            </div>
+            <div class="p-4 flex justify-end gap-2">
+                <button type="button" id="cancelDelete" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600 dark:hover:bg-gray-600">
+                    Annuler
+                </button>
+                <form id="deleteUserForm" method="POST" action="{{ path('app_admin_user_delete', {'id': user.id}) }}">
+                    <input type="hidden" name="_method" value="DELETE">
+                    <button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-700 focus:outline-none dark:bg-red-700 dark:hover:bg-red-800">
+                        Supprimer
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function openDeleteModal() {
+        document.getElementById('deleteConfirmModal').classList.remove('hidden');
+    }
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        // Close modal with X button
+        const closeModal = document.getElementById('closeModal');
+        if (closeModal) {
+            closeModal.addEventListener('click', function() {
+                document.getElementById('deleteConfirmModal').classList.add('hidden');
+            });
+        }
+        
+        // Close modal with Cancel button
+        const cancelDelete = document.getElementById('cancelDelete');
+        if (cancelDelete) {
+            cancelDelete.addEventListener('click', function() {
+                document.getElementById('deleteConfirmModal').classList.add('hidden');
+            });
+        }
+        
+        // Close modal by clicking outside
+        const modal = document.getElementById('deleteConfirmModal');
+        modal.addEventListener('click', function(event) {
+            if (event.target === modal) {
+                modal.classList.add('hidden');
+            }
+        });
+        
+        // Form validation
+        const form = document.querySelector('form');
+        form.addEventListener('submit', function(event) {
+            const errorElements = document.querySelectorAll('.js-form-error');
+            errorElements.forEach(element => element.remove());
+
+            let hasErrors = false;
+            
+            // Name validation
+            const nameInput = document.getElementById('user_name');
+            if (nameInput && nameInput.value.length < 2) {
+                const errorElement = document.createElement('p');
+                errorElement.classList.add('text-red-500', 'text-sm', 'mt-1', 'js-form-error');
+                errorElement.textContent = 'Le nom doit contenir au moins 2 caractères.';
+                nameInput.parentNode.appendChild(errorElement);
+                hasErrors = true;
+            }
+            
+            // Email validation
+            const emailInput = document.getElementById('user_email');
+            if (emailInput) {
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(emailInput.value)) {
+                    const errorElement = document.createElement('p');
+                    errorElement.classList.add('text-red-500', 'text-sm', 'mt-1', 'js-form-error');
+                    errorElement.textContent = 'Veuillez entrer une adresse email valide.';
+                    emailInput.parentNode.appendChild(errorElement);
+                    hasErrors = true;
+                }
+            }
+            
+            if (hasErrors) {
+                event.preventDefault();
+            }
+        });
+    });
+</script>
+{% endblock %}

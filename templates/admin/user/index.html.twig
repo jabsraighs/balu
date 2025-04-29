@@ -1,0 +1,166 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Users
+{% endblock %}
+
+{% block page_content %}
+	<div class="container mx-auto px-4 py-8">
+		<div class="mb-6">
+			<h1 class="text-2xl font-bold text-gray-900 dark:text-white">Users</h1>
+		</div>
+
+		<div class="flex justify-between items-center mb-6">
+			<div>
+				<h2 class="text-xl font-semibold text-gray-900 dark:text-white">Tous les users</h2>
+				<p class="text-gray-500 dark:text-gray-400"> Gérez votre base de users</p>
+			</div>
+			<a href="{{ path('app_admin_user_new') }}" class="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-baluBlue hover:bg-baluBlue-light rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-baluBlue">
+				<svg xmlns="http://www.w3.org/2000/svg" class="mr-2 h-4 w-4" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+					<path d="M5 12h14"></path>
+					<path d="M12 5v14"></path>
+				</svg>
+				Ajouter un user
+			</a>
+		</div>
+
+		<div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden">
+			<div class="relative w-full overflow-auto">
+				<table class="w-full caption-bottom text-sm">
+					<thead>
+						<tr class="border-b transition-colors hover:bg-muted/50">
+							<th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Nom</th>
+							<th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Email</th>
+							<th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground">est verifiée </th>
+							<th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Rôle</th>
+							<th class="h-12 px-4 text-right align-middle font-medium text-muted-foreground">Actions</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for user in users %}
+							<tr class="border-b transition-colors hover:bg-muted/50">
+								<td class="p-4 align-middle">
+									<div class="flex items-center">
+										<div class="h-8 w-8 flex-shrink-0 mr-3">
+											<div class="h-8 w-8 rounded-full bg-baluBlue text-white flex items-center justify-center font-medium text-xs">
+												{{ user.fullname|first|upper }}
+											</div>
+										</div>
+										<div class="font-medium text-gray-900 dark:text-white">{{ user.fullname }}</div>
+									</div>
+								</td>
+								<td class="p-4 align-middle">{{ user.email }}</td>
+								<td class="p-4 align-middle">{{ user.isVerified  ? 'vrai ': 'faux' }}</td>
+								<td class="p-4 align-middle">{{  user.roles | join(', ') }}</td>
+								<td class="p-4 align-middle text-right">
+									<div class="flex justify-end space-x-2">
+										<a href="{{ path('app_admin_user_show', {'id': user.id}) }}" class="inline-flex items-center justify-center px-3 py-1 text-xs font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-baluBlue dark:bg-gray-800 dark:border-gray-700 dark:text-gray-200 dark:hover:bg-gray-700">
+											Voir
+										</a>
+										<a href="{{ path('app_admin_user_edit', {'id': user.id}) }}" class="inline-flex items-center justify-center px-3 py-1 text-xs font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-baluBlue dark:bg-gray-800 dark:border-gray-700 dark:text-gray-200 dark:hover:bg-gray-700">
+											<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+												<path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"></path>
+												<path d="m15 5 4 4"></path>
+											</svg>
+											Modifier
+										</a>
+										<button type="button" class="inline-flex items-center justify-center px-3 py-1 text-xs font-medium text-red-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 dark:bg-gray-800 dark:border-gray-700 dark:text-red-400 dark:hover:bg-gray-700" data-user-id="{{ user.id }}" onclick="openDeleteModal({{ user.id }})">
+											Supprimer
+										</button>
+									</div>
+								</td>
+							</tr>
+						{% else %}
+							<tr>
+								<td colspan="6" class="p-4 align-middle text-center text-gray-500 dark:text-gray-400">Aucun user trouvé</td>
+							</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			</div>
+		</div>
+
+		<div id="deleteConfirmModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center hidden">
+			<div class="bg-white dark:bg-gray-800 rounded-lg max-w-md w-full mx-auto">
+				<div class="p-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
+					<h5 class="text-lg font-semibold text-gray-900 dark:text-white">Supprimer le user</h5>
+					<button type="button" class="text-gray-400 hover:text-gray-500 dark:hover:text-gray-300" id="closeModal">
+						<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+							<line x1="18" y1="6" x2="6" y2="18"></line>
+							<line x1="6" y1="6" x2="18" y2="18"></line>
+						</svg>
+					</button>
+				</div>
+				<div class="p-4 border-b border-gray-200 dark:border-gray-700">
+					<p class="text-gray-700 dark:text-gray-300">Êtes-vous sûr de vouloir supprimer ce user ? Cette action ne peut pas être annulée.</p>
+				</div>
+				<div class="p-4 flex justify-end gap-2">
+					<button type="button" id="cancelDelete" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600 dark:hover:bg-gray-600">
+						Annuler
+					</button>
+					<form id="deleteUserForm" method="POST" action="">
+						<input type="hidden" name="_token" id="csrf_token_placeholder" value="">
+						<button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-700 focus:outline-none dark:bg-red-700 dark:hover:bg-red-800">
+							Supprimer
+						</button>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script>
+		window.csrfTokens = {
+{% for user in users %}
+"{{ user.id }}" : "{{ csrf_token('delete' ~ user.id) }}",{% endfor %}
+};
+
+function openDeleteModal(userId) {
+const modal = document.getElementById('deleteConfirmModal');
+const deleteForm = document.getElementById('deleteUserForm');
+const csrfTokenInput = document.getElementById('csrf_token_placeholder');
+
+deleteForm.action = "{{ path('app_admin_user_delete', {'id': 'USER_ID'}) }}".replace('USER_ID', userId);
+
+csrfTokenInput.value = csrfTokens[userId];
+
+modal.classList.remove('hidden');
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+const closeModal = document.getElementById('closeModal');
+if (closeModal) {
+closeModal.addEventListener('click', function () {
+document.getElementById('deleteConfirmModal').classList.add('hidden');
+});
+}
+
+const cancelDelete = document.getElementById('cancelDelete');
+if (cancelDelete) {
+cancelDelete.addEventListener('click', function () {
+document.getElementById('deleteConfirmModal').classList.add('hidden');
+});
+}
+
+const modal = document.getElementById('deleteConfirmModal');
+modal.addEventListener('click', function (event) {
+if (event.target === modal) {
+modal.classList.add('hidden');
+}
+});
+
+const flashMessages = document.querySelectorAll('.alert-dismissible');
+flashMessages.forEach(function (flashMessage) {
+const closeButton = flashMessage.querySelector('.btn-close');
+if (closeButton) {
+closeButton.addEventListener('click', function () {
+flashMessage.remove();
+});
+}
+
+setTimeout(function () {
+flashMessage.remove();
+}, 5000);
+});
+});
+	</script>
+{% endblock %}

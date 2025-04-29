@@ -1,0 +1,148 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Détails de l'Utilisateur - {{ user.fullname }}{% endblock %}
+
+{% block page_content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="mb-6">
+        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Détails de l'Utilisateur</h1>
+    </div>
+    
+    <div class="mb-6">
+        <a href="{{ path('app_admin_user_index') }}" class="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-gray-700 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm hover:bg-gray-50 dark:hover:bg-gray-700">
+            <svg xmlns="http://www.w3.org/2000/svg" class="mr-2 h-4 w-4" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="m12 19-7-7 7-7"></path>
+                <path d="M19 12H5"></path>
+            </svg>
+            Retour à la liste
+        </a>
+    </div>
+    
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden">
+        <div class="p-6">
+            <div class="flex justify-between items-start mb-6">
+                <div class="flex items-center">
+                    <div>
+                        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">{{ user.fullname }}</h1>
+                        {% if user.company is defined %}
+                            <p class="text-gray-500 dark:text-gray-400">{{ user.company }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div class="flex space-x-2">
+                    <a 
+                        href="{{ path('app_admin_user_edit', {'id': user.id}) }}" 
+                        class="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-gray-700 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm hover:bg-gray-50 dark:hover:bg-gray-700"
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" class="mr-2 h-4 w-4" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"></path>
+                            <path d="m15 5 4 4"></path>
+                        </svg>
+                        Modifier
+                    </a>
+                    <button 
+                        type="button" 
+                        class="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                        onclick="openDeleteModal()"
+                    >
+                        Supprimer
+                    </button>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+                <div>
+                    <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Informations de contact</h2>
+                    <div class="space-y-3">
+                        <div>
+                            <p class="text-sm text-gray-500 dark:text-gray-400">Email</p>
+                            <p class="text-gray-900 dark:text-white">{{ user.email }}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-500 dark:text-gray-400">rôles</p>
+                            <p class="text-gray-900 dark:text-white">{{ user.roles | join(', ') }}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-500 dark:text-gray-400">est vérifiée</p>
+                            <p class="text-gray-900 dark:text-white">{{ user.isVerified ? 'vrai' : 'faux' }}</p>
+                        </div>
+                    </div>
+                </div>
+                
+                {# <div>
+                    <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Informations supplémentaires</h2>
+                    <div class="space-y-3">
+                        <div>
+                            <p class="text-sm text-gray-500 dark:text-gray-400">User depuis</p>
+                            <p class="text-gray-900 dark:text-white">{{ user.createdAt ? user.createdAt|date('d/m/Y') : 'N/A' }}</p>
+                        </div>
+                    </div>
+                </div> #}
+            </div>
+        </div>
+    </div>
+    
+    {# Delete Confirmation Modal - Tailwind Version #}
+    <div id="deleteConfirmModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center hidden">
+        <div class="bg-white dark:bg-gray-800 rounded-lg max-w-md w-full mx-auto">
+            <div class="p-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
+                <h5 class="text-lg font-semibold text-gray-900 dark:text-white">Supprimer le user</h5>
+                <button type="button" class="text-gray-400 hover:text-gray-500 dark:hover:text-gray-300" id="closeModal">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="p-4 border-b border-gray-200 dark:border-gray-700">
+                <p class="text-gray-700 dark:text-gray-300">Êtes-vous sûr de vouloir supprimer ce user ? Cette action ne peut pas être annulée.</p>
+            </div>
+            <div class="p-4 flex justify-end gap-2">
+                <button type="button" id="cancelDelete" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600 dark:hover:bg-gray-600">
+                    Annuler
+                </button>
+                <form id="deleteUserForm" method="POST" action="{{ path('app_admin_user_delete', {'id': user.id}) }}">
+                    <input type="hidden" name="_method" value="DELETE">
+                    <input type="hidden" name="_token" value="{{ csrf_token('delete_user_' ~ user.id) }}">
+                    <button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-700 focus:outline-none dark:bg-red-700 dark:hover:bg-red-800">
+                        Supprimer
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function openDeleteModal() {
+        document.getElementById('deleteConfirmModal').classList.remove('hidden');
+    }
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        // Close modal with X button
+        const closeModal = document.getElementById('closeModal');
+        if (closeModal) {
+            closeModal.addEventListener('click', function() {
+                document.getElementById('deleteConfirmModal').classList.add('hidden');
+            });
+        }
+        
+        // Close modal with Cancel button
+        const cancelDelete = document.getElementById('cancelDelete');
+        if (cancelDelete) {
+            cancelDelete.addEventListener('click', function() {
+                document.getElementById('deleteConfirmModal').classList.add('hidden');
+            });
+        }
+        
+        // Close modal by clicking outside
+        const modal = document.getElementById('deleteConfirmModal');
+        modal.addEventListener('click', function(event) {
+            if (event.target === modal) {
+                modal.classList.add('hidden');
+            }
+        });
+    });
+</script>
+{% endblock %}
