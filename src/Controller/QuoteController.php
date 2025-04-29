@@ -16,7 +16,7 @@ use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
-use Knp\Snappy\Pdf;
+use App\Service\PdfService;
 
 #[Route('/quote')]
 #[IsGranted('ROLE_COMPANY')]
@@ -158,7 +158,7 @@ final class QuoteController extends AbstractController
             $invoiceLine->setQuantity($quoteLine->getQuantity());
             $invoiceLine->setUnitPrice($quoteLine->getUnitPrice());
             $invoiceLine->setDiscount($quoteLine->getDiscount());
-            
+
 
             $invoice->addInvoiceLine($invoiceLine);
 
@@ -180,7 +180,7 @@ final class QuoteController extends AbstractController
     }
 
     #[Route('/{id}/pdf', name: 'app_quote_pdf', methods: ['GET'])]
-    public function generatePdf(Quote $quote, Pdf $knpSnappyPdf): Response
+    public function generatePdf(Quote $quote, PdfService $pdfService): Response
     {
         if ($quote->getCompany() !== $this->getUser()->getCompany()) {
             $this->addFlash('error', 'Vous n\'avez pas accès à ce devis.');
@@ -191,8 +191,10 @@ final class QuoteController extends AbstractController
             'quote' => $quote
         ]);
 
+        $pdfContent = $pdfService->generatePdf($html);
+
         return new Response(
-            $knpSnappyPdf->getOutputFromHtml($html),
+            $pdfContent,
             200,
             [
                 'Content-Type' => 'application/pdf',
@@ -202,7 +204,7 @@ final class QuoteController extends AbstractController
     }
 
     #[Route('/{id}/send-email', name: 'app_quote_send_email', methods: ['GET'])]
-    public function sendEmail(Quote $quote, Pdf $knpSnappyPdf, MailerInterface $mailer): Response
+    public function sendEmail(Quote $quote, PdfService $pdfService, MailerInterface $mailer): Response
     {
         if ($quote->getCompany() !== $this->getUser()->getCompany()) {
             $this->addFlash('error', 'Vous n\'avez pas accès à ce devis.');
@@ -212,8 +214,10 @@ final class QuoteController extends AbstractController
         $html = $this->renderView('quote/pdf.html.twig', [
             'quote' => $quote
         ]);
-        // $pdf = $knpSnappyPdf->getOutputFromHtml($html);
-        
+
+        // Utiliser le PdfService au lieu de Dompdf directement
+        $pdfContent = $pdfService->generatePdf($html);
+
         $email = (new Email())
             ->from('baludevis@support.com')
             ->to($quote->getClient()->getEmail())
@@ -222,13 +226,13 @@ final class QuoteController extends AbstractController
                 'quote' => $quote,
                 'app_url' => $this->getParameter('app_url'),
                 'company_name' => $quote->getCompany()->getName(),
-            ]));
-            // ->attach($pdf, 'devis-'.$quote->getQuoteNumber().'.pdf', 'application/pdf');
-        
+            ]))
+            ->attach($pdfContent, 'devis-' . $quote->getQuoteNumber() . '.pdf', 'application/pdf');
+
         $mailer->send($email);
-        
+
         $this->addFlash('success', 'Le devis a été envoyé par email avec succès.');
-        
+
         return $this->redirectToRoute('app_quote_show', ['id' => $quote->getId()]);
     }
 

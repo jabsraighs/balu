@@ -155,7 +155,7 @@
 	{% block javascripts %}
 		{{ parent() }}
 		<script>
-			document.addEventListener('DOMContentLoaded', function () {
+			document.addEventListener('turbo:load', function () {
 const dropdown = document.querySelector('.dropdown');
 
 dropdown.addEventListener('click', function () {
