@@ -79,6 +79,49 @@ class PaymentRepository extends ServiceEntityRepository
         return $result ? (float) $result : 0;
     }
 
+    public function sumAmountByMonth(Company $c, int $months): float
+    {
+        $qb = $this->createQueryBuilder('p')
+            ->select('SUM(p.amount) as total')
+            ->join('p.invoice', 'i')
+            ->andWhere('i.company = :c')
+            ->andWhere('p.datePaid >= :start')
+            ->setParameters(new \Doctrine\Common\Collections\ArrayCollection([
+                'c' => $c,
+                'start' => (new \DateTime("-{$months} months"))->setTime(0, 0)
+            ]));
+        return (float) $qb->getQuery()->getSingleScalarResult();
+    }
+
+    /**
+     * Total des paiements reçus par mois sur les X derniers mois
+     * Retourne ['YYYY-MM'=>amount,…]
+     */
+    public function getMonthlyPayments(Company $company, int $months = 6): array
+    {
+        $qb = $this->createQueryBuilder('p')
+            ->select("to_char(p.datePaid, 'YYYY-MM') AS ym, SUM(p.amount) AS total")
+            ->join('p.invoice', 'i')
+            ->andWhere('i.company = :company')
+            ->setParameter('company', $company)
+            ->andWhere('p.datePaid >= :start')
+            ->setParameter('start', (new \DateTime())->modify("-{$months} months"))
+            ->groupBy('ym')
+            ->orderBy('ym', 'ASC');
+
+        $raw = $qb->getQuery()->getResult();
+        $data = [];
+        for ($i = $months; $i >= 0; $i--) {
+            $m = (new \DateTime())->modify("-{$i} months")->format('Y-m');
+            $data[$m] = 0.0;
+        }
+        foreach ($raw as $r) {
+            $data[$r['ym']] = (float) $r['total'];
+        }
+        return $data;
+    }
+
+
     //    /**
     //     * @return Payment[] Returns an array of Payment objects
     //     */

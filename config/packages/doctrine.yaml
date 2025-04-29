@@ -14,6 +14,9 @@ doctrine:
         report_fields_where_declared: true
         validate_xml_mapping: true
         naming_strategy: doctrine.orm.naming_strategy.underscore_number_aware
+        dql:
+            datetime_functions:
+                to_char: DoctrineExtensions\Query\Postgresql\DateFormat
         identity_generation_preferences:
             Doctrine\DBAL\Platforms\PostgreSQLPlatform: identity
         auto_mapping: true

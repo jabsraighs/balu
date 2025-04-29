@@ -26,10 +26,12 @@ final class InvitationController extends AbstractController
         $form->handleRequest($req);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $role = $form->get('roles')->getData();
             $inv->setToken(bin2hex(random_bytes(32)))
                 ->setCompany($this->getUser()->getCompany())
                 ->setInvitedBy($this->getUser())
                 ->setCreatedAt(new \DateTimeImmutable())
+                ->setRoles([$role])
                 ->setExpiresAt((new \DateTimeImmutable())->modify('+7 days'));
 
             $em->persist($inv);

@@ -45,6 +45,48 @@ class InvoiceRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    /**
+     * Renvoie un tableau ['paid'=>X, 'pending'=>Y, 'partial'=>Z]
+     * pour la répartition des statuts de toutes les factures de la company
+     */
+    public function getStatusDistribution(Company $company): array
+    {
+        $qb = $this->createQueryBuilder('i')
+            ->select('i.status AS st, COUNT(i.id) AS cnt')
+            ->andWhere('i.company = :company')
+            ->setParameter('company', $company)
+            ->groupBy('i.status');
+
+        $raw = $qb->getQuery()->getResult();
+        $dist = ['paid' => 0, 'pending' => 0, 'partial' => 0];
+        foreach ($raw as $r) {
+            $dist[$r['st']] = (int) $r['cnt'];
+        }
+        return $dist;
+    }
+
+    public function sumTotalByClient(Company $c): array
+    {
+        $qb = $this->createQueryBuilder('i')
+            ->select('c.name as client, SUM(i.totalAmount) as total')
+            ->join('i.client', 'c')
+            ->andWhere('i.company = :c')
+            ->groupBy('c.id')
+            ->setParameter('c', $c);
+
+        $data = [];
+        foreach ($qb->getQuery()->getResult() as $row) {
+            $data[$row['client']] = (float) $row['total'];
+        }
+        return $data;
+    }
+
+    public function findAllForCompany(Company $c): array
+    {
+        return $this->findBy(['company' => $c], ['dateCreated' => 'DESC']);
+    }
+
+
     public function getOverdueAmount(): float
     {
         $today = new \DateTime();
@@ -167,57 +209,31 @@ class InvoiceRepository extends ServiceEntityRepository
     }
 
     /**
-     * Récupère les revenus mensuels sur les 6 derniers mois
-     * @return array Un tableau avec les revenus par mois
+     * Rend un tableau ['YYYY-MM' => totalAmount, …] pour les X derniers mois
      */
-    public function getMonthlyRevenue(): array
+    public function getMonthlyRevenue(Company $company, int $months = 6): array
     {
-        $conn = $this->getEntityManager()->getConnection();
+        $qb = $this->createQueryBuilder(alias: 'i')
+            ->select("to_char(i.createdAt, 'YYYY-MM') AS ym, SUM(i.totalAmount) AS total")
+            ->andWhere('i.company = :company')
+            ->setParameter('company', $company)
+            ->andWhere('i.createdAt >= :start')
+            ->setParameter('start', (new \DateTime())->modify("-{$months} months"))
+            ->groupBy('ym')
+            ->orderBy('ym', 'ASC');
 
-        $sql = "
-        SELECT 
-            EXTRACT(MONTH FROM date_due) as month, 
-            EXTRACT(YEAR FROM date_due) as year,
-            SUM(total_amount) as amount
-        FROM invoice
-        WHERE status = 'paid'
-        AND date_due >= CURRENT_DATE - INTERVAL '5 months'
-        GROUP BY EXTRACT(YEAR FROM date_due), EXTRACT(MONTH FROM date_due)
-        ORDER BY year ASC, month ASC
-    ";
-
-
-        $months = $conn->executeQuery($sql)->fetchAllAssociative();
-
-        $result = [];
-        $monthNames = ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin', 'Juil', 'Août', 'Sep', 'Oct', 'Nov', 'Déc'];
-
-        foreach ($months as $month) {
-            $result[] = [
-                'label' => $monthNames[$month['month'] - 1],
-                'amount' => (float) $month['amount']
-            ];
+        $raw = $qb->getQuery()->getResult();
+        $data = [];
+        // initialiser tous les mois à 0
+        for ($i = $months; $i >= 0; $i--) {
+            $m = (new \DateTime())->modify("-{$i} months")->format('Y-m');
+            $data[$m] = 0.0;
         }
-
-        while (count($result) < 6) {
-            array_unshift($result, ['label' => '---', 'amount' => 0]);
+        // injecter les valeurs existantes
+        foreach ($raw as $r) {
+            $data[$r['ym']] = (float) $r['total'];
         }
-
-        return $result;
-    }
-
-    public function getMaxMonthlyRevenue(): float
-    {
-        $monthlyRevenue = $this->getMonthlyRevenue();
-        $max = 0;
-
-        foreach ($monthlyRevenue as $month) {
-            if ($month['amount'] > $max) {
-                $max = $month['amount'];
-            }
-        }
-
-        return max(ceil($max / 1000) * 1000, 1);
+        return $data;
     }
 
     public function findRecent(int $limit): array

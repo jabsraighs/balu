@@ -1,0 +1,191 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Tableau de bord Comptable{% endblock %}
+
+{% block page_content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="mb-6">
+        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Tableau de bord Comptable</h1>
+        <p class="text-gray-500 dark:text-gray-400">Bienvenue, {{ app.user.fullname }}</p>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 border border-gray-200 dark:border-gray-700">
+            <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Chiffre d'affaires (6 mois)</h2>
+            <div class="h-80">
+                <canvas id="chartRevenue"></canvas>
+            </div>
+        </div>
+        
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 border border-gray-200 dark:border-gray-700">
+            <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Répartition Statuts Factures</h2>
+            <div class="h-80">
+                <canvas id="chartStatus"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-8 bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 border border-gray-200 dark:border-gray-700">
+        <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Paiements reçus (6 mois)</h2>
+        <div class="h-80">
+            <canvas id="chartPayments"></canvas>
+        </div>
+    </div>
+
+    <div class="mt-8">
+        <div class="flex justify-between items-center mb-4">
+            <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Rapports</h2>
+            <a href="{{ path('accountant_report') }}" class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-baluBlue hover:bg-baluBlue-light rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-baluBlue">
+                <svg xmlns="http://www.w3.org/2000/svg" class="mr-2 h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="7 10 12 15 17 10"></polyline>
+                    <line x1="12" y1="15" x2="12" y2="3"></line>
+                </svg>
+                Générer un rapport
+            </a>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const revenueData = {{ revenueData|json_encode|raw }};
+    const revLabels = Object.keys(revenueData);
+    const revValues = Object.values(revenueData);
+    
+    const statusDist = {{ statusDist|json_encode|raw }};
+    const statusKeys = Object.keys(statusDist);
+    const statusVals = Object.values(statusDist);
+    
+    const paymentData = {{ paymentData|json_encode|raw }};
+    const payLabels = Object.keys(paymentData);
+    const payValues = Object.values(paymentData);
+
+    const colors = [
+        'rgba(79, 70, 229, 0.7)',    
+        'rgba(16, 185, 129, 0.7)',
+        'rgba(245, 158, 11, 0.7)',
+        'rgba(239, 68, 68, 0.7)', 
+        'rgba(139, 92, 246, 0.7)' 
+    ];
+
+    // 1) CA par mois (bar chart)
+    new Chart(document.getElementById('chartRevenue'), {
+        type: 'bar',
+        data: {
+            labels: revLabels,
+            datasets: [{
+                label: 'Chiffre d\'affaires (€)',
+                data: revValues,
+                backgroundColor: colors[0],
+                borderColor: colors[0].replace('0.7', '1'),
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'top',
+                    labels: {
+                        color: document.documentElement.classList.contains('dark') ? '#e5e7eb' : '#374151'
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        color: document.documentElement.classList.contains('dark') ? '#9ca3af' : '#6b7280'
+                    },
+                    grid: {
+                        color: document.documentElement.classList.contains('dark') ? 'rgba(75, 85, 99, 0.2)' : 'rgba(209, 213, 219, 0.2)'
+                    }
+                },
+                x: {
+                    ticks: {
+                        color: document.documentElement.classList.contains('dark') ? '#9ca3af' : '#6b7280'
+                    },
+                    grid: {
+                        display: false
+                    }
+                }
+            }
+        }
+    });
+
+    // 2) Statuts factures (pie chart)
+    new Chart(document.getElementById('chartStatus'), {
+        type: 'pie',
+        data: {
+            labels: statusKeys.map(key => key.charAt(0).toUpperCase() + key.slice(1)),
+            datasets: [{
+                data: statusVals,
+                backgroundColor: colors,
+                borderColor: colors.map(color => color.replace('0.7', '1')),
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'right',
+                    labels: {
+                        color: document.documentElement.classList.contains('dark') ? '#e5e7eb' : '#374151'
+                    }
+                }
+            }
+        }
+    });
+
+    // 3) Paiements par mois (line chart)
+    new Chart(document.getElementById('chartPayments'), {
+        type: 'line',
+        data: {
+            labels: payLabels,
+            datasets: [{
+                label: 'Paiements (€)',
+                data: payValues,
+                backgroundColor: colors[1],
+                borderColor: colors[1].replace('0.7', '1'),
+                tension: 0.4,
+                fill: false
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'top',
+                    labels: {
+                        color: document.documentElement.classList.contains('dark') ? '#e5e7eb' : '#374151'
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        color: document.documentElement.classList.contains('dark') ? '#9ca3af' : '#6b7280'
+                    },
+                    grid: {
+                        color: document.documentElement.classList.contains('dark') ? 'rgba(75, 85, 99, 0.2)' : 'rgba(209, 213, 219, 0.2)'
+                    }
+                },
+                x: {
+                    ticks: {
+                        color: document.documentElement.classList.contains('dark') ? '#9ca3af' : '#6b7280'
+                    },
+                    grid: {
+                        display: false
+                    }
+                }
+            }
+        }
+    });
+</script>
+{% endblock %}

@@ -7,8 +7,6 @@
 {% elseif is_granted('ROLE_ACCOUNTANT') %}
 	{% set navItems = [
         { path: 'app_dashboard', name: 'Tableau de bord', icon: 'layout-dashboard' },
-        { path: 'reports_index', name: 'Rapports', icon: 'bar-chart' },
-        { path: 'payment_index', name: 'Paiements', icon: 'credit-card' }
     ] %}
 {% else %}
 	{% set navItems = [
@@ -27,13 +25,13 @@
 <div class="{{ mobileOpen ? 'block' : 'hidden' }} lg:hidden fixed inset-0 z-40 bg-gray-900/80 backdrop-blur-sm close-mobile-button"></div>
 
 <aside class="
-						    fixed inset-y-0 left-0 z-50
-						    {{ mobileOpen ? 'block' : 'hidden' }}
-						    lg:block
-						    {{ isCollapsed ? 'lg:w-20' : 'lg:w-64' }}
-						    bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800
-						    transition-all duration-300 transform {{ mobileOpen ? '' : 'lg:translate-x-0 -translate-x-full' }}
-						">
+										    fixed inset-y-0 left-0 z-50
+										    {{ mobileOpen ? 'block' : 'hidden' }}
+										    lg:block
+										    {{ isCollapsed ? 'lg:w-20' : 'lg:w-64' }}
+										    bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800
+										    transition-all duration-300 transform {{ mobileOpen ? '' : 'lg:translate-x-0 -translate-x-full' }}
+										">
 	<div class="flex flex-col h-full">
 		<div class="h-[64px] flex items-center px-4 border-b border-gray-200 dark:border-gray-800">
 			<div class="flex items-center justify-between w-full">
@@ -58,15 +56,15 @@
 				{% for item in navItems %}
 					<li>
 						<a href="{{ path(item.path) }}" class="flex items-center px-3 py-3 text-sm font-medium rounded-md group transition-colors
-																								                                {{ currentRoute starts with item.path
-																								                                    ? 'bg-baluBlue text-white'
-																								                                    : 'text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800'
-																								                                }}">
+																																								                                {{ currentRoute starts with item.path
+																																								                                    ? 'bg-baluBlue text-white'
+																																								                                    : 'text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800'
+																																								                                }}">
 							<div class="flex items-center">
 								<span class="flex items-center justify-center h-5 w-5 {{ currentRoute starts with item.path
-																														                                    ? 'text-white'
-																														                                    : 'text-gray-500 dark:text-gray-400 group-hover:text-gray-700 dark:group-hover:text-gray-300'
-																														                                }}">
+																																																		                                    ? 'text-white'
+																																																		                                    : 'text-gray-500 dark:text-gray-400 group-hover:text-gray-700 dark:group-hover:text-gray-300'
+																																																		                                }}">
 									{% if item.icon == 'layout-dashboard' %}
 										<svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg>
 									{% elseif item.icon == 'users' %}

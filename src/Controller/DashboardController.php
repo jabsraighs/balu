@@ -36,8 +36,15 @@ final class DashboardController extends AbstractController{
         }
 
         if (in_array('ROLE_ACCOUNTANT', $roles, true)) {
+            $revenueData   = $invoiceRepository->getMonthlyRevenue($company, 6);
+            $statusDist    = $invoiceRepository->getStatusDistribution($company);
+            $paymentData   = $paymentRepository->getMonthlyPayments($company, 6);
+
             return $this->render('dashboard/accountant.html.twig', [
                 'user' => $user,
+                'revenueData' => $revenueData,
+                'statusDist'  => $statusDist,
+                'paymentData' => $paymentData,
             ]);
         }
 
@@ -47,7 +54,7 @@ final class DashboardController extends AbstractController{
                 'pendingCount' => $invoiceRepository->getPendingCount(),
                 'pendingAmount' => $invoiceRepository->getPendingAmount(),
                 'percentIncrease' => $invoiceRepository->getMonthlyIncreasePercentage(),
-                'monthlyRevenue' => $invoiceRepository->getMonthlyRevenue(),
+                'monthlyRevenue' => $invoiceRepository->getMonthlyRevenue($company, 6),
                 'maxMonthlyRevenue' => $invoiceRepository->getMaxMonthlyRevenue(),
                 'overdueAmount' => $invoiceRepository->getOverdueAmount(),
                 'paidThisMonth' => $paymentRepository->sumPaymentsByPeriod(
