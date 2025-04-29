@@ -15,38 +15,41 @@ class ClientFixtures extends Fixture implements DependentFixtureInterface
     public function load(ObjectManager $manager): void
     {
         $faker = Factory::create('fr_FR');
-        $date = new \DateTimeImmutable(); // Date de création
+        
+        $mainCompany = $this->getReference('main-company', Company::class);
+        
+        $companyNames = [
+            'Carrefour France', 'Orange SA', 'Renault Groupe', 'BNP Paribas', 'AXA Assurances',
+            'Société Générale', 'Total Energies', 'SNCF', 'EDF', 'Veolia',
+            'Bouygues Télécom', 'Crédit Agricole', 'Michelin', 'L\'Oréal', 'Air France-KLM',
+            'Danone', 'Accor Hotels', 'Peugeot SA', 'Vivendi', 'Chanel'
+        ];
+        
+        for ($i = 0; $i < 20; $i++) {
+            $client = new Client();
+            $client->setName($companyNames[$i] ?? $faker->company())
+                  ->setContactName($faker->name())
+                  ->setEmail($faker->companyEmail())
+                  ->setPhone($faker->phoneNumber())
+                  ->setAddress($faker->address())
+                  ->setCompany($mainCompany)
+                  ->setCreatedAt(\DateTimeImmutable::createFromMutable($faker->dateTimeThisYear()));
 
-        // Récupérer toutes les entreprises déjà créées
-        $companies = $manager->getRepository(Company::class)->findAll();
-
-        if (empty($companies)) {
-            throw new \Exception("Aucune entreprise n'a été trouvée. Veuillez d'abord ajouter des entreprises.");
+            $manager->persist($client);
+            $this->addReference('client-' . $i, $client);
         }
 
-        // Créer un premier client
-        $client = (new Client())
-            ->setName($faker->company()) // Le nom du client peut être un nom d'entreprise ou autre
-            ->setContactName($faker->name())
-            ->setEmail($faker->email())
-            ->setPhone($faker->phoneNumber())
-            ->setAddress($faker->address())
-            ->setCompany($companies[array_rand($companies)]) // Associer aléatoirement une entreprise
-            ->setCreatedAt($date); // Date de création du client
-
-        $manager->persist($client);
-        $this->addReference('client', $client);
-
-        // Créer 100 autres clients
-        for ($i = 0; $i < 100; $i++) {
-            $client = (new Client())
-                ->setName($faker->company()) // Le nom du client
-                ->setContactName($faker->name()) // Contact du client
-                ->setEmail($faker->email())
-                ->setPhone($faker->phoneNumber())
-                ->setAddress($faker->address())
-                ->setCompany($companies[array_rand($companies)]) // Associer aléatoirement une entreprise
-                ->setCreatedAt($date);
+        $otherCompanies = [$this->getReference('company-0', Company::class), $this->getReference('company-1', Company::class)];
+        
+        for ($i = 0; $i < 15; $i++) {
+            $client = new Client();
+            $client->setName($faker->company())
+                  ->setContactName($faker->name())
+                  ->setEmail($faker->companyEmail())
+                  ->setPhone($faker->phoneNumber())
+                  ->setAddress($faker->address())
+                  ->setCompany($otherCompanies[array_rand($otherCompanies)])
+                  ->setCreatedAt(\DateTimeImmutable::createFromMutable($faker->dateTimeThisYear()));
 
             $manager->persist($client);
         }
@@ -57,7 +60,7 @@ class ClientFixtures extends Fixture implements DependentFixtureInterface
     public function getDependencies(): array
     {
         return [
-            CompanyFixtures::class, // Assurer que les entreprises existent avant
+            CompanyFixtures::class,
         ];
     }
 }

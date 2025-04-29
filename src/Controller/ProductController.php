@@ -18,8 +18,10 @@ final class ProductController extends AbstractController{
     #[Route(name: 'app_product_index', methods: ['GET'])]
     public function index(ProductRepository $productRepository): Response
     {
+        $company = $this->getUser()->getCompany();
+        
         return $this->render('product/index.html.twig', [
-            'products' => $productRepository->findAll(),
+            'products' => $productRepository->findBy(['company' => $company]),
         ]);
     }
 
@@ -47,6 +49,11 @@ final class ProductController extends AbstractController{
     #[Route('/{id}', name: 'app_product_show', methods: ['GET'])]
     public function show(Product $product): Response
     {
+        if ($product->getCompany() !== $this->getUser()->getCompany()) {
+            $this->addFlash('error', 'Vous n\'avez pas accès à ce produit.');
+            return $this->redirectToRoute('app_product_index');
+        }
+
         return $this->render('product/show.html.twig', [
             'product' => $product,
         ]);
@@ -59,7 +66,8 @@ final class ProductController extends AbstractController{
         $form->handleRequest($request);
 
         if ($product->getCompany() !== $this->getUser()->getCompany()) {
-            throw $this->createAccessDeniedException();
+            $this->addFlash('error', 'Vous n\'avez pas accès à ce produit.');
+            return $this->redirectToRoute('app_product_index');
         }
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -77,6 +85,11 @@ final class ProductController extends AbstractController{
     #[Route('/{id}', name: 'app_product_delete', methods: ['POST'])]
     public function delete(Request $request, Product $product, EntityManagerInterface $entityManager): Response
     {
+        if ($product->getCompany() !== $this->getUser()->getCompany()) {
+            $this->addFlash('error', 'Vous n\'avez pas accès à ce produit.');
+            return $this->redirectToRoute('app_product_index');
+        }
+        
         if ($this->isCsrfTokenValid('delete'.$product->getId(), $request->getPayload()->getString('_token'))) {
             $entityManager->remove($product);
             $entityManager->flush();

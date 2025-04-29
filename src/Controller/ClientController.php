@@ -5,6 +5,8 @@ namespace App\Controller;
 use App\Entity\Client;
 use App\Form\ClientType;
 use App\Repository\ClientRepository;
+use App\Repository\InvoiceRepository;
+use App\Repository\QuoteRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,12 +16,15 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/client')]
 #[IsGranted('ROLE_COMPANY')]
-final class ClientController extends AbstractController{
+final class ClientController extends AbstractController
+{
     #[Route(name: 'app_client_index', methods: ['GET'])]
     public function index(ClientRepository $clientRepository): Response
     {
+        $company = $this->getUser()->getCompany();
+
         return $this->render('client/index.html.twig', [
-            'clients' => $clientRepository->findAll(),
+            'clients' => $clientRepository->findBy(['company' => $company]),
         ]);
     }
 
@@ -48,6 +53,11 @@ final class ClientController extends AbstractController{
     #[Route('/{id}', name: 'app_client_show', methods: ['GET'])]
     public function show(Client $client): Response
     {
+        if ($client->getCompany() !== $this->getUser()->getCompany()) {
+            $this->addFlash('error', 'Vous n\'avez pas accès à ce client.');
+            return $this->redirectToRoute('app_client_index');
+        }
+
         return $this->render('client/show.html.twig', [
             'client' => $client,
         ]);
@@ -60,7 +70,8 @@ final class ClientController extends AbstractController{
         $form->handleRequest($request);
 
         if ($client->getCompany() !== $this->getUser()->getCompany()) {
-            throw $this->createAccessDeniedException();
+            $this->addFlash('error', 'Vous n\'avez pas accès à ce client.');
+            return $this->redirectToRoute('app_client_index');
         }
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -76,10 +87,29 @@ final class ClientController extends AbstractController{
     }
 
     #[Route('/{id}', name: 'app_client_delete', methods: ['POST'])]
-    public function delete(Request $request, Client $client, EntityManagerInterface $entityManager): Response
-    {   
-        dump('delete'.$client->getId());
-        if ($this->isCsrfTokenValid('delete'.$client->getId(), $request->getPayload()->getString('_token'))) {
+    public function delete(Request $request, Client $client, EntityManagerInterface $entityManager, QuoteRepository $quoteRepository, InvoiceRepository $invoiceRepository): Response
+    {
+        if ($client->getCompany() !== $this->getUser()->getCompany()) {
+            $this->addFlash('error', 'Vous n\'avez pas accès à ce client.');
+            return $this->redirectToRoute('app_client_index');
+        }
+
+        $countQuotes = $quoteRepository->count(['client' => $client]);
+        $countInvoices = $invoiceRepository->count(['client' => $client]);
+
+        if ($countQuotes > 0 || $countInvoices > 0) {
+            $this->addFlash(
+                'error',
+                'Impossible de supprimer ce client : il a ' .
+                ($countQuotes ? "{$countQuotes} devis" : '') .
+                ($countQuotes && $countInvoices ? ' et ' : '') .
+                ($countInvoices ? "{$countInvoices} factures" : '') .
+                ' associés.'
+            );
+            return $this->redirectToRoute('app_client_index');
+        }
+
+        if ($this->isCsrfTokenValid('delete' . $client->getId(), $request->getPayload()->getString('_token'))) {
             $entityManager->remove($client);
             $entityManager->flush();
         }

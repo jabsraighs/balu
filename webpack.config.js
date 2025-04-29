@@ -24,6 +24,9 @@ Encore
         './assets/app.js',
         './assets/styles/app.css'
     ])
+    .addEntry('layout', './assets/layout.js')
+    .addEntry('header', './assets/header.js')
+    .addEntry('theme', '/assets/theme.js')
 
     // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.
     .splitEntryChunks()

@@ -4,8 +4,9 @@ namespace App\Service;
 
 use App\Entity\Invoice;
 use App\Entity\Quote;
-use Knp\Snappy\Pdf;
+use Dompdf\Dompdf;
 use App\Entity\Invitation;
+use Dompdf\Options;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
@@ -23,13 +24,11 @@ class EmailService
 
     public function __construct(
         MailerInterface $mailer,
-        Pdf $pdf,
         Environment $twig,
         ParameterBagInterface $params,
         UrlGeneratorInterface $router
     ) {
         $this->mailer = $mailer;
-        $this->pdf = $pdf;
         $this->twig = $twig;
         $this->params = $params;
         $this->router = $router;
@@ -79,36 +78,52 @@ class EmailService
      */
     public function sendInvoiceEmail(Invoice $invoice, array $customVars = []): bool
     {
+        // Configurer et générer le PDF avec Dompdf
+        $options = new Options();
+        $options->set('isHtml5ParserEnabled', true);
+        $options->set('isPhpEnabled', true);
+        $options->set('defaultFont', 'Arial');
+        
+        $dompdf = new Dompdf($options);
+        
+        // Générer le HTML pour le PDF
         $pdfHtml = $this->twig->render('invoice/pdf.html.twig', [
             'invoice' => $invoice
         ]);
-
-        $pdfContent = $this->pdf->getOutputFromHtml($pdfHtml);
-
-        // Variables par défaut
+        
+        // Charger le HTML et générer le PDF
+        $dompdf->loadHtml($pdfHtml);
+        $dompdf->setPaper('A4', 'portrait');
+        $dompdf->render();
+        $pdfContent = $dompdf->output();
+    
+        // Variables pour le template email
         $variables = [
             'invoice' => $invoice,
             'app_url' => $this->params->get('app_url'),
             'company_name' => $invoice->getCompany()->getName(),
         ];
-
+    
         // Ajouter les variables personnalisées
         $variables = array_merge($variables, $customVars);
-
+    
+        // Générer le HTML pour l'email
         $emailHtml = $this->twig->render('invoice/email.html.twig', $variables);
-
+    
+        // Créer et envoyer l'email avec le PDF en pièce jointe
         $email = (new Email())
             ->from($this->params->get('app_email_from'))
             ->to($invoice->getClient()->getEmail())
             ->subject('Facture #' . $invoice->getInvoiceNumber())
             ->html($emailHtml)
             ->attach($pdfContent, 'facture-' . $invoice->getInvoiceNumber() . '.pdf', 'application/pdf');
-
+    
         try {
             $this->mailer->send($email);
             return true;
         } catch (TransportExceptionInterface $e) {
             // Log l'erreur
+            error_log("Erreur d'envoi de la facture par email: " . $e->getMessage());
             return false;
         }
     }

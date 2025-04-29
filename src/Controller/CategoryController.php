@@ -18,8 +18,10 @@ final class CategoryController extends AbstractController{
     #[Route(name: 'app_category_index', methods: ['GET'])]
     public function index(CategoryRepository $categoryRepository): Response
     {
+        $company = $this->getUser()->getCompany();
+        
         return $this->render('category/index.html.twig', [
-            'categories' => $categoryRepository->findAll(),
+            'categories' => $categoryRepository->findBy(['company' => $company]),
         ]);
     }
 
@@ -47,6 +49,11 @@ final class CategoryController extends AbstractController{
     #[Route('/{id}', name: 'app_category_show', methods: ['GET'])]
     public function show(Category $category): Response
     {
+        if ($category->getCompany() !== $this->getUser()->getCompany()) {
+            $this->addFlash('error', 'Vous n\'avez pas accès à cette catégorie.');
+            return $this->redirectToRoute('app_category_index');
+        }
+        
         return $this->render('category/show.html.twig', [
             'category' => $category,
         ]);
@@ -59,7 +66,8 @@ final class CategoryController extends AbstractController{
         $form->handleRequest($request);
 
         if ($category->getCompany() !== $this->getUser()->getCompany()) {
-            throw $this->createAccessDeniedException();
+            $this->addFlash('error', 'Vous n\'avez pas accès à cette catégorie.');
+            return $this->redirectToRoute('app_category_index');
         }
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -77,6 +85,11 @@ final class CategoryController extends AbstractController{
     #[Route('/{id}', name: 'app_category_delete', methods: ['POST'])]
     public function delete(Request $request, Category $category, EntityManagerInterface $entityManager): Response
     {
+        if ($category->getCompany() !== $this->getUser()->getCompany()) {
+            $this->addFlash('error', 'Vous n\'avez pas accès à cette catégorie.');
+            return $this->redirectToRoute('app_category_index');
+        }
+        
         if ($this->isCsrfTokenValid('delete'.$category->getId(), $request->getPayload()->getString('_token'))) {
             $entityManager->remove($category);
             $entityManager->flush();

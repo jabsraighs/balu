@@ -23,8 +23,6 @@
                 <td>{{ payment.datePaid ? payment.datePaid|date('Y-m-d H:i:s') : '' }}</td>
                 <td>{{ payment.method }}</td>
                 <td>
-                    <a href="{{ path('app_payment_show', {'id': payment.id}) }}">show</a>
-                    <a href="{{ path('app_payment_edit', {'id': payment.id}) }}">edit</a>
                 </td>
             </tr>
         {% else %}

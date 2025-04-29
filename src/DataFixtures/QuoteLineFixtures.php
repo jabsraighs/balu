@@ -8,54 +8,65 @@ use App\Entity\Product;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
-use Faker\Factory;
 
 class QuoteLineFixtures extends Fixture implements DependentFixtureInterface
 {
     public function load(ObjectManager $manager): void
     {
-        $faker = Factory::create('fr_FR'); // Utilisation de Faker pour générer des données aléatoires
-
-        // Récupération de tous les devis et produits existants
+        // Récupération de tous les devis
         $quotes = $manager->getRepository(Quote::class)->findAll();
-        $products = $manager->getRepository(Product::class)->findAll();
-
-        // Vérification que nous avons des devis et produits
-        if (empty($quotes) || empty($products)) {
-            throw new \Exception("Veuillez d'abord charger des devis et des produits.");
+        
+        foreach ($quotes as $index => $quote) {
+            // Nombre de lignes par devis (entre 1 et 4)
+            $lineCount = rand(1, 4);
+            $totalAmount = 0;
+            
+            // Produits déjà utilisés dans ce devis
+            $usedProducts = [];
+            
+            for ($i = 0; $i < $lineCount; $i++) {
+                // Sélection d'un produit non encore utilisé dans ce devis
+                do {
+                    $productIndex = rand(0, 14);
+                    $productRef = 'product-' . $productIndex;
+                } while (in_array($productIndex, $usedProducts) && count($usedProducts) < 15);
+                
+                $usedProducts[] = $productIndex;
+                $product = $this->getReference($productRef, Product::class);
+                
+                // Création de la ligne de devis
+                $quoteLine = new QuoteLine();
+                $quantity = rand(1, 3);
+                $discount = rand(0, 15); // Pourcentage de remise
+                
+                $quoteLine->setQuote($quote)
+                    ->setProductName($product->getName())
+                    ->setProductDescription($product->getDescription())
+                    ->setUnitPrice($product->getUnitPrice())
+                    ->setQuantity($quantity)
+                    ->setDiscount($discount)
+                    ->setDescription("Prestation de " . $product->getName());
+                
+                // Calcul du montant total de la ligne
+                $lineAmount = $product->getUnitPrice() * $quantity * (1 - $discount/100);
+                $totalAmount += $lineAmount;
+                
+                $manager->persist($quoteLine);
+            }
+            
+            // Mise à jour du montant total du devis
+            $quote->setTotalAmount($totalAmount);
+            $manager->persist($quote);
         }
-
-        // Création de 200 lignes de devis
-        for ($i = 0; $i < 200; $i++) {
-            $quote = $quotes[array_rand($quotes)]; // Sélection d'un devis aléatoire
-            $product = $products[array_rand($products)]; // Sélection d'un produit aléatoire
-
-            $quoteLine = new QuoteLine();
-            $quoteLine->setQuote($quote)
-                ->setProductName(substr($product->getName(), 0, 255))
-                ->setProductDescription(substr($product->getDescription(), 0, 255))
-                ->setUnitPrice($faker->randomFloat(2, 10, 500))
-                ->setQuantity($faker->numberBetween(1, 10))
-                ->setDiscount($faker->randomFloat(2, 0, 50))
-                ->setDescription(substr($faker->paragraph(), 0, 255));
-
-            $manager->persist($quoteLine); // Persiste la ligne de devis
-        }
-
-        // Sauvegarde toutes les lignes de devis
+        
         $manager->flush();
     }
 
-    /**
-     * Dépendances pour charger les fixtures dans le bon ordre
-     *
-     * @return array
-     */
     public function getDependencies(): array
     {
         return [
-            QuoteFixtures::class,  // Charge les devis en premier
-            ProductFixtures::class, // Charge les produits en second
+            QuoteFixtures::class,
+            ProductFixtures::class,
         ];
     }
 }

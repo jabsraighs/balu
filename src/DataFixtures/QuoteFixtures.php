@@ -3,9 +3,6 @@
 namespace App\DataFixtures;
 
 use App\Entity\Quote;
-use App\Entity\Client;
-use App\Entity\User;
-use App\Entity\Company;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
@@ -13,55 +10,91 @@ use Faker\Factory;
 
 class QuoteFixtures extends Fixture implements DependentFixtureInterface
 {
-    public function load(ObjectManager $manager): void    
+    public function load(ObjectManager $manager): void
     {
         $faker = Factory::create('fr_FR');
-        $status = ['pending', 'accepted', 'rejected'];
         
-        $clients = $manager->getRepository(Client::class)->findAll();
-        $users = $manager->getRepository(User::class)->findAll();
-        $companies = $manager->getRepository(Company::class)->findAll();
+        // Récupérer l'entreprise principale et ses utilisateurs
+        $mainCompany = $this->getReference('main-company', \App\Entity\Company::class);
+        $companyUser = $this->getReference('company-user', \App\Entity\User::class);
         
-        if (empty($clients) || empty($users) || empty($companies)) {
-            throw new \Exception("Veuillez d'abord charger des clients, des utilisateurs et des entreprises.");
+        // Statuts possibles pour les devis
+        $status = ['draft', 'sent', 'accepted', 'rejected', 'expired'];
+        $statusDistribution = [15, 30, 35, 10, 10]; // Pourcentages approximatifs
+        
+        // Création d'une distribution mensuelle réaliste (plus de devis récemment)
+        $monthlyDistribution = [
+            '01' => 5,  // Janvier
+            '02' => 6,  // Février
+            '03' => 7,  // Mars
+            '04' => 8,  // Avril
+            '05' => 9,  // Mai
+            '06' => 10, // Juin 
+            '07' => 9,  // Juillet
+            '08' => 6,  // Août
+            '09' => 12, // Septembre
+            '10' => 14, // Octobre
+            '11' => 7,  // Novembre
+            '12' => 7   // Décembre
+        ];
+        
+        $quoteNumber = 1;
+        $year = 2024;
+        
+        foreach ($monthlyDistribution as $month => $count) {
+            for ($i = 0; $i < $count; $i++) {
+                // Générer une date dans le mois concerné
+                $day = str_pad($faker->numberBetween(1, 28), 2, '0', STR_PAD_LEFT);
+                $dateString = "$year-$month-$day";
+                $createdAt = \DateTimeImmutable::createFromFormat('Y-m-d', $dateString);
+                
+                // Date d'expiration (30 jours après création)
+                $expiredAt = $createdAt->modify('+30 days');
+                
+                // Déterminer le statut selon la distribution souhaitée
+                $randomValue = $faker->numberBetween(1, 100);
+                $cumulativeProb = 0;
+                $selectedStatus = $status[0];
+                
+                foreach ($statusDistribution as $index => $probability) {
+                    $cumulativeProb += $probability;
+                    if ($randomValue <= $cumulativeProb) {
+                        $selectedStatus = $status[$index];
+                        break;
+                    }
+                }
+                
+                // Sélection aléatoire d'un client
+                $clientIndex = $faker->numberBetween(0, 19);
+                $client = $this->getReference('client-' . $clientIndex, \App\Entity\Client::class);
+                
+                // Création du devis
+                $quote = new Quote();
+                $quote->setQuoteNumber('DEV-' . str_pad($quoteNumber, 5, '0', STR_PAD_LEFT))
+                    ->setDateCreated($createdAt)
+                    ->setCreatedAt($createdAt)
+                    ->setDateValidUntil($expiredAt)
+                    ->setStatus($selectedStatus)
+                    ->setCompany($mainCompany)
+                    ->setClient($client)
+                    ->setCustomer($companyUser)
+                    ->setTotalAmount(0); // Sera calculé après ajout des lignes
+                
+                $manager->persist($quote);
+                $this->addReference('quote-' . $quoteNumber, $quote);
+                $quoteNumber++;
+            }
         }
         
-        for ($i = 0; $i < 100; $i++) {
-            $createdAt = $faker->dateTimeThisDecade();
-            $name = "Devis numéro " . ($i + 1);
-            $expiredAt = $faker->dateTimeInInterval($createdAt, '+1 year');
-            
-            // Création d'un devis
-            $quote = new Quote();
-            $quote->setQuoteNumber('DEV-' . str_pad($i + 1, 5, '0', STR_PAD_LEFT))
-                ->setDateCreated($createdAt)
-                ->setCreatedAt(\DateTimeImmutable::createFromMutable($createdAt))
-                ->setDateValidUntil($expiredAt)
-                ->setStatus($status[array_rand($status)])
-                ->setTotalAmount($faker->randomFloat(2, 0, 1000))
-                ->setCompany($companies[array_rand($companies)])
-                ->setClient($clients[array_rand($clients)])
-                ->setCustomer($users[array_rand($users)]);
-            
-            // Persist du devis
-            $manager->persist($quote);
-        }
-        
-        // Sauvegarde des devis dans la base de données
         $manager->flush();
     }
     
-    /**
-     * Dépendances pour charger les fixtures dans le bon ordre
-     *
-     * @return array
-     */
     public function getDependencies(): array
     {
         return [
-            ClientFixtures::class,    // Charge les clients en premier
-            UserFixtures::class,      // Charge les utilisateurs en second
-            CompanyFixtures::class,   // Charge les entreprises en troisième
+            ClientFixtures::class,
+            CompanyFixtures::class,
+            UserFixtures::class,
         ];
     }
 }

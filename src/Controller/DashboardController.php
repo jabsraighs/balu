@@ -11,23 +11,24 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-final class DashboardController extends AbstractController{
+final class DashboardController extends AbstractController
+{
     #[Route('/', name: 'app_dashboard')]
     #[IsGranted('IS_AUTHENTICATED_FULLY')]
     public function index(InvoiceRepository $invoiceRepository, QuoteRepository $quoteRepository, ClientRepository $clientRepository, PaymentRepository $paymentRepository): Response
     {
-        $user  = $this->getUser();
+        $user = $this->getUser();
         $roles = $user->getRoles();
         $company = $user->getCompany();
 
         $recentPayments = $paymentRepository->createQueryBuilder('p')
-        ->join('p.invoice', 'i')
-        ->where('i.company = :company')
-        ->setParameter('company', $company)
-        ->orderBy('p.datePaid', 'DESC')
-        ->setMaxResults(5)
-        ->getQuery()
-        ->getResult();
+            ->join('p.invoice', 'i')
+            ->where('i.company = :company')
+            ->setParameter('company', $company)
+            ->orderBy('p.datePaid', 'DESC')
+            ->setMaxResults(5)
+            ->getQuery()
+            ->getResult();
 
         if (in_array('ROLE_ADMIN', $roles, true)) {
             return $this->render('dashboard/admin.html.twig', [
@@ -36,17 +37,29 @@ final class DashboardController extends AbstractController{
         }
 
         if (in_array('ROLE_ACCOUNTANT', $roles, true)) {
-            $revenueData   = $invoiceRepository->getMonthlyRevenue($company, 6);
-            $statusDist    = $invoiceRepository->getStatusDistribution($company);
-            $paymentData   = $paymentRepository->getMonthlyPayments($company, 6);
+            $revenueData = $invoiceRepository->getMonthlyRevenue($company, 6);
+            $statusDist = $invoiceRepository->getStatusDistribution($company);
+            $paymentData = $paymentRepository->getMonthlyPayments($company, 6);
 
             return $this->render('dashboard/accountant.html.twig', [
                 'user' => $user,
                 'revenueData' => $revenueData,
-                'statusDist'  => $statusDist,
+                'statusDist' => $statusDist,
                 'paymentData' => $paymentData,
             ]);
         }
+
+        $monthlyRevenueData = $invoiceRepository->getMonthlyRevenue($company);
+        $monthlyRevenue = [];
+
+        foreach ($monthlyRevenueData as $label => $amount) {
+            $monthlyRevenue[] = [
+                'label' => $label,
+                'amount' => $amount
+            ];
+        }
+
+        $maxMonthlyRevenue = $invoiceRepository->getMaxMonthlyRevenue();
 
         return $this->render('dashboard/index.html.twig', [
             'invoiceStats' => [
@@ -54,8 +67,8 @@ final class DashboardController extends AbstractController{
                 'pendingCount' => $invoiceRepository->getPendingCount(),
                 'pendingAmount' => $invoiceRepository->getPendingAmount(),
                 'percentIncrease' => $invoiceRepository->getMonthlyIncreasePercentage(),
-                'monthlyRevenue' => $invoiceRepository->getMonthlyRevenue($company, 6),
-                'maxMonthlyRevenue' => $invoiceRepository->getMaxMonthlyRevenue(),
+                'monthlyRevenue' => $monthlyRevenue,
+                'maxMonthlyRevenue' => $maxMonthlyRevenue,
                 'overdueAmount' => $invoiceRepository->getOverdueAmount(),
                 'paidThisMonth' => $paymentRepository->sumPaymentsByPeriod(
                     $company,

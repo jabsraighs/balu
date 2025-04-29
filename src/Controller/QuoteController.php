@@ -76,6 +76,11 @@ final class QuoteController extends AbstractController
     #[Route('/{id}', name: 'app_quote_show', methods: ['GET'])]
     public function show(Quote $quote): Response
     {
+        if ($quote->getCompany() !== $this->getUser()->getCompany()) {
+            $this->addFlash('error', 'Vous n\'avez pas accès à ce devis.');
+            return $this->redirectToRoute('app_quote_index');
+        }
+
         return $this->render('quote/show.html.twig', [
             'quote' => $quote,
         ]);
@@ -84,6 +89,11 @@ final class QuoteController extends AbstractController
     #[Route('/{id}/edit', name: 'app_quote_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Quote $quote, EntityManagerInterface $entityManager, ProductRepository $productRepository): Response
     {
+        if ($quote->getCompany() !== $this->getUser()->getCompany()) {
+            $this->addFlash('error', 'Vous n\'avez pas accès à ce devis.');
+            return $this->redirectToRoute('app_quote_index');
+        }
+
         $form = $this->createForm(QuoteType::class, $quote);
         $form->handleRequest($request);
 
@@ -116,6 +126,11 @@ final class QuoteController extends AbstractController
     #[Route('/{id}/convert-to-invoice', name: 'app_quote_convert_to_invoice', methods: ['GET'])]
     public function convertToInvoice(Quote $quote, EntityManagerInterface $entityManager): Response
     {
+        if ($quote->getCompany() !== $this->getUser()->getCompany()) {
+            $this->addFlash('error', 'Vous n\'avez pas accès à ce devis.');
+            return $this->redirectToRoute('app_quote_index');
+        }
+
         if ($quote->getStatus() === 'accepted') {
             $this->addFlash('warning', 'Ce devis a déjà été accepté.');
             return $this->redirectToRoute('app_quote_show', ['id' => $quote->getId()]);
@@ -163,9 +178,15 @@ final class QuoteController extends AbstractController
 
         return $this->redirectToRoute('app_invoice_show', ['id' => $invoice->getId()]);
     }
+
     #[Route('/{id}/pdf', name: 'app_quote_pdf', methods: ['GET'])]
     public function generatePdf(Quote $quote, Pdf $knpSnappyPdf): Response
     {
+        if ($quote->getCompany() !== $this->getUser()->getCompany()) {
+            $this->addFlash('error', 'Vous n\'avez pas accès à ce devis.');
+            return $this->redirectToRoute('app_quote_index');
+        }
+
         $html = $this->renderView('quote/pdf.html.twig', [
             'quote' => $quote
         ]);
@@ -183,6 +204,11 @@ final class QuoteController extends AbstractController
     #[Route('/{id}/send-email', name: 'app_quote_send_email', methods: ['GET'])]
     public function sendEmail(Quote $quote, Pdf $knpSnappyPdf, MailerInterface $mailer): Response
     {
+        if ($quote->getCompany() !== $this->getUser()->getCompany()) {
+            $this->addFlash('error', 'Vous n\'avez pas accès à ce devis.');
+            return $this->redirectToRoute('app_quote_index');
+        }
+
         $html = $this->renderView('quote/pdf.html.twig', [
             'quote' => $quote
         ]);
@@ -228,6 +254,11 @@ final class QuoteController extends AbstractController
     #[Route('/{id}', name: 'app_quote_delete', methods: ['POST'])]
     public function delete(Request $request, Quote $quote, EntityManagerInterface $entityManager): Response
     {
+        if ($quote->getCompany() !== $this->getUser()->getCompany()) {
+            $this->addFlash('error', 'Vous n\'avez pas accès à ce devis.');
+            return $this->redirectToRoute('app_quote_index');
+        }
+
         if ($this->isCsrfTokenValid('delete' . $quote->getId(), $request->getPayload()->getString('_token'))) {
             $entityManager->remove($quote);
             $entityManager->flush();

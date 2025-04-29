@@ -6,6 +6,8 @@ use App\Entity\Invoice;
 use App\Form\InvoiceType;
 use App\Repository\InvoiceRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Dompdf\Dompdf;
+use Dompdf\Options;
 use Knp\Snappy\Pdf;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,8 +23,10 @@ final class InvoiceController extends AbstractController{
     #[Route(name: 'app_invoice_index', methods: ['GET'])]
     public function index(InvoiceRepository $invoiceRepository): Response
     {
+        $company = $this->getUser()->getCompany();
+        
         return $this->render('invoice/index.html.twig', [
-            'invoices' => $invoiceRepository->findAll(),
+            'invoices' => $invoiceRepository->findBy(['company' => $company]),
         ]);
     }
 
@@ -49,6 +53,11 @@ final class InvoiceController extends AbstractController{
     #[Route('/{id}', name: 'app_invoice_show', methods: ['GET'])]
     public function show(Invoice $invoice): Response
     {
+        if ($invoice->getCompany() !== $this->getUser()->getCompany()) {
+            $this->addFlash('error', 'Vous n\'avez pas accès à cette facture.');
+            return $this->redirectToRoute('app_invoice_index');
+        }
+        
         return $this->render('invoice/show.html.twig', [
             'invoice' => $invoice,
         ]);
@@ -57,6 +66,11 @@ final class InvoiceController extends AbstractController{
     #[Route('/{id}/edit', name: 'app_invoice_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Invoice $invoice, EntityManagerInterface $entityManager): Response
     {
+        if ($invoice->getCompany() !== $this->getUser()->getCompany()) {
+            $this->addFlash('error', 'Vous n\'avez pas accès à cette facture.');
+            return $this->redirectToRoute('app_invoice_index');
+        }
+        
         $form = $this->createForm(InvoiceType::class, $invoice);
         $form->handleRequest($request);
 
@@ -75,6 +89,11 @@ final class InvoiceController extends AbstractController{
     #[Route('/{id}', name: 'app_invoice_delete', methods: ['POST'])]
     public function delete(Request $request, Invoice $invoice, EntityManagerInterface $entityManager): Response
     {
+        if ($invoice->getCompany() !== $this->getUser()->getCompany()) {
+            $this->addFlash('error', 'Vous n\'avez pas accès à cette facture.');
+            return $this->redirectToRoute('app_invoice_index');
+        }
+        
         if ($this->isCsrfTokenValid('delete'.$invoice->getId(), $request->getPayload()->getString('_token'))) {
             $entityManager->remove($invoice);
             $entityManager->flush();
@@ -83,13 +102,26 @@ final class InvoiceController extends AbstractController{
         return $this->redirectToRoute('app_invoice_index', [], Response::HTTP_SEE_OTHER);
     }
 
-        #[Route('/{id}/send-email', name: 'app_invoice_send_email', methods: ['GET'])]
-    public function sendEmail(Invoice $invoice, Pdf $knpSnappyPdf, MailerInterface $mailer): Response
+    #[Route('/{id}/send-email', name: 'app_invoice_send_email', methods: ['GET'])]
+    public function sendEmail(Invoice $invoice, Dompdf $dompdf, MailerInterface $mailer): Response
     {
+        if ($invoice->getCompany() !== $this->getUser()->getCompany()) {
+            $this->addFlash('error', 'Vous n\'avez pas accès à cette facture.');
+            return $this->redirectToRoute('app_invoice_index');
+        }
+        
         $html = $this->renderView('invoice/pdf.html.twig', [
             'invoice' => $invoice
         ]);
-        $pdf = $knpSnappyPdf->getOutputFromHtml($html);
+
+        $options = new Options();
+        $options->set('isHtml5ParserEnabled', true);
+        $options->set('isPhpEnabled', true);
+        $options->set('defaultFont', 'Arial');
+
+        $dompdf->loadHtml($html);
+        $dompdf->render();
+        $pdfContent = $dompdf->output();
         
         $email = (new Email())
             ->from($this->getParameter('app_email_from'))
@@ -98,7 +130,7 @@ final class InvoiceController extends AbstractController{
             ->html($this->renderView('invoice/email.html.twig', [
                 'invoice' => $invoice
             ]))
-            ->attach($pdf, 'facture-'.$invoice->getInvoiceNumber().'.pdf', 'application/pdf');
+            ->attach($pdfContent, 'facture-'.$invoice->getInvoiceNumber().'.pdf', 'application/pdf');
         
         $mailer->send($email);
         

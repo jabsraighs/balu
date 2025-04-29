@@ -236,6 +236,60 @@ class InvoiceRepository extends ServiceEntityRepository
         return $data;
     }
 
+        /**
+     * Récupère les revenus mensuels sur les 6 derniers mois
+     * @return array Un tableau avec les revenus par mois
+     */
+    public function getMonthlyRevenueLastMonths(): array
+    {
+        $conn = $this->getEntityManager()->getConnection();
+
+        $sql = "
+        SELECT 
+            EXTRACT(MONTH FROM date_due) as month, 
+            EXTRACT(YEAR FROM date_due) as year,
+            SUM(total_amount) as amount
+        FROM invoice
+        WHERE status = 'paid'
+        AND date_due >= CURRENT_DATE - INTERVAL '5 months'
+        GROUP BY EXTRACT(YEAR FROM date_due), EXTRACT(MONTH FROM date_due)
+        ORDER BY year ASC, month ASC
+    ";
+
+
+        $months = $conn->executeQuery($sql)->fetchAllAssociative();
+
+        $result = [];
+        $monthNames = ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin', 'Juil', 'Août', 'Sep', 'Oct', 'Nov', 'Déc'];
+
+        foreach ($months as $month) {
+            $result[] = [
+                'label' => $monthNames[$month['month'] - 1],
+                'amount' => (float) $month['amount']
+            ];
+        }
+
+        while (count($result) < 6) {
+            array_unshift($result, ['label' => '---', 'amount' => 0]);
+        }
+
+        return $result;
+    }
+
+    public function getMaxMonthlyRevenue(): float
+    {
+        $monthlyRevenue = $this->getMonthlyRevenueLastMonths();
+        $max = 0;
+    
+        foreach ($monthlyRevenue as $month) {
+            if ($month['amount'] > $max) {
+                $max = $month['amount'];
+            }
+        }
+    
+        return max(ceil($max / 1000) * 1000, 1);
+    }
+
     public function findRecent(int $limit): array
     {
         return $this->createQueryBuilder('i')

@@ -7,41 +7,53 @@ use App\Entity\Invoice;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
-use Faker\Factory;
 
 class PaymentFixtures extends Fixture implements DependentFixtureInterface
 {
     public function load(ObjectManager $manager): void
     {
-        $faker = Factory::create('fr_FR');
+        // Récupérer toutes les factures payées
+        $invoices = $manager->getRepository(Invoice::class)->findBy(['status' => 'paid']);
         
-        // Récupérer toutes les factures de la base de données
-        $invoices = $manager->getRepository(Invoice::class)->findAll();
+        $paymentMethods = [
+            'credit_card' => 60,    // 60% cartes bancaires
+            'bank_transfer' => 30,  // 30% virements bancaires
+            'paypal' => 10          // 10% PayPal
+        ];
         
-        if (empty($invoices)) {
-            throw new \Exception("Assurez-vous d'avoir des factures dans la base de données.");
+        foreach ($invoices as $invoice) {
+            // Création d'un paiement pour chaque facture payée
+            $payment = new Payment();
+            $payment->setInvoice($invoice)
+                   ->setAmount($invoice->getTotalAmount())
+                   ->setDatePaid($invoice->getDatePaid())
+                   ->setMethod($this->getRandomMethod($paymentMethods));
+            
+            $manager->persist($payment);
         }
         
-        // Créer 100 paiements
-        for ($i = 0; $i < 100; $i++) {
-            $invoice = $invoices[array_rand($invoices)]; // Sélectionner une facture aléatoire
-            
-            $payment = (new Payment())
-                ->setInvoice($invoice) // Lier le paiement à une facture existante
-                ->setAmount($faker->randomFloat(2, 50, 500)) // Montant du paiement entre 50 et 500
-                ->setDatePaid($faker->dateTimeThisYear()) // Date de paiement cette année
-                ->setMethod($faker->randomElement(['credit_card', 'paypal', 'bank_transfer'])); // Méthode de paiement
-            
-            $manager->persist($payment); // Enregistrer le paiement dans la base de données
+        $manager->flush();
+    }
+    
+    private function getRandomMethod(array $methods): string
+    {
+        $rand = mt_rand(1, 100);
+        $cumulative = 0;
+        
+        foreach ($methods as $method => $probability) {
+            $cumulative += $probability;
+            if ($rand <= $cumulative) {
+                return $method;
+            }
         }
         
-        $manager->flush(); // Sauvegarder les paiements
+        return array_key_first($methods);
     }
     
     public function getDependencies(): array
     {
         return [
-            InvoiceFixtures::class, // Dépendance des factures
+            InvoiceFixtures::class,
         ];
     }
 }
