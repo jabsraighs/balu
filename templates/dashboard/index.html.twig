@@ -91,14 +91,7 @@
 			<h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-6">Évolution du chiffre d'affaires</h2>
 
 			<div class="h-72">
-				<div class="flex items-end h-64 justify-between border-b border-gray-200 dark:border-gray-700">
-					{% for month in invoiceStats.monthlyRevenue %}
-						<div class="flex flex-col items-center w-full">
-							<div class="bg-baluBlue rounded-t w-12 mx-auto transition-all duration-300 hover:bg-baluBlue-light" style="height: {{ (month.amount / invoiceStats.maxMonthlyRevenue * 100)|number_format(0) }}%"></div>
-							<span class="text-xs mt-2 text-gray-500 dark:text-gray-400">{{ month.label }}</span>
-						</div>
-					{% endfor %}
-				</div>
+				<canvas id="revenueChart"></canvas>
 			</div>
 		</div>
 
@@ -281,6 +274,51 @@
 			</div>
 		</div>
 
-
 	</div>
+
+	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+	<script>
+		document.addEventListener('turbo:load', function() {
+			const monthlyData = {{ invoiceStats.monthlyRevenue|json_encode|raw }};
+			const labels = monthlyData.map(item => item.label);
+			const amounts = monthlyData.map(item => item.amount);
+
+			const ctx = document.getElementById('revenueChart').getContext('2d');
+			new Chart(ctx, {
+				type: 'bar',
+				data: {
+					labels: labels,
+					datasets: [{
+						label: 'Chiffre d\'affaires (€)',
+						data: amounts,
+						backgroundColor: 'rgba(79, 70, 229, 0.7)',
+						borderColor: 'rgba(79, 70, 229, 1)',
+						borderWidth: 1
+					}]
+				},
+				options: {
+					responsive: true,
+					maintainAspectRatio: false,
+					scales: {
+						y: {
+							beginAtZero: true,
+							grid: {
+								color: 'rgba(160, 174, 192, 0.1)'
+							}
+						},
+						x: {
+							grid: {
+								display: false
+							}
+						}
+					},
+					plugins: {
+						legend: {
+							display: false
+						}
+					}
+				}
+			});
+		});
+	</script>
 {% endblock %}

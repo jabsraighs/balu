@@ -17,7 +17,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[IsGranted('ROLE_COMPANY')]
 final class PaymentController extends AbstractController
 {
-    #[Route(name: 'app_payment_index', methods: ['GET'])]
+    #[Route('/', name: 'app_payment_index', methods: ['GET'])]
     public function index(PaymentRepository $paymentRepository): Response
     {
         $company = $this->getUser()->getCompany();

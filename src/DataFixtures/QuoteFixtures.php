@@ -14,15 +14,12 @@ class QuoteFixtures extends Fixture implements DependentFixtureInterface
     {
         $faker = Factory::create('fr_FR');
         
-        // Récupérer l'entreprise principale et ses utilisateurs
         $mainCompany = $this->getReference('main-company', \App\Entity\Company::class);
         $companyUser = $this->getReference('company-user', \App\Entity\User::class);
         
-        // Statuts possibles pour les devis
         $status = ['draft', 'sent', 'accepted', 'rejected', 'expired'];
-        $statusDistribution = [15, 30, 35, 10, 10]; // Pourcentages approximatifs
+        $statusDistribution = [15, 30, 35, 10, 10];
         
-        // Création d'une distribution mensuelle réaliste (plus de devis récemment)
         $monthlyDistribution = [
             '01' => 5,  // Janvier
             '02' => 6,  // Février
@@ -78,7 +75,7 @@ class QuoteFixtures extends Fixture implements DependentFixtureInterface
                     ->setCompany($mainCompany)
                     ->setClient($client)
                     ->setCustomer($companyUser)
-                    ->setTotalAmount(0); // Sera calculé après ajout des lignes
+                    ->setTotalAmount(0);
                 
                 $manager->persist($quote);
                 $this->addReference('quote-' . $quoteNumber, $quote);

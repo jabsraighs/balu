@@ -17,6 +17,7 @@ use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use App\Service\PdfService;
+use Symfony\Component\Serializer\SerializerInterface;
 
 #[Route('/quote')]
 #[IsGranted('ROLE_COMPANY')]
@@ -34,7 +35,7 @@ final class QuoteController extends AbstractController
     }
 
     #[Route('/new', name: 'app_quote_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager, ProductRepository $productRepository): Response
+    public function new(Request $request, EntityManagerInterface $entityManager, ProductRepository $productRepository, SerializerInterface $serializer): Response
     {
         $user = $this->getUser();
         $company = $user->getCompany();
@@ -66,10 +67,16 @@ final class QuoteController extends AbstractController
             return $this->redirectToRoute('app_quote_index', [], Response::HTTP_SEE_OTHER);
         }
 
+        $products = $productRepository->findByCompany($company);
+
+        $jsonProducts = $serializer->serialize($products, 'json', [
+            'groups' => ['product:list']
+        ]);
+
         return $this->render('quote/new.html.twig', [
             'quote' => $quote,
             'form' => $form,
-            'products' => $productRepository->findByCompany($company),
+            'products' => $jsonProducts,
         ]);
     }
 
@@ -91,6 +98,11 @@ final class QuoteController extends AbstractController
     {
         if ($quote->getCompany() !== $this->getUser()->getCompany()) {
             $this->addFlash('error', 'Vous n\'avez pas accès à ce devis.');
+            return $this->redirectToRoute('app_quote_index');
+        }
+        
+        if ($quote->getStatus() === 'accepted') {
+            $this->addFlash('error', 'Ce devis a déjà été accepté et ne peut plus être modifié.');
             return $this->redirectToRoute('app_quote_index');
         }
 
@@ -260,6 +272,11 @@ final class QuoteController extends AbstractController
     {
         if ($quote->getCompany() !== $this->getUser()->getCompany()) {
             $this->addFlash('error', 'Vous n\'avez pas accès à ce devis.');
+            return $this->redirectToRoute('app_quote_index');
+        }
+        
+        if ($quote->getStatus() === 'accepted') {
+            $this->addFlash('error', 'Ce devis a déjà été accepté et ne peut plus être supprimé.');
             return $this->redirectToRoute('app_quote_index');
         }
 

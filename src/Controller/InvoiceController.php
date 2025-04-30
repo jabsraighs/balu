@@ -71,6 +71,11 @@ final class InvoiceController extends AbstractController{
             return $this->redirectToRoute('app_invoice_index');
         }
         
+        if ($invoice->getStatus() === 'paid') {
+            $this->addFlash('error', 'Cette facture a déjà été payée et ne peut plus être modifiée.');
+            return $this->redirectToRoute('app_invoice_index');
+        }
+        
         $form = $this->createForm(InvoiceType::class, $invoice);
         $form->handleRequest($request);
 
@@ -91,6 +96,11 @@ final class InvoiceController extends AbstractController{
     {
         if ($invoice->getCompany() !== $this->getUser()->getCompany()) {
             $this->addFlash('error', 'Vous n\'avez pas accès à cette facture.');
+            return $this->redirectToRoute('app_invoice_index');
+        }
+        
+        if ($invoice->getStatus() === 'paid') {
+            $this->addFlash('error', 'Cette facture a déjà été payée et ne peut plus être supprimée.');
             return $this->redirectToRoute('app_invoice_index');
         }
         

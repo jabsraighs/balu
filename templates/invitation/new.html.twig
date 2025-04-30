@@ -1,93 +1,92 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Inviter un utilisateur{% endblock %}
+{% block title %}Inviter un utilisateur
+{% endblock %}
 
 {% block page_content %}
-<div class="container mx-auto px-4 py-8">
-    <div class="mb-6 flex justify-between items-center">
-        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Inviter un collaborateur</h1>
-        <a href="{{ path('app_dashboard') }}" class="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm hover:bg-gray-50 dark:hover:bg-gray-700">
-            <svg xmlns="http://www.w3.org/2000/svg" class="mr-2 h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="m12 19-7-7 7-7"></path>
-                <path d="M19 12H5"></path>
-            </svg>
-            Retour
-        </a>
-    </div>
-    
-    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden">
-        <div class="p-6">
-            <div class="mb-6">
-                <p class="text-gray-600 dark:text-gray-400 mb-4">
-                    Invitez un comptable ou un collaborateur à rejoindre votre entreprise. Un email d'invitation sera envoyé avec un lien permettant de créer un compte.
-                </p>
-                
-                <div class="p-4 bg-blue-50 dark:bg-blue-900/20 border-l-4 border-blue-500 rounded-md mb-6">
-                    <div class="flex items-start">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-600 dark:text-blue-400 mt-0.5 mr-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <circle cx="12" cy="12" r="10"/>
-                            <path d="M12 16v-4"/>
-                            <path d="M12 8h.01"/>
-                        </svg>
-                        <p class="text-sm text-blue-700 dark:text-blue-300">
-                            L'invitation sera valide pendant 7 jours. La personne invitée devra créer un compte en utilisant l'email indiqué ci-dessous.
-                        </p>
-                    </div>
-                </div>
-            </div>
-            
-            {{ form_start(form, {'attr': {'class': 'space-y-6'}}) }}
-                
-                <div class="space-y-2">
-                    <label for="{{ form.email.vars.id }}" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                        Adresse email
-                    </label>
-                    <div class="relative">
-                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
-                            </svg>
-                        </div>
-                        {{ form_widget(form.email, {
+	<div class="container mx-auto px-4 py-8">
+		<div class="mb-6 flex justify-between items-center">
+			<h1 class="text-2xl font-bold text-gray-900 dark:text-white">Inviter un collaborateur</h1>
+			<a href="{{ path('app_dashboard') }}" class="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm hover:bg-gray-50 dark:hover:bg-gray-700">
+				<svg xmlns="http://www.w3.org/2000/svg" class="mr-2 h-4 w-4" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+					<path d="m12 19-7-7 7-7"></path>
+					<path d="M19 12H5"></path>
+				</svg>
+				Retour
+			</a>
+		</div>
+
+		<div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden">
+			<div class="p-6">
+				<div class="mb-6">
+					<p class="text-gray-600 dark:text-gray-400 mb-4">
+						Invitez un comptable ou un collaborateur à rejoindre votre entreprise. Un email d'invitation sera envoyé avec un lien permettant de créer un compte.
+					</p>
+
+					<div class="p-4 bg-blue-50 dark:bg-blue-900/20 border-l-4 border-blue-500 rounded-md mb-6">
+						<div class="flex items-start">
+							<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-600 dark:text-blue-400 mt-0.5 mr-3" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+								<circle cx="12" cy="12" r="10"/>
+								<path d="M12 16v-4"/>
+								<path d="M12 8h.01"/>
+							</svg>
+							<p class="text-sm text-blue-700 dark:text-blue-300">
+								L'invitation sera valide pendant 7 jours. La personne invitée devra créer un compte en utilisant l'email indiqué ci-dessous.
+							</p>
+						</div>
+					</div>
+				</div>
+
+				{{ form_start(form, {'attr': {'class': 'space-y-6'}}) }}
+
+				<div class="space-y-2">
+					<label for="{{ form.email.vars.id }}" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+						Adresse email
+					</label>
+					<div class="relative">
+						<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+							<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewbox="0 0 24 24" stroke="currentColor">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+							</svg>
+						</div>
+						{{ form_widget(form.email, {
                             'attr': {
                                 'class': 'block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-baluBlue focus:border-baluBlue dark:bg-gray-700 dark:border-gray-600 dark:text-white',
                                 'placeholder': 'email@exemple.com'
                             }
                         }) }}
-                    </div>
-                    {{ form_errors(form.email, {'attr': {'class': 'text-red-500 text-sm mt-1'}}) }}
-                </div>
-                
-                <div class="space-y-2">
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                        Rôle de l'utilisateur
-                    </label>
-                    <div class="bg-gray-50 dark:bg-gray-800 rounded-md p-4 border border-gray-200 dark:border-gray-700">
-                        {{ form_widget(form.roles, {
+					</div>
+					{{ form_errors(form.email, {'attr': {'class': 'text-red-500 text-sm mt-1'}}) }}
+				</div>
+
+				<div class="space-y-2">
+					<label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+						Rôle de l'utilisateur
+					</label>
+					{{ form_widget(form.roles, {
                             'attr': {
-                                'class': 'space-y-2'
+                                'class': 'block w-full px-2 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-baluBlue focus:border-baluBlue dark:bg-gray-700 dark:border-gray-600 dark:text-white'
                             }
                         }) }}
-                    </div>
-                    {{ form_errors(form.roles, {'attr': {'class': 'text-red-500 text-sm mt-1'}}) }}
-                </div>
-                
-                <div class="flex justify-end space-x-2 pt-4">
-                    <a href="{{ path('app_dashboard') }}" class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 shadow-sm text-sm font-medium rounded-md text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
-                        Annuler
-                    </a>
-                    <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-baluBlue hover:bg-baluBlue-light focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-baluBlue">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="mr-2 h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                            <polyline points="17 8 12 3 7 8"></polyline>
-                            <line x1="12" y1="3" x2="12" y2="15"></line>
-                        </svg>
-                        Envoyer l'invitation
-                    </button>
-                </div>
-                
-            {{ form_end(form) }}
-        </div>
-    </div>
-</div>
+					{{ form_errors(form.roles, {'attr': {'class': 'text-red-500 text-sm mt-1'}}) }}
+				</div>
+
+				<div class="flex justify-end space-x-2 pt-4">
+					<a href="{{ path('app_dashboard') }}" class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 shadow-sm text-sm font-medium rounded-md text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
+						Annuler
+					</a>
+					<button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-baluBlue hover:bg-baluBlue-light focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-baluBlue">
+						<svg xmlns="http://www.w3.org/2000/svg" class="mr-2 h-4 w-4" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+							<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+							<polyline points="17 8 12 3 7 8"></polyline>
+							<line x1="12" y1="3" x2="12" y2="15"></line>
+						</svg>
+						Envoyer l'invitation
+					</button>
+				</div>
+
+				{{ form_end(form) }}
+			</div>
+		</div>
+	</div>
 {% endblock %}
