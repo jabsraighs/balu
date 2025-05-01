@@ -40,4 +40,17 @@ class CompanyRepository extends ServiceEntityRepository
 //            ->getOneOrNullResult()
 //        ;
 //    }
+
+    /**
+     * Compte les entreprises considérées comme actives
+     * Une entreprise est considérée active si elle a au moins un utilisateur associé
+     */
+    public function countActiveCompanies(): int
+    {
+        return $this->createQueryBuilder('c')
+            ->select('COUNT(DISTINCT c.id)')
+            ->join('c.users', 'u')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
 }

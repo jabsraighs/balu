@@ -3,9 +3,12 @@
 namespace App\Controller;
 
 use App\Repository\ClientRepository;
+use App\Repository\CompanyRepository;
+use App\Repository\InvitationRepository;
 use App\Repository\InvoiceRepository;
 use App\Repository\PaymentRepository;
 use App\Repository\QuoteRepository;
+use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -15,7 +18,7 @@ final class DashboardController extends AbstractController
 {
     #[Route('/', name: 'app_dashboard')]
     #[IsGranted('IS_AUTHENTICATED_FULLY')]
-    public function index(InvoiceRepository $invoiceRepository, QuoteRepository $quoteRepository, ClientRepository $clientRepository, PaymentRepository $paymentRepository): Response
+    public function index(InvoiceRepository $invoiceRepository, CompanyRepository $companyRepository, InvitationRepository $invitationRepository, UserRepository $userRepository, QuoteRepository $quoteRepository, ClientRepository $clientRepository, PaymentRepository $paymentRepository): Response
     {
         $user = $this->getUser();
         $roles = $user->getRoles();
@@ -31,8 +34,44 @@ final class DashboardController extends AbstractController
             ->getResult();
 
         if (in_array('ROLE_ADMIN', $roles, true)) {
+            $monthlyRegistrations = $userRepository->getMonthlyRegistrations();
+
+            $registrationsLabels = [];
+            $registrationsValues = [];
+            foreach ($monthlyRegistrations as $month => $count) {
+                $registrationsLabels[] = $month;
+                $registrationsValues[] = $count;
+            }
+
             return $this->render('dashboard/admin.html.twig', [
                 'user' => $user,
+                'invoiceStats' => [
+                    'totalAmount' => $invoiceRepository->getTotalAmount(),
+                    'percentIncrease' => $invoiceRepository->getMonthlyIncreasePercentage(),
+                ],
+                'userStats' => [
+                    'totalCount' => $userRepository->count([]),
+                    'newCount' => $userRepository->countNewThisMonth(),
+                ],
+                'companyStats' => [
+                    'totalCount' => $companyRepository->count([]),
+                    'activeCount' => $companyRepository->countActiveCompanies(),
+                ],
+                'invitationStats' => [
+                    'pendingCount' => $invitationRepository->countPendingInvitations(),
+                    'usedCount' => $invitationRepository->countUsedInvitations(),
+                ],
+                'registrationsData' => [
+                    'labels' => $registrationsLabels,
+                    'values' => $registrationsValues
+                ],
+                'recentUsers' => $userRepository->findBy([], ['id' => 'DESC'], 5),
+                'recentCompanies' => $companyRepository->findBy([], ['id' => 'DESC'], 5),
+                'globalStats' => [
+                    'invoiceCount' => $invoiceRepository->count([]),
+                    'quoteCount' => $quoteRepository->count([]),
+                    'clientCount' => $clientRepository->count([]),
+                ],
             ]);
         }
 
@@ -63,7 +102,7 @@ final class DashboardController extends AbstractController
 
         return $this->render('dashboard/index.html.twig', [
             'invoiceStats' => [
-                'totalAmount' => $invoiceRepository->getTotalAmount(),
+                'totalAmount' => $invoiceRepository->getTotalAmount($company),
                 'pendingCount' => $invoiceRepository->getPendingCount(),
                 'pendingAmount' => $invoiceRepository->getPendingAmount(),
                 'percentIncrease' => $invoiceRepository->getMonthlyIncreasePercentage(),

@@ -118,17 +118,24 @@ class InvoiceRepository extends ServiceEntityRepository
     }
 
     /**
-     * Récupère le montant total de toutes les factures payées
+     * Récupère le montant total des factures payées
+     * Si $company est fourni, limite aux factures de cette entreprise (pour ROLE_COMPANY ou ROLE_ACCOUNTANT)
+     * Sinon retourne le total de toutes les factures payées (pour ROLE_ADMIN)
      */
-    public function getTotalAmount(): float
+    public function getTotalAmount(?Company $company = null): float
     {
         $qb = $this->createQueryBuilder('i')
             ->select('SUM(i.totalAmount)')
             ->where('i.status = :status')
             ->setParameter('status', 'paid');
-
+            
+        if ($company) {
+            $qb->andWhere('i.company = :company')
+               ->setParameter('company', $company);
+        }
+        
         $result = $qb->getQuery()->getSingleScalarResult();
-
+        
         return $result ? (float) $result : 0.0;
     }
 
@@ -168,39 +175,38 @@ class InvoiceRepository extends ServiceEntityRepository
         $conn = $this->getEntityManager()->getConnection();
 
         $currentMonth = date('m');
-        $previousMonth = $currentMonth - 1 ?: 12; // Si on est en janvier, prendre décembre
+        $previousMonth = $currentMonth - 1 ?: 12;
         $currentYear = date('Y');
         $previousYear = $previousMonth == 12 ? $currentYear - 1 : $currentYear;
 
-        // Requête pour le mois courant
         $currentMonthSql = "
-        SELECT SUM(total_amount) 
-        FROM invoice 
-        WHERE EXTRACT(MONTH FROM date_due) = :currentMonth 
-        AND EXTRACT(YEAR FROM date_due) = :currentYear
-        AND status = 'paid'
-    ";
+            SELECT COALESCE(SUM(total_amount), 0) 
+            FROM invoice 
+            WHERE EXTRACT(MONTH FROM created_at) = :currentMonth 
+            AND EXTRACT(YEAR FROM created_at) = :currentYear
+            AND status = 'paid'
+        ";
 
         $previousMonthSql = "
-        SELECT SUM(total_amount) 
-        FROM invoice 
-        WHERE EXTRACT(MONTH FROM date_due) = :previousMonth 
-        AND EXTRACT(YEAR FROM date_due) = :previousYear
-        AND status = 'paid'
-    ";
+            SELECT COALESCE(SUM(total_amount), 0) 
+            FROM invoice 
+            WHERE EXTRACT(MONTH FROM created_at) = :previousMonth 
+            AND EXTRACT(YEAR FROM created_at) = :previousYear
+            AND status = 'paid'
+        ";
 
-        $currentMonthTotal = $conn->executeQuery($currentMonthSql, [
+        $currentMonthTotal = (float) $conn->executeQuery($currentMonthSql, [
             'currentMonth' => $currentMonth,
             'currentYear' => $currentYear
         ])->fetchOne();
 
-        $previousMonthTotal = $conn->executeQuery($previousMonthSql, [
+        $previousMonthTotal = (float) $conn->executeQuery($previousMonthSql, [
             'previousMonth' => $previousMonth,
             'previousYear' => $previousYear
         ])->fetchOne();
 
         if (!$previousMonthTotal || $previousMonthTotal == 0) {
-            return $currentMonthTotal ? 100 : 0; // Si pas de CA le mois dernier, c'est une augmentation de 100%
+            return $currentMonthTotal ? 100 : 0;
         }
 
         return (($currentMonthTotal - $previousMonthTotal) / $previousMonthTotal) * 100;

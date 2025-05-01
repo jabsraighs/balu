@@ -33,6 +33,35 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $this->getEntityManager()->flush();
     }
 
+    public function getMonthlyRegistrations(): array
+    {
+        $qb = $this->createQueryBuilder('u')
+            ->select("to_char(u.createdAt, 'YYYY-MM') AS month, COUNT(u.id) AS count")
+            ->groupBy('month')
+            ->orderBy('month', 'ASC');
+            
+        $raw = $qb->getQuery()->getResult();
+        $data = [];
+        
+        foreach ($raw as $r) {
+            $data[$r['month']] = (int) $r['count'];
+        }
+        
+        return $data;
+    }
+
+    public function countNewThisMonth(): int
+    {
+        $firstDayOfMonth = new \DateTime('first day of this month midnight');
+        
+        return $this->createQueryBuilder('u')
+            ->select('COUNT(u.id)')
+            ->where('u.createdAt >= :firstDayOfMonth')
+            ->setParameter('firstDayOfMonth', $firstDayOfMonth)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
 //    /**
 //     * @return User[] Returns an array of User objects
 //     */

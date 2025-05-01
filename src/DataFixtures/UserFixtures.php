@@ -47,6 +47,7 @@ class UserFixtures extends Fixture
               ->setIsVerified(true)
               ->setFullname(self::ADMIN_USER['fullname']);
         $admin->setPassword($this->passwordHasher->hashPassword($admin, $password));
+        $admin->setCreatedAt(new \DateTimeImmutable());
         $manager->persist($admin);
         $this->addReference(self::ADMIN_USER['reference'], $admin);
         
@@ -57,6 +58,7 @@ class UserFixtures extends Fixture
                    ->setIsVerified(true)
                    ->setFullname(self::COMPANY_USER['fullname']);
         $companyUser->setPassword($this->passwordHasher->hashPassword($companyUser, $password));
+        $companyUser->setCreatedAt(new \DateTimeImmutable());
         $manager->persist($companyUser);
         $this->addReference(self::COMPANY_USER['reference'], $companyUser);
         
@@ -67,10 +69,11 @@ class UserFixtures extends Fixture
                       ->setIsVerified(true)
                       ->setFullname(self::ACCOUNTANT_USER['fullname']);
         $accountantUser->setPassword($this->passwordHasher->hashPassword($accountantUser, $password));
+        $accountantUser->setCreatedAt(new \DateTimeImmutable());
         $manager->persist($accountantUser);
         $this->addReference(self::ACCOUNTANT_USER['reference'], $accountantUser);
         
-        for ($i = 0; $i < 8; $i++) {
+        for ($i = 0; $i < 100; $i++) {
             $user = new User();
             $user->setEmail($faker->unique()->safeEmail())
                  ->setRoles([])
@@ -78,6 +81,7 @@ class UserFixtures extends Fixture
                  ->setFullname($faker->name());
             $user->setPassword($this->passwordHasher->hashPassword($user, $password));
             $manager->persist($user);
+            $user->setCreatedAt(new \DateTimeImmutable());
             $this->addReference('user-' . $i, $user);
         }
 

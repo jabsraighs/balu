@@ -40,4 +40,22 @@ class InvitationRepository extends ServiceEntityRepository
     //            ->getOneOrNullResult()
     //        ;
     //    }
+
+    public function countPendingInvitations(): int
+    {
+        return $this->createQueryBuilder('i')
+            ->select('COUNT(i.id)')
+            ->where('i.usedAt IS NULL')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    public function countUsedInvitations(): int
+    {
+        return $this->createQueryBuilder('i')
+            ->select('COUNT(i.id)')
+            ->where('i.usedAt IS NOT NULL')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
 }
