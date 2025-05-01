@@ -14,7 +14,7 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/payment')]
-#[IsGranted('ROLE_COMPANY')]
+#[IsGranted('IS_AUTHENTICATED_FULLY')]
 final class PaymentController extends AbstractController
 {
     #[Route('/', name: 'app_payment_index', methods: ['GET'])]

@@ -7,6 +7,8 @@
 {% elseif is_granted('ROLE_ACCOUNTANT') %}
 	{% set navItems = [
         { path: 'app_dashboard', name: 'Tableau de bord', icon: 'layout-dashboard' },
+		{ path: 'app_payment_index', name: 'Paiements', icon: 'credit-card' },
+		{ path: 'accountant_report', name: 'Rapport', icon: 'bar-chart' },
     ] %}
 {% else %}
 	{% set navItems = [

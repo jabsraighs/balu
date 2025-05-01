@@ -31,161 +31,198 @@
             <canvas id="chartPayments"></canvas>
         </div>
     </div>
-
-    <div class="mt-8">
-        <div class="flex justify-between items-center mb-4">
-            <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Rapports</h2>
-            <a href="{{ path('accountant_report') }}" class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-baluBlue hover:bg-baluBlue-light rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-baluBlue">
-                <svg xmlns="http://www.w3.org/2000/svg" class="mr-2 h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                    <polyline points="7 10 12 15 17 10"></polyline>
-                    <line x1="12" y1="15" x2="12" y2="3"></line>
-                </svg>
-                Générer un rapport
-            </a>
-        </div>
-    </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-    const revenueData = {{ revenueData|json_encode|raw }};
-    const revLabels = Object.keys(revenueData);
-    const revValues = Object.values(revenueData);
+    function loadScript(url, callback) {
+        if (window.Chart) {
+            callback();
+            return;
+        }
+        
+        const script = document.createElement('script');
+        script.src = url;
+        script.async = true;
+        
+        script.onload = callback;
+        script.onerror = function() {
+            console.error('Erreur de chargement de Chart.js');
+        };
+        
+        document.head.appendChild(script);
+    }
     
-    const statusDist = {{ statusDist|json_encode|raw }};
-    const statusKeys = Object.keys(statusDist);
-    const statusVals = Object.values(statusDist);
+    window.accountantCharts = window.accountantCharts || [];
     
-    const paymentData = {{ paymentData|json_encode|raw }};
-    const payLabels = Object.keys(paymentData);
-    const payValues = Object.values(paymentData);
+    function initializeCharts() {
+        if (window.accountantCharts.length) {
+            window.accountantCharts.forEach(chart => chart.destroy());
+            window.accountantCharts = [];
+        }
+        
+        if (typeof Chart === 'undefined') {
+            console.error('Chart.js n\'est pas encore chargé');
+            return;
+        }
+        
+        const revenueData = {{ revenueData|json_encode|raw }};
+        const revLabels = Object.keys(revenueData);
+        const revValues = Object.values(revenueData);
+        
+        const statusDist = {{ statusDist|json_encode|raw }};
+        const statusKeys = Object.keys(statusDist);
+        const statusVals = Object.values(statusDist);
+        
+        const paymentData = {{ paymentData|json_encode|raw }};
+        const payLabels = Object.keys(paymentData);
+        const payValues = Object.values(paymentData);
 
-    const colors = [
-        'rgba(79, 70, 229, 0.7)',    
-        'rgba(16, 185, 129, 0.7)',
-        'rgba(245, 158, 11, 0.7)',
-        'rgba(239, 68, 68, 0.7)', 
-        'rgba(139, 92, 246, 0.7)' 
-    ];
+        const colors = [
+            'rgba(79, 70, 229, 0.7)',    
+            'rgba(16, 185, 129, 0.7)',
+            'rgba(245, 158, 11, 0.7)',
+            'rgba(239, 68, 68, 0.7)', 
+            'rgba(139, 92, 246, 0.7)' 
+        ];
 
-    // 1) CA par mois (bar chart)
-    new Chart(document.getElementById('chartRevenue'), {
-        type: 'bar',
-        data: {
-            labels: revLabels,
-            datasets: [{
-                label: 'Chiffre d\'affaires (€)',
-                data: revValues,
-                backgroundColor: colors[0],
-                borderColor: colors[0].replace('0.7', '1'),
-                borderWidth: 1
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    position: 'top',
-                    labels: {
-                        color: document.documentElement.classList.contains('dark') ? '#e5e7eb' : '#374151'
-                    }
-                }
+        const chartElements = [
+            document.getElementById('chartRevenue'),
+            document.getElementById('chartStatus'),
+            document.getElementById('chartPayments')
+        ];
+        
+        if (chartElements.some(el => !el)) {
+            console.warn("Un ou plusieurs conteneurs de graphiques non trouvés");
+            return;
+        }
+
+        window.accountantCharts.push(new Chart(chartElements[0], {
+            type: 'bar',
+            data: {
+                labels: revLabels,
+                datasets: [{
+                    label: 'Chiffre d\'affaires (€)',
+                    data: revValues,
+                    backgroundColor: colors[0],
+                    borderColor: colors[0].replace('0.7', '1'),
+                    borderWidth: 1
+                }]
             },
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    ticks: {
-                        color: document.documentElement.classList.contains('dark') ? '#9ca3af' : '#6b7280'
-                    },
-                    grid: {
-                        color: document.documentElement.classList.contains('dark') ? 'rgba(75, 85, 99, 0.2)' : 'rgba(209, 213, 219, 0.2)'
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                        labels: {
+                            color: document.documentElement.classList.contains('dark') ? '#e5e7eb' : '#374151'
+                        }
                     }
                 },
-                x: {
-                    ticks: {
-                        color: document.documentElement.classList.contains('dark') ? '#9ca3af' : '#6b7280'
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            color: document.documentElement.classList.contains('dark') ? '#9ca3af' : '#6b7280'
+                        },
+                        grid: {
+                            color: document.documentElement.classList.contains('dark') ? 'rgba(75, 85, 99, 0.2)' : 'rgba(209, 213, 219, 0.2)'
+                        }
                     },
-                    grid: {
-                        display: false
+                    x: {
+                        ticks: {
+                            color: document.documentElement.classList.contains('dark') ? '#9ca3af' : '#6b7280'
+                        },
+                        grid: {
+                            display: false
+                        }
                     }
                 }
             }
-        }
-    });
+        }));
 
-    // 2) Statuts factures (pie chart)
-    new Chart(document.getElementById('chartStatus'), {
-        type: 'pie',
-        data: {
-            labels: statusKeys.map(key => key.charAt(0).toUpperCase() + key.slice(1)),
-            datasets: [{
-                data: statusVals,
-                backgroundColor: colors,
-                borderColor: colors.map(color => color.replace('0.7', '1')),
-                borderWidth: 1
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    position: 'right',
-                    labels: {
-                        color: document.documentElement.classList.contains('dark') ? '#e5e7eb' : '#374151'
-                    }
-                }
-            }
-        }
-    });
-
-    // 3) Paiements par mois (line chart)
-    new Chart(document.getElementById('chartPayments'), {
-        type: 'line',
-        data: {
-            labels: payLabels,
-            datasets: [{
-                label: 'Paiements (€)',
-                data: payValues,
-                backgroundColor: colors[1],
-                borderColor: colors[1].replace('0.7', '1'),
-                tension: 0.4,
-                fill: false
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    position: 'top',
-                    labels: {
-                        color: document.documentElement.classList.contains('dark') ? '#e5e7eb' : '#374151'
-                    }
-                }
+        window.accountantCharts.push(new Chart(chartElements[1], {
+            type: 'pie',
+            data: {
+                labels: statusKeys.map(key => key.charAt(0).toUpperCase() + key.slice(1)),
+                datasets: [{
+                    data: statusVals,
+                    backgroundColor: colors,
+                    borderColor: colors.map(color => color.replace('0.7', '1')),
+                    borderWidth: 1
+                }]
             },
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    ticks: {
-                        color: document.documentElement.classList.contains('dark') ? '#9ca3af' : '#6b7280'
-                    },
-                    grid: {
-                        color: document.documentElement.classList.contains('dark') ? 'rgba(75, 85, 99, 0.2)' : 'rgba(209, 213, 219, 0.2)'
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'right',
+                        labels: {
+                            color: document.documentElement.classList.contains('dark') ? '#e5e7eb' : '#374151'
+                        }
+                    }
+                }
+            }
+        }));
+
+        window.accountantCharts.push(new Chart(chartElements[2], {
+            type: 'line',
+            data: {
+                labels: payLabels,
+                datasets: [{
+                    label: 'Paiements (€)',
+                    data: payValues,
+                    backgroundColor: colors[1],
+                    borderColor: colors[1].replace('0.7', '1'),
+                    tension: 0.4,
+                    fill: false
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                        labels: {
+                            color: document.documentElement.classList.contains('dark') ? '#e5e7eb' : '#374151'
+                        }
                     }
                 },
-                x: {
-                    ticks: {
-                        color: document.documentElement.classList.contains('dark') ? '#9ca3af' : '#6b7280'
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            color: document.documentElement.classList.contains('dark') ? '#9ca3af' : '#6b7280'
+                        },
+                        grid: {
+                            color: document.documentElement.classList.contains('dark') ? 'rgba(75, 85, 99, 0.2)' : 'rgba(209, 213, 219, 0.2)'
+                        }
                     },
-                    grid: {
-                        display: false
+                    x: {
+                        ticks: {
+                            color: document.documentElement.classList.contains('dark') ? '#9ca3af' : '#6b7280'
+                        },
+                        grid: {
+                            display: false
+                        }
                     }
                 }
             }
-        }
-    });
+        }));
+    }
+    
+    function setupCharts() {
+        loadScript('https://cdn.jsdelivr.net/npm/chart.js', initializeCharts);
+    }
+    
+    document.addEventListener("turbo:load", setupCharts);
+    
+    if (document.readyState === 'complete' || document.readyState === 'interactive') {
+        setTimeout(setupCharts, 1);
+    } else {
+        document.addEventListener("DOMContentLoaded", setupCharts);
+    }
 </script>
 {% endblock %}

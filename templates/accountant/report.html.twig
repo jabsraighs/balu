@@ -1,0 +1,365 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Rapport Financier{% endblock %}
+
+{% block page_content %}
+    <div class="container mx-auto px-4 py-8">
+        <div class="mb-6 flex justify-between items-center">
+            <div class="mb-6">
+                <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Rapport Financier</h1>
+                <p class="text-gray-500 dark:text-gray-400">Aperçu de la situation financière</p>
+            </div>
+
+            <a href="{{ path('app_financial_report_export') }}" class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-baluBlue hover:bg-baluBlue-light rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-baluBlue">
+                <svg xmlns="http://www.w3.org/2000/svg" class="mr-2 h-4 w-4" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="7 10 12 15 17 10"></polyline>
+                    <line x1="12" y1="15" x2="12" y2="3"></line>
+                </svg>
+                Exporter en PDF
+            </a>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm p-6">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Total Payé</h3>
+                    <span class="p-2 bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 rounded-full">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect width="18" height="18" x="3" y="3" rx="2"/>
+                            <path d="M8 13.5v-3a1.5 1.5 0 0 1 3 0v3"/>
+                            <path d="M11 13.5v-3a1.5 1.5 0 0 1 3 0v3"/>
+                            <path d="M14 13.5v-3a1.5 1.5 0 0 1 3 0v3"/>
+                        </svg>
+                    </span>
+                </div>
+                <div class="text-2xl font-bold text-gray-900 dark:text-white">{{ reportData.totalPaid|format_currency('EUR') }}</div>
+            </div>
+
+            <div class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm p-6">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Total Impayé</h3>
+                    <span class="p-2 bg-yellow-100 dark:bg-yellow-900/30 text-yellow-600 dark:text-yellow-400 rounded-full">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/>
+                            <polyline points="14 2 14 8 20 8"/>
+                            <path d="M16 13H8"/>
+                            <path d="M16 17H8"/>
+                            <path d="M10 9H8"/>
+                        </svg>
+                    </span>
+                </div>
+                <div class="text-2xl font-bold text-gray-900 dark:text-white">{{ reportData.totalUnpaid|format_currency('EUR') }}</div>
+            </div>
+
+            <div class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm p-6">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Moyenne par Facture</h3>
+                    <span class="p-2 bg-blue-100 dark:bg-blue-900/30 text-baluBlue rounded-full">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="7 10 12 15 17 10"></polyline>
+                            <line x1="12" y1="15" x2="12" y2="3"></line>
+                        </svg>
+                    </span>
+                </div>
+                <div class="text-2xl font-bold text-gray-900 dark:text-white">{{ reportData.averageInvoice|format_currency('EUR') }}</div>
+            </div>
+            
+            <div class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm p-6">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Taux de Conversion</h3>
+                    <span class="p-2 bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 rounded-full">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48l2.83-2.83"/>
+                        </svg>
+                    </span>
+                </div>
+                <div class="text-2xl font-bold text-gray-900 dark:text-white">{{ (conversionRate)|number_format(1, ',', ' ') }}%</div>
+            </div>
+        </div>
+
+        <div class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm p-6 mb-8">
+            <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-6">Répartition des factures</h2>
+            <div class="h-72">
+                <canvas id="invoiceDistributionChart"></canvas>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+            <div class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm p-6">
+                <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-6">Dernières factures</h2>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                        <thead>
+                            <tr>
+                                <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Client</th>
+                                <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">N°</th>
+                                <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Date</th>
+                                <th scope="col" class="px-4 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Montant</th>
+                                <th scope="col" class="px-4 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Statut</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                            {% for invoice in reportData.latestInvoices %}
+                                <tr>
+                                    <td class="px-4 py-3 whitespace-nowrap">
+                                        <div class="flex items-center">
+                                            <div class="flex-shrink-0 h-8 w-8 rounded-full bg-baluBlue text-white flex items-center justify-center font-medium text-xs">
+                                                {{ invoice.client.name|first }}
+                                            </div>
+                                            <div class="ml-3">
+                                                <div class="text-sm font-medium text-gray-900 dark:text-white">{{ invoice.client.name }}</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                                        <a href="{{ path('app_invoice_show', {'id': invoice.id}) }}" class="text-baluBlue hover:underline">
+                                            {{ invoice.invoiceNumber }}
+                                        </a>
+                                    </td>
+                                    <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                                        {{ invoice.createdAt|date('d/m/Y') }}
+                                    </td>
+                                    <td class="px-4 py-3 whitespace-nowrap text-sm text-right font-medium text-gray-900 dark:text-white">
+                                        {{ invoice.totalAmount|number_format(2, ',', ' ') }}
+                                        €
+                                    </td>
+                                    <td class="px-4 py-3 whitespace-nowrap text-sm text-right">
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
+                                                {% if invoice.status == 'paid' %}
+                                                    bg-green-100 text-green-800 dark:bg-green-800/30 dark:text-green-500
+                                                {% elseif invoice.status == 'pending' %}
+                                                    bg-yellow-100 text-yellow-800 dark:bg-yellow-800/30 dark:text-yellow-500
+                                                {% elseif invoice.status == 'draft' %}
+                                                    bg-blue-100 text-blue-800 dark:bg-blue-800/30 dark:text-blue-500
+                                                {% elseif invoice.status == 'cancelled' %}
+                                                    bg-red-100 text-red-800 dark:bg-red-800/30 dark:text-red-500
+                                                {% endif %}
+                                            ">
+                                            {{ invoice.status|capitalize }}
+                                        </span>
+                                    </td>
+                                </tr>
+                            {% else %}
+                                <tr>
+                                    <td colspan="5" class="px-4 py-3 text-center text-gray-500 dark:text-gray-400">Aucune facture récente</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm p-6">
+                <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-6">Montants par statut</h2>
+                <div class="h-64">
+                    <canvas id="statusChart"></canvas>
+                </div>
+            </div>
+        </div>
+        
+        <!-- NOUVELLE SECTION: Top 5 clients et Méthodes de paiement -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+            <div class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm p-6">
+                <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-6">Top 5 Clients</h2>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                        <thead>
+                            <tr>
+                                <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Rang</th>
+                                <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Client</th>
+                                <th scope="col" class="px-4 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Montant Total</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                            {% if reportData.topClients is iterable %}
+                                {% for client in reportData.topClients %}
+                                    <tr>
+                                        <td class="px-4 py-3 whitespace-nowrap text-sm font-bold text-gray-900 dark:text-white">
+                                            {{ loop.index }}
+                                        </td>
+                                        <td class="px-4 py-3 whitespace-nowrap">
+                                            <div class="flex items-center">
+                                                <div class="flex-shrink-0 h-8 w-8 rounded-full bg-baluBlue text-white flex items-center justify-center font-medium text-xs">
+                                                    {{ client.client_name|first }}
+                                                </div>
+                                                <div class="ml-3">
+                                                    <div class="text-sm font-medium text-gray-900 dark:text-white">{{ client.client_name }}</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="px-4 py-3 whitespace-nowrap text-sm text-right font-medium text-gray-900 dark:text-white">
+                                            {{ client.total|number_format(2, ',', ' ') }} €
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            {% else %}
+                                <tr>
+                                    <td colspan="3" class="px-4 py-3 text-center text-gray-500 dark:text-gray-400">Aucun client trouvé</td>
+                                </tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm p-6">
+                <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-6">Méthodes de paiement</h2>
+                <div class="h-64">
+                    <canvas id="paymentMethodsChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        document.addEventListener('turbo:load', function () { 
+            // Premier graphique - répartition des factures
+            const statusLabels = ['Payé', 'En attente', 'Brouillon', 'Annulé'];
+            const statusData = [
+                {{ reportData.totalPaid }}, 
+                {{ reportData.totalUnpaid }}, 
+                0, 
+                0
+            ];
+
+            const ctx1 = document.getElementById('invoiceDistributionChart').getContext('2d');
+            new Chart(ctx1, {
+                type: 'bar',
+                data: {
+                    labels: statusLabels,
+                    datasets: [{
+                        label: 'Montant (€)',
+                        data: statusData,
+                        backgroundColor: [
+                            'rgba(16, 185, 129, 0.7)', 
+                            'rgba(245, 158, 11, 0.7)', 
+                            'rgba(79, 70, 229, 0.7)', 
+                            'rgba(239, 68, 68, 0.7)'
+                        ],
+                        borderColor: [
+                            'rgba(16, 185, 129, 1)', 
+                            'rgba(245, 158, 11, 1)', 
+                            'rgba(79, 70, 229, 1)', 
+                            'rgba(239, 68, 68, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(160, 174, 192, 0.1)'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Deuxième graphique - Montants par statut
+            const ctx2 = document.getElementById('statusChart').getContext('2d');
+            new Chart(ctx2, {
+                type: 'pie',
+                data: {
+                    labels: ['Payé', 'Non payé'],
+                    datasets: [{
+                        data: [{{ reportData.totalPaid }}, {{ reportData.totalUnpaid }}],
+                        backgroundColor: [
+                            'rgba(16, 185, 129, 0.7)', 
+                            'rgba(245, 158, 11, 0.7)'
+                        ],
+                        borderColor: [
+                            'rgba(16, 185, 129, 1)', 
+                            'rgba(245, 158, 11, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'right'
+                        }
+                    }
+                }
+            });
+            
+            // NOUVEAU GRAPHIQUE - Méthodes de paiement
+            {% if reportData.paymentMethods is iterable %}
+                const methodLabels = [
+                    {% for method in reportData.paymentMethods %}
+                        "{{ method.method }}",
+                    {% endfor %}
+                ];
+                
+                const methodCounts = [
+                    {% for method in reportData.paymentMethods %}
+                        {{ method.count }},
+                    {% endfor %}
+                ];
+                
+                const methodColors = [
+                    'rgba(16, 185, 129, 0.7)',
+                    'rgba(59, 130, 246, 0.7)',
+                    'rgba(245, 158, 11, 0.7)',
+                    'rgba(139, 92, 246, 0.7)',
+                    'rgba(236, 72, 153, 0.7)'
+                ];
+                
+                const methodBorders = [
+                    'rgba(16, 185, 129, 1)', 
+                    'rgba(59, 130, 246, 1)',
+                    'rgba(245, 158, 11, 1)',
+                    'rgba(139, 92, 246, 1)',
+                    'rgba(236, 72, 153, 1)'
+                ];
+                
+                const ctx3 = document.getElementById('paymentMethodsChart').getContext('2d');
+                new Chart(ctx3, {
+                    type: 'doughnut',
+                    data: {
+                        labels: methodLabels,
+                        datasets: [{
+                            data: methodCounts,
+                            backgroundColor: methodColors,
+                            borderColor: methodBorders,
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'right'
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                        const value = context.raw;
+                                        const percentage = Math.round((value / total) * 100);
+                                        return `${context.label}: ${value} (${percentage}%)`;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            {% endif %}
+        });
+    </script>
+{% endblock %}

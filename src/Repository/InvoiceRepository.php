@@ -86,7 +86,6 @@ class InvoiceRepository extends ServiceEntityRepository
         return $this->findBy(['company' => $c], ['dateCreated' => 'DESC']);
     }
 
-
     public function getOverdueAmount(): float
     {
         $today = new \DateTime();
@@ -190,7 +189,6 @@ class InvoiceRepository extends ServiceEntityRepository
         AND status = 'paid'
     ";
 
-
         $currentMonthTotal = $conn->executeQuery($currentMonthSql, [
             'currentMonth' => $currentMonth,
             'currentYear' => $currentYear
@@ -236,7 +234,7 @@ class InvoiceRepository extends ServiceEntityRepository
         return $data;
     }
 
-        /**
+    /**
      * Récupère les revenus mensuels sur les 6 derniers mois
      * @return array Un tableau avec les revenus par mois
      */
@@ -255,7 +253,6 @@ class InvoiceRepository extends ServiceEntityRepository
         GROUP BY EXTRACT(YEAR FROM date_due), EXTRACT(MONTH FROM date_due)
         ORDER BY year ASC, month ASC
     ";
-
 
         $months = $conn->executeQuery($sql)->fetchAllAssociative();
 
@@ -280,13 +277,13 @@ class InvoiceRepository extends ServiceEntityRepository
     {
         $monthlyRevenue = $this->getMonthlyRevenueLastMonths();
         $max = 0;
-    
+
         foreach ($monthlyRevenue as $month) {
             if ($month['amount'] > $max) {
                 $max = $month['amount'];
             }
         }
-    
+
         return max(ceil($max / 1000) * 1000, 1);
     }
 
@@ -301,28 +298,277 @@ class InvoiceRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    //    /**
-    //     * @return Invoice[] Returns an array of Invoice objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('i')
-    //            ->andWhere('i.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('i.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+    public function getTotalInvoicedForPeriod(Company $c, int $year, int $month): float
+    {
+        $startDate = new \DateTime("$year-" . ($month > 0 ? "$month" : "01") . "-01");
+        $endDate = clone $startDate;
 
-    //    public function findOneBySomeField($value): ?Invoice
-    //    {
-    //        return $this->createQueryBuilder('i')
-    //            ->andWhere('i.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+        if ($month > 0) {
+            $endDate->modify('last day of this month');
+        } else {
+            $endDate->modify('last day of december');
+        }
+
+        $qb = $this->createQueryBuilder('i')
+            ->select('COALESCE(SUM(i.totalAmount),0)')
+            ->andWhere('i.company = :c')
+            ->andWhere('i.createdAt BETWEEN :start AND :end')
+            ->setParameter('c', $c) // Use the full company object
+            ->setParameter('start', $startDate)
+            ->setParameter('end', $endDate->setTime(23, 59, 59));
+
+        return (float) $qb->getQuery()->getSingleScalarResult();
+    }
+
+    public function getTotalPaidForPeriod(Company $c, int $year, int $month): float
+    {
+        $startDate = new \DateTime("$year-" . ($month > 0 ? "$month" : "01") . "-01");
+        $endDate = clone $startDate;
+
+        if ($month > 0) {
+            $endDate->modify('last day of this month');
+        } else {
+            $endDate->modify('last day of december');
+        }
+
+        return (float) $this->getEntityManager()->createQuery(
+            'SELECT COALESCE(SUM(p.amount),0)
+             FROM App\Entity\Payment p
+             JOIN p.invoice i
+             WHERE i.company = :c
+             AND p.datePaid BETWEEN :start AND :end'
+        )
+            ->setParameters([
+                'c' => $c,
+                'start' => $startDate,
+                'end' => $endDate->setTime(23, 59, 59)
+            ])->getSingleScalarResult();
+    }
+
+    public function getTotalPendingForPeriod(Company $c, int $year, int $month): float
+    {
+        $startDate = new \DateTime("$year-" . ($month > 0 ? "$month" : "01") . "-01");
+        $endDate = clone $startDate;
+
+        if ($month > 0) {
+            $endDate->modify('last day of this month');
+        } else {
+            $endDate->modify('last day of december');
+        }
+
+        $qb = $this->createQueryBuilder('i')
+            ->select('COALESCE(SUM(i.totalAmount),0)')
+            ->andWhere('i.company = :c')
+            ->andWhere("i.status = 'pending'")
+            ->andWhere('i.createdAt BETWEEN :start AND :end')
+            ->setParameter('c', $c)
+            ->setParameter('start', $startDate)
+            ->setParameter('end', $endDate->setTime(23, 59, 59));
+
+        return (float) $qb->getQuery()->getSingleScalarResult();
+    }
+
+    public function getTotalOverdueForPeriod(Company $c, int $year, int $month): float
+    {
+        $startDate = new \DateTime("$year-" . ($month > 0 ? "$month" : "01") . "-01");
+        $endDate = clone $startDate;
+
+        if ($month > 0) {
+            $endDate->modify('last day of this month');
+        } else {
+            $endDate->modify('last day of december');
+        }
+
+        $qb = $this->createQueryBuilder('i')
+            ->select('COALESCE(SUM(i.totalAmount),0)')
+            ->andWhere('i.company = :c')
+            ->andWhere("i.status = 'overdue'")
+            ->andWhere('i.dateDue BETWEEN :start AND :end')
+            ->setParameter('c', $c)
+            ->setParameter('start', $startDate)
+            ->setParameter('end', $endDate->setTime(23, 59, 59));
+
+        return (float) $qb->getQuery()->getSingleScalarResult();
+    }
+
+    public function getAveragePaymentTime(Company $c, int $year, int $month): float
+    {
+        $startDate = new \DateTime("$year-" . ($month > 0 ? "$month" : "01") . "-01");
+        $endDate = clone $startDate;
+
+        if ($month > 0) {
+            $endDate->modify('last day of this month');
+        } else {
+            $endDate->modify('last day of december');
+        }
+
+        $qb = $this->getEntityManager()->createQueryBuilder();
+        $qb->select('p.datePaid', 'i.dateDue')
+            ->from('App\Entity\Payment', 'p')
+            ->join('p.invoice', 'i')
+            ->where('i.company = :c')
+            ->andWhere('p.datePaid BETWEEN :start AND :end')
+            ->setParameter('c', $c)
+            ->setParameter('start', $startDate)
+            ->setParameter('end', $endDate->setTime(23, 59, 59));
+
+        $results = $qb->getQuery()->getResult();
+
+        if (empty($results)) {
+            return 0;
+        }
+
+        $totalDays = 0;
+        foreach ($results as $result) {
+            $datePaid = $result['datePaid'];
+            $dateDue = $result['dateDue'];
+
+            if ($datePaid && $dateDue) {
+                $diff = $datePaid->diff($dateDue);
+                $totalDays += $diff->days;
+            }
+        }
+
+        return count($results) > 0 ? $totalDays / count($results) : 0;
+    }
+
+    public function getFinancialReportData(): array
+    {
+        return [
+            'totalPaid' => $this->createQueryBuilder('i')
+                ->select('COALESCE(SUM(i.totalAmount), 0)')
+                ->where('i.status = :paid')
+                ->setParameter('paid', 'paid')
+                ->getQuery()
+                ->getSingleScalarResult(),
+    
+            'totalUnpaid' => $this->createQueryBuilder('i')
+                ->select('COALESCE(SUM(i.totalAmount), 0)')
+                ->where('i.status = :pending')
+                ->setParameter('pending', 'pending')
+                ->getQuery()
+                ->getSingleScalarResult(),
+    
+            'averageInvoice' => $this->createQueryBuilder('i')
+                ->select('COALESCE(AVG(i.totalAmount), 0)')
+                ->getQuery()
+                ->getSingleScalarResult(),
+                
+            'topClients' => $this->createQueryBuilder('i')
+                ->select('c.name as client_name, COALESCE(SUM(i.totalAmount), 0) as total')
+                ->join('i.client', 'c')
+                ->groupBy('c.id')
+                ->orderBy('total', 'DESC')
+                ->setMaxResults(5)
+                ->getQuery()
+                ->getResult(),
+                
+            'paymentMethods' => $this->getEntityManager()->createQueryBuilder()
+                ->select('p.method as method, COUNT(p.id) as count')
+                ->from('App\Entity\Payment', 'p')
+                ->join('p.invoice', 'i')
+                ->groupBy('p.method')
+                ->getQuery()
+                ->getResult(),
+                
+            'latestInvoices' => $this->createQueryBuilder('i')
+                ->join('i.client', 'c')
+                ->addSelect('c')
+                ->orderBy('i.createdAt', 'DESC')
+                ->setMaxResults(5)
+                ->getQuery()
+                ->getResult()
+        ];
+    }
+
+    public function getConversionRateForPeriod(Company $c, int $year, int $month): float
+    {
+        $startDate = new \DateTime("$year-" . ($month > 0 ? "$month" : "01") . "-01");
+        $endDate = clone $startDate;
+
+        if ($month > 0) {
+            $endDate->modify('last day of this month');
+        } else {
+            $endDate->modify('last day of december');
+        }
+
+        $qbTotal = $this->getEntityManager()->createQueryBuilder()
+            ->select('COUNT(q)')
+            ->from('App\Entity\Quote', 'q')
+            ->andWhere('q.company = :c')
+            ->andWhere('q.createdAt BETWEEN :start AND :end')
+            ->setParameters(new \Doctrine\Common\Collections\ArrayCollection([
+                'c' => $c,
+                'start' => $startDate,
+                'end' => $endDate->setTime(23, 59, 59)
+            ]));
+
+        $total = (int) $qbTotal->getQuery()->getSingleScalarResult();
+
+        $qbConv = $this->getEntityManager()->createQueryBuilder()
+            ->select('COUNT(i)')
+            ->from('App\Entity\Invoice', 'i')
+            ->andWhere('i.company = :c')
+            ->andWhere('i.createdAt BETWEEN :start AND :end')
+            ->setParameters(new \Doctrine\Common\Collections\ArrayCollection([
+                'c' => $c,
+                'start' => $startDate,
+                'end' => $endDate->setTime(23, 59, 59)
+            ]));
+
+        $converted = (int) $qbConv->getQuery()->getSingleScalarResult();
+
+        return $total > 0 ? $converted / $total : 0;
+    }
+
+    public function getMonthlyRevenueForYear(Company $c, int $year): array
+    {
+        $data = array_fill(1, 12, 0.0);
+
+        // On va faire une requête pour chaque mois (ce n'est pas optimal mais c'est plus simple)
+        for ($month = 1; $month <= 12; $month++) {
+            $startDate = new \DateTime("$year-$month-01");
+            $endDate = clone $startDate;
+            $endDate->modify('last day of this month')->setTime(23, 59, 59);
+
+            $result = $this->createQueryBuilder('i')
+                ->select("SUM(i.totalAmount) as s")
+                ->andWhere('i.company = :c')
+                ->andWhere('i.createdAt BETWEEN :start AND :end')
+                ->setParameters(new \Doctrine\Common\Collections\ArrayCollection([
+                    'c' => $c,
+                    'start' => $startDate,
+                    'end' => $endDate
+                ]))
+                ->getQuery()
+                ->getSingleScalarResult();
+
+            $data[$month] = $result ? (float) $result : 0.0;
+        }
+
+        return $data;
+    }
+
+    public function findByPeriod(Company $c, int $year, int $month): array
+    {
+        $startDate = new \DateTime("$year-" . ($month > 0 ? "$month" : "01") . "-01");
+        $endDate = clone $startDate;
+
+        if ($month > 0) {
+            $endDate->modify('last day of this month');
+        } else {
+            $endDate->modify('last day of december');
+        }
+
+        $qb = $this->createQueryBuilder('i')
+            ->andWhere('i.company = :c')
+            ->andWhere('i.createdAt BETWEEN :start AND :end')
+            ->setParameters(new \Doctrine\Common\Collections\ArrayCollection([
+                'c' => $c,
+                'start' => $startDate,
+                'end' => $endDate->setTime(23, 59, 59)
+            ]));
+
+        return $qb->orderBy('i.createdAt', 'DESC')->getQuery()->getResult();
+    }
 }

@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Client;
+use App\Entity\Company;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -40,6 +41,40 @@ class ClientRepository extends ServiceEntityRepository
             ->setParameter('firstDayOfMonth', $firstDayOfMonth);
 
         return (int) $qb->getQuery()->getSingleScalarResult();
+    }
+
+    public function getTopClientsByRevenue(Company $c, int $limit, int $year, int $month): array
+    {
+        $startDate = new \DateTime("$year-" . ($month > 0 ? "$month" : "01") . "-01");
+        $endDate = clone $startDate;
+        
+        if ($month > 0) {
+            $endDate->modify('last day of this month');
+        } else {
+            $endDate->modify('last day of december');
+        }
+        
+        $qb = $this->createQueryBuilder('cl')
+            ->select('cl.name as name, COUNT(i.id) as invoice_count, SUM(i.totalAmount) as total_amount')
+            ->join('cl.invoices', 'i')
+            ->andWhere('cl.company = :c')
+            ->andWhere('i.dateCreated BETWEEN :start AND :end')
+            ->setParameter('c', $c)
+            ->setParameter('start', $startDate)
+            ->setParameter('end', $endDate->setTime(23, 59, 59));
+            
+        $raw = $qb->groupBy('cl.id')
+            ->orderBy('total_amount', 'DESC')
+            ->setMaxResults($limit)
+            ->getQuery()->getResult();
+
+        return array_map(function ($r) {
+            return [
+                'name' => $r['name'],
+                'revenue' => $r['total_amount'],
+                'invoiceCount' => $r['invoice_count']
+            ]; 
+        }, $raw);
     }
 
     //    /**

@@ -121,6 +121,47 @@ class PaymentRepository extends ServiceEntityRepository
         return $data;
     }
 
+    public function getPaymentMethodsDistribution(Company $c, int $year, int $month): array
+    {
+        $startDate = new \DateTime("$year-" . ($month > 0 ? "$month" : "01") . "-01");
+        $endDate = clone $startDate;
+        
+        if ($month > 0) {
+            $endDate->modify('last day of this month');
+        } else {
+            $endDate->modify('last day of december');
+        }
+        
+        $qb = $this->createQueryBuilder('p')
+            ->select('p.method as m, SUM(p.amount) as s')
+            ->join('p.invoice', 'i')
+            ->andWhere('i.company = :c')
+            ->andWhere('p.datePaid BETWEEN :start AND :end')
+            ->setParameters(new \Doctrine\Common\Collections\ArrayCollection([
+                'c' => $c,
+                'start' => $startDate,
+                'end' => $endDate->setTime(23, 59, 59)
+            ]));
+            
+        $raw = $qb->groupBy('p.method')->getQuery()->getResult();
+        $out = [];
+        
+        foreach ($raw as $r) {
+            $out[$r['m']] = (float) $r['s'];
+        }
+        
+        return $out;
+    }
+
+    public function findRecentPaymentsByCompany(Company $c, int $limit = 10): array
+    {
+        return $this->createQueryBuilder('p')
+            ->join('p.invoice', 'i')
+            ->andWhere('i.company=:c')->setParameter('c', $c)
+            ->orderBy('p.datePaid', 'DESC')
+            ->setMaxResults($limit)
+            ->getQuery()->getResult();
+    }
 
     //    /**
     //     * @return Payment[] Returns an array of Payment objects
