@@ -31,7 +31,9 @@ class AdminClientController extends AbstractController
     {
         $client = new Client();
         $client->setCreatedAt(new \DateTimeImmutable());
-        $form = $this->createForm(ClientType::class, $client);
+        $form = $this->createForm(ClientType::class, $client, [
+            'is_admin' => true
+        ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -58,7 +60,9 @@ class AdminClientController extends AbstractController
     #[Route('/{id}/edit', name: 'admin_client_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Client $client, EntityManagerInterface $entityManager): Response
     {
-        $form = $this->createForm(ClientType::class, $client);
+        $form = $this->createForm(ClientType::class, $client, [
+            'is_admin' => true
+        ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

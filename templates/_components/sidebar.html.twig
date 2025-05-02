@@ -3,13 +3,13 @@
         { path: 'app_dashboard', name: 'Tableau de bord', icon: 'layout-dashboard' },
         { path: 'admin_user_index', name: 'Utilisateurs', icon: 'users' },
 		{ path: 'admin_client_index', name: 'Clients', icon: 'users' },
+        { path: 'admin_company_index', name: 'Entreprises', icon: 'building' },
         { path: 'admin_product_index', name: 'Produits', icon: 'package' },
         { path: 'admin_category_index', name: 'Catégories', icon: 'file-text' },
         { path: 'admin_quote_index', name: 'Devis', icon: 'file-text' },
         { path: 'admin_invoice_index', name: 'Factures', icon: 'receipt' },
 		{ path: 'admin_invitation_index', name: 'Invitations', icon: 'user-plus' },
 		{ path: 'admin_payment_index', name: 'Paiements', icon: 'credit-card' }
-       
     ] %}
 {% elseif is_granted('ROLE_ACCOUNTANT') %}
 	{% set navItems = [
