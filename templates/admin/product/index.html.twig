@@ -2,67 +2,152 @@
 
 {% block title %}Produits{% endblock %}
 
-{% block javascripts %}
-    {{ parent() }}
-	{{ encore_entry_script_tags('product') }}
-{% endblock %}
-
-{% block body %}
-	<div class="flex flex-col gap-7">
-		<div class="w-full flex items-center justify-between">
-			<h1 class="text-4xl text-secondary-500 font-extrabold">Produits</h1>
-            <a href="{{path('back_admin_user_product_new')}}" class="bg-primary-300 hover:bg-primary-400 text-white font-bold py-2 px-4 rounded inline-flex items-center transition-colors ease-linear">
-                <svg class="fill-white w-4 h-4 mr-2 stroke-white"  viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path class="stroke-white" d="M6.41034 12.6765H12.4103M12.4103 12.6765H18.4103M12.4103 12.6765V18.6765M12.4103 12.6765V6.67651" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-
-                <span> Ajouter un nouveau produit </span>
-            </a>
-		</div>
+{% block page_content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="mb-6">
+        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Gestion des Produits</h1>
+    </div>
+    
+    <div class="flex justify-between items-center mb-6">
         <div>
-            <div class="relative">
-                <div class="absolute inset-y-0 left-0 rtl:inset-r-0 rtl:right-0 flex items-center ps-3 pointer-events-none">
-                    <svg class="w-5 h-5 text-gray-500 dark:text-gray-400" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"></path></svg>
-                </div>
-                <input type="text" id="table-search" class="block p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 " placeholder="Rechercher les produits">
-            </div>
+            <h2 class="text-xl font-semibold text-gray-900 dark:text-white">Tous les produits</h2>
+            <p class="text-gray-500 dark:text-gray-400">Gérez le catalogue de produits de la plateforme</p>
         </div>
-        <div class="relative overflow-x-auto rounded-3xl border  border-primaryLight shadow-sm">
-            <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                <thead class="text-xs text-gray-700 uppercase bg-white border-b">
-                    <tr>
-                        <th scope="col" class="px-6 py-3 font-bold">Nom</th>
-                        <th scope="col" class="px-6 py-3 font-bold">Categorie</th>
-                        <th scope="col" class="px-6 py-3 font-bold">Prix</th>
-                        <th scope="col" class="px-6 py-3 font-bold">Actions</th>
+        <a href="{{ path('admin_product_new') }}" class="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-baluBlue hover:bg-baluBlue-light rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-baluBlue">
+            <svg xmlns="http://www.w3.org/2000/svg" class="mr-2 h-4 w-4" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M5 12h14"></path>
+                <path d="M12 5v14"></path>
+            </svg>
+            Ajouter un produit
+        </a>
+    </div>
+    
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden">
+        <div class="relative w-full overflow-auto">
+            <table class="w-full caption-bottom text-sm">
+                <thead>
+                    <tr class="border-b transition-colors hover:bg-muted/50">
+                        <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Nom</th>
+                        <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Catégorie</th>
+                        <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Prix</th>
+                        <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Entreprise</th>
+                        <th class="h-12 px-4 text-right align-middle font-medium text-muted-foreground">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                {% for product in products %}
-                    <tr class="product-row bg-white border-b transition-opacity duration-300 ease-in-out">
-                        <th scope="row" class="px-6 py-4 font-medium text-secondary-900 whitespace-nowrap">{{ product.name }}</th>
-                        <td class="px-6 py-4 text-secondary-300">{{ product.category }}</td>
-                        <td class="px-6 py-4 text-secondary-300 w-10p">{{ product.price }} €</td>
-                        <td class="px-6 py-4 text-secondary-300 flex items-center gap-2">
-                        <div class="inline-flex rounded-md shadow-sm items-center w-full h-full">
-                            <a href="{{ path('back_admin_user_product_show', {'id': product.id}) }}" aria-current="page" class="px-4 py-2 text-sm font-medium text-primary-700 bg-white border border-gray-200 rounded-s-lg hover:bg-gray-100 focus:z-10 focus:ring-2 ">
-                                Détails
-                            </a>
-                            <a href="{{ path('back_admin_user_product_edit', {'id': product.id}) }}" class="px-4 py-2 text-sm font-medium text-white bg-secondary border-t border-b border-gray-200 hover:opacity-90 focus:z-10 focus:ring-2">
-                                Editer
-                            </a>
-                             {{ include('back/admin/user/product/_delete_form.html.twig') }}
-                        </div>
-                        </td>
-                    </tr>
-                {% else %}
-                    <tr class="bg-white border-b">
-                        <td colspan="5">Pas de produits.</td>
-                    </tr>
-                {% endfor %}
+                    {% for product in products %}
+                        <tr class="border-b transition-colors hover:bg-muted/50">
+                            <td class="p-4 align-middle">{{ product.name }}</td>
+                            <td class="p-4 align-middle">{{ product.category ? product.category.name : 'N/A' }}</td>
+                            <td class="p-4 align-middle">{{ product.unitPrice|number_format(2, ',', ' ') }} €</td>
+                            <td class="p-4 align-middle">{{ product.company ? product.company.name : 'N/A' }}</td>
+                            <td class="p-4 align-middle text-right">
+                                <div class="flex justify-end space-x-2">
+                                    <a href="{{ path('admin_product_show', {'id': product.id}) }}" class="inline-flex items-center justify-center px-3 py-1 text-xs font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-baluBlue dark:bg-gray-800 dark:border-gray-700 dark:text-gray-200 dark:hover:bg-gray-700">
+                                        Voir
+                                    </a>
+                                    <a href="{{ path('admin_product_edit', {'id': product.id}) }}" class="inline-flex items-center justify-center px-3 py-1 text-xs font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-baluBlue dark:bg-gray-800 dark:border-gray-700 dark:text-gray-200 dark:hover:bg-gray-700">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"></path>
+                                            <path d="m15 5 4 4"></path>
+                                        </svg>
+                                        Modifier
+                                    </a>
+                                    <button type="button" class="inline-flex items-center justify-center px-3 py-1 text-xs font-medium text-red-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 dark:bg-gray-800 dark:border-gray-700 dark:text-red-400 dark:hover:bg-gray-700" data-product-id="{{ product.id }}" data-product-name="{{ product.name }}" onclick="openDeleteModal({{ product.id }}, '{{ product.name }}')">
+                                        Supprimer
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="5" class="p-4 align-middle text-center text-gray-500 dark:text-gray-400">Aucun produit trouvé</td>
+                        </tr>
+                    {% endfor %}
                 </tbody>
             </table>
         </div>
     </div>
+    
+    <!-- Modal de suppression -->
+    <div id="deleteConfirmModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center hidden">
+        <div class="bg-white dark:bg-gray-800 rounded-lg max-w-md w-full mx-auto">
+            <div class="p-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
+                <h5 class="text-lg font-semibold text-gray-900 dark:text-white">Supprimer le produit</h5>
+                <button type="button" class="text-gray-400 hover:text-gray-500 dark:hover:text-gray-300" id="closeModal">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="p-4 border-b border-gray-200 dark:border-gray-700">
+                <p id="deleteConfirmMessage" class="text-gray-700 dark:text-gray-300">Êtes-vous sûr de vouloir supprimer ce produit ? Cette action ne peut pas être annulée.</p>
+            </div>
+            <div class="p-4 flex justify-end gap-2">
+                <button type="button" id="cancelDelete" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600 dark:hover:bg-gray-600">
+                    Annuler
+                </button>
+                <form id="deleteProductForm" method="POST" action="">
+                    <input type="hidden" name="_token" id="csrf_token_placeholder" value="">
+                    <button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-700 focus:outline-none dark:bg-red-700 dark:hover:bg-red-800">
+                        Supprimer
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 
+<script>
+    window.csrfTokens = {
+        {% for product in products %}
+            "{{ product.id }}": "{{ csrf_token('delete' ~ product.id) }}",
+        {% endfor %}
+    };
+
+    function openDeleteModal(productId, productName) {
+        const modal = document.getElementById('deleteConfirmModal');
+        const deleteForm = document.getElementById('deleteProductForm');
+        const csrfTokenInput = document.getElementById('csrf_token_placeholder');
+        const confirmMessage = document.getElementById('deleteConfirmMessage');
+
+        deleteForm.action = "{{ path('admin_product_delete', {'id': 'PRODUCT_ID'}) }}".replace('PRODUCT_ID', productId);
+        csrfTokenInput.value = window.csrfTokens[productId];
+        confirmMessage.textContent = `Êtes-vous sûr de vouloir supprimer le produit "${productName}" ? Cette action ne peut pas être annulée.`;
+
+        modal.classList.remove('hidden');
+    }
+
+    document.addEventListener('turbo:load', function() {
+        initializeDeleteFunctionality();
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        initializeDeleteFunctionality();
+    });
+
+    function initializeDeleteFunctionality() {
+        const closeModal = document.getElementById('closeModal');
+        if (closeModal) {
+            closeModal.addEventListener('click', function() {
+                document.getElementById('deleteConfirmModal').classList.add('hidden');
+            });
+        }
+
+        const cancelDelete = document.getElementById('cancelDelete');
+        if (cancelDelete) {
+            cancelDelete.addEventListener('click', function() {
+                document.getElementById('deleteConfirmModal').classList.add('hidden');
+            });
+        }
+
+        const modal = document.getElementById('deleteConfirmModal');
+        modal.addEventListener('click', function(event) {
+            if (event.target === modal) {
+                modal.classList.add('hidden');
+            }
+        });
+    }
+</script>
 {% endblock %}

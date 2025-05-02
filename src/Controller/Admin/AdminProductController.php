@@ -5,10 +5,12 @@ namespace App\Controller\Admin;
 use App\Entity\Product;
 use App\Form\ProductType;
 use App\Repository\ProductRepository;
+use App\Repository\CategoryRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
@@ -28,10 +30,24 @@ class AdminProductController extends AbstractController
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $product = new Product();
-        $form = $this->createForm(ProductType::class, $product);
+        $form = $this->createForm(ProductType::class, $product, [
+            'is_admin' => true,
+            'categories_url' => $this->generateUrl('admin_product_categories')
+        ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $company = $product->getCompany();
+            $category = $product->getCategory();
+            
+            if ($category && $category->getCompany() !== $company) {
+                $this->addFlash('error', 'La catégorie sélectionnée n\'appartient pas à l\'entreprise choisie.');
+                return $this->render('admin/product/new.html.twig', [
+                    'product' => $product,
+                    'form' => $form,
+                ]);
+            }
+            
             $entityManager->persist($product);
             $entityManager->flush();
 
@@ -42,6 +58,28 @@ class AdminProductController extends AbstractController
             'product' => $product,
             'form' => $form,
         ]);
+    }
+
+    #[Route('/categories', name: 'admin_product_categories', methods: ['GET'])]
+    public function getCategories(Request $request, CategoryRepository $categoryRepository): JsonResponse 
+    {
+        $companyId = $request->query->get('company_id');
+        
+        if (!$companyId) {
+            return new JsonResponse([]);
+        }
+        
+        $categories = $categoryRepository->findBy(['company' => $companyId]);
+        
+        $formattedCategories = [];
+        foreach ($categories as $category) {
+            $formattedCategories[] = [
+                'id' => $category->getId(),
+                'name' => $category->getName()
+            ];
+        }
+        
+        return new JsonResponse($formattedCategories);
     }
 
     #[Route('/{id}', name: 'admin_product_show', methods: ['GET'])]
@@ -55,10 +93,24 @@ class AdminProductController extends AbstractController
     #[Route('/{id}/edit', name: 'admin_product_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Product $product, EntityManagerInterface $entityManager): Response
     {
-        $form = $this->createForm(ProductType::class, $product);
+        $form = $this->createForm(ProductType::class, $product, [
+            'is_admin' => true,
+            'categories_url' => $this->generateUrl('admin_product_categories')
+        ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $company = $product->getCompany();
+            $category = $product->getCategory();
+            
+            if ($category && $category->getCompany() !== $company) {
+                $this->addFlash('error', 'La catégorie sélectionnée n\'appartient pas à l\'entreprise choisie.');
+                return $this->render('admin/product/edit.html.twig', [
+                    'product' => $product,
+                    'form' => $form,
+                ]);
+            }
+            
             $entityManager->flush();
 
             return $this->redirectToRoute('admin_product_index', [], Response::HTTP_SEE_OTHER);
@@ -73,7 +125,7 @@ class AdminProductController extends AbstractController
     #[Route('/{id}', name: 'admin_product_delete', methods: ['POST'])]
     public function delete(Request $request, Product $product, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$product->getId(), $request->getPayload()->getString('_token'))) {
+        if ($this->isCsrfTokenValid('delete'.$product->getId(), $request->request->get('_token'))) {
             $entityManager->remove($product);
             $entityManager->flush();
         }

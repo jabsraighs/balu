@@ -29,8 +29,12 @@ final class ProductController extends AbstractController{
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $product = new Product();
-        $product->setCompany($this->getUser()->getCompany());
-        $form = $this->createForm(ProductType::class, $product);
+        $userCompany = $this->getUser()->getCompany();
+        $product->setCompany($userCompany);
+        
+        $form = $this->createForm(ProductType::class, $product, [
+            'user_company' => $userCompany
+        ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -62,13 +66,15 @@ final class ProductController extends AbstractController{
     #[Route('/{id}/edit', name: 'app_product_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Product $product, EntityManagerInterface $entityManager): Response
     {
-        $form = $this->createForm(ProductType::class, $product);
-        $form->handleRequest($request);
-
         if ($product->getCompany() !== $this->getUser()->getCompany()) {
             $this->addFlash('error', 'Vous n\'avez pas accès à ce produit.');
             return $this->redirectToRoute('app_product_index');
         }
+        
+        $form = $this->createForm(ProductType::class, $product, [
+            'user_company' => $this->getUser()->getCompany() 
+        ]);
+        $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();

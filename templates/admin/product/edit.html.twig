@@ -1,29 +1,265 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Modifier {{product.name}}{% endblock %}
+{% block title %}Modifier Produit{% endblock %}
 
-{% block body %}
-	<div class="flex gap-2 items-center">
-		<a href="{{ path('back_admin_user_product_index') }}">
-			<svg height="35px" width="35px" version="1.1" class="fill-secondary-500 hover:opacity-60 transition-opacity" id="_x32_" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewbox="0 0 512 512" xml:space="preserve">
-				<g>
-					<path class="st0" d="M154.52,265.848l90.964,69.014c2.329,1.766,4.674,2.702,6.78,2.702c2.148,0,4.022-0.974,5.276-2.741
-													c1.199-1.688,1.807-3.99,1.807-6.844v-26.424c0-6.952,5.656-12.608,12.607-12.608h75.036c8.705,0,15.788-7.085,15.788-15.788
-													v-34.313c0-8.703-7.083-15.788-15.788-15.788h-75.036c-6.951,0-12.607-5.656-12.607-12.608v-26.425
-													c0-7.065-3.659-9.584-7.082-9.584c-2.106,0-4.451,0.936-6.78,2.702l-90.964,69.014c-3.416,2.59-5.297,6.087-5.297,9.849
-													C149.223,259.762,151.103,263.259,154.52,265.848z"/>
-					<path class="st0" d="M256,0C114.842,0,0.002,114.84,0.002,256S114.842,512,256,512c141.158,0,255.998-114.84,255.998-256
-											S397.158,0,256,0z M256,66.785c104.334,0,189.216,84.879,189.216,189.215S360.334,445.215,256,445.215S66.783,360.336,66.783,256
-											S151.667,66.785,256,66.785z"/>
-				</g>
-			</svg>
-		</a>
-		{% embed '_components/_page_title.html.twig' %}
-			{% block title %}Modifier le produit
-			{% endblock %}
-		{% endembed %}
-	</div>
+{% block page_content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="mb-6">
+        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Modifier Produit</h1>
+    </div>
+    
+    <div class="mb-6">
+        <a href="{{ path('admin_product_index') }}" class="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-gray-700 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm hover:bg-gray-50 dark:hover:bg-gray-700">
+            <svg xmlns="http://www.w3.org/2000/svg" class="mr-2 h-4 w-4" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="m12 19-7-7 7-7"></path>
+                <path d="M19 12H5"></path>
+            </svg>
+            Retour
+        </a>
+    </div>
+    
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden">
+        <div class="p-6">
+            {{ form_start(form, {
+                'attr': {
+                    'class': 'space-y-6',
+                    'novalidate': 'novalidate'
+                }
+            }) }}
+                
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    {{ form_label(form.name, 'Nom*', {'label_attr': {'class': 'block text-sm font-medium text-gray-700 dark:text-gray-300'}}) }}
+                    {{ form_widget(form.name, {
+                        'attr': {
+                            'class': 'mt-1 block w-full p-2 border border-gray-300 dark:border-gray-700 rounded-md shadow-sm focus:ring-baluBlue focus:border-baluBlue bg-white dark:bg-gray-800 text-gray-900 dark:text-white',
+                            'placeholder': 'Nom du produit'
+                        }
+                    }) }}
+                    {{ form_errors(form.name, {'attr': {'class': 'text-red-500 text-sm mt-1'}}) }}
+                </div>
+                
+                <div>
+                    {{ form_label(form.unitPrice, 'Prix unitaire*', {'label_attr': {'class': 'block text-sm font-medium text-gray-700 dark:text-gray-300'}}) }}
+                    {{ form_widget(form.unitPrice, {
+                        'attr': {
+                            'class': 'mt-1 block w-full p-2 border border-gray-300 dark:border-gray-700 rounded-md shadow-sm focus:ring-baluBlue focus:border-baluBlue bg-white dark:bg-gray-800 text-gray-900 dark:text-white',
+                            'placeholder': '0.00'
+                        }
+                    }) }}
+                    {{ form_errors(form.unitPrice, {'attr': {'class': 'text-red-500 text-sm mt-1'}}) }}
+                </div>
+                
+                <div>
+                    {{ form_label(form.category, 'Catégorie*', {'label_attr': {'class': 'block text-sm font-medium text-gray-700 dark:text-gray-300'}}) }}
+                    {{ form_widget(form.category, {
+                        'attr': {
+                            'class': 'mt-1 block w-full p-2 border border-gray-300 dark:border-gray-700 rounded-md shadow-sm focus:ring-baluBlue focus:border-baluBlue bg-white dark:bg-gray-800 text-gray-900 dark:text-white'
+                        }
+                    }) }}
+                    {{ form_errors(form.category, {'attr': {'class': 'text-red-500 text-sm mt-1'}}) }}
+                </div>
+                
+                <div>
+                    {{ form_label(form.company, 'Entreprise*', {'label_attr': {'class': 'block text-sm font-medium text-gray-700 dark:text-gray-300'}}) }}
+                    {{ form_widget(form.company, {
+                        'attr': {
+                            'class': 'mt-1 block w-full p-2 border border-gray-300 dark:border-gray-700 rounded-md shadow-sm focus:ring-baluBlue focus:border-baluBlue bg-white dark:bg-gray-800 text-gray-900 dark:text-white'
+                        }
+                    }) }}
+                    {{ form_errors(form.company, {'attr': {'class': 'text-red-500 text-sm mt-1'}}) }}
+                </div>
+            </div>
+            
+            <div>
+                {{ form_label(form.description, 'Description', {'label_attr': {'class': 'block text-sm font-medium text-gray-700 dark:text-gray-300'}}) }}
+                {{ form_widget(form.description, {
+                    'attr': {
+                        'class': 'mt-1 block w-full p-2 border border-gray-300 dark:border-gray-700 rounded-md shadow-sm focus:ring-baluBlue focus:border-baluBlue bg-white dark:bg-gray-800 text-gray-900 dark:text-white min-h-[100px]',
+                        'placeholder': 'Description du produit'
+                    }
+                }) }}
+                {{ form_errors(form.description, {'attr': {'class': 'text-red-500 text-sm mt-1'}}) }}
+            </div>
+            
+            <div class="flex justify-between mt-6">
+                <button 
+                    type="button" 
+                    class="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-red-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 dark:bg-gray-800 dark:border-gray-700 dark:text-red-400 dark:hover:bg-gray-700"
+                    onclick="openDeleteModal()"
+                >
+                    Supprimer
+                </button>
+                
+                <div class="flex space-x-2">
+                    <a 
+                        href="{{ path('admin_product_index') }}" 
+                        class="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-gray-700 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm hover:bg-gray-50 dark:hover:bg-gray-700"
+                    >
+                        Annuler
+                    </a>
+                    <button 
+                        type="submit" 
+                        class="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-baluBlue hover:bg-baluBlue-light rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-baluBlue"
+                    >
+                        Mettre à jour
+                    </button>
+                </div>
+            </div>
+            
+            {{ form_rest(form) }}
+            {{ form_end(form) }}
+        </div>
+    </div>
+    
+    <div id="deleteConfirmModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center hidden">
+        <div class="bg-white dark:bg-gray-800 rounded-lg max-w-md w-full mx-auto">
+            <div class="p-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
+                <h5 class="text-lg font-semibold text-gray-900 dark:text-white">Supprimer le produit</h5>
+                <button type="button" class="text-gray-400 hover:text-gray-500 dark:hover:text-gray-300" id="closeModal">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="p-4 border-b border-gray-200 dark:border-gray-700">
+                <p class="text-gray-700 dark:text-gray-300">Êtes-vous sûr de vouloir supprimer ce produit ? Cette action ne peut pas être annulée.</p>
+            </div>
+            <div class="p-4 flex justify-end gap-2">
+                <button type="button" id="cancelDelete" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600 dark:hover:bg-gray-600">
+                    Annuler
+                </button>
+                <form method="POST" action="{{ path('admin_product_delete', {'id': product.id}) }}">
+                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ product.id) }}">
+                    <button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-700 focus:outline-none dark:bg-red-700 dark:hover:bg-red-800">
+                        Supprimer
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 
-    {{ include('Back/admin/user/product/_form.html.twig', {'button_label': 'Mettre à jour'}) }}
+<script>
+    document.addEventListener('turbo:load', function() {
+        const closeModal = document.getElementById('closeModal');
+        if (closeModal) {
+            closeModal.addEventListener('click', function() {
+                document.getElementById('deleteConfirmModal').classList.add('hidden');
+            });
+        }
+        
+        const cancelDelete = document.getElementById('cancelDelete');
+        if (cancelDelete) {
+            cancelDelete.addEventListener('click', function() {
+                document.getElementById('deleteConfirmModal').classList.add('hidden');
+            });
+        }
+        
+        const modal = document.getElementById('deleteConfirmModal');
+        modal.addEventListener('click', function(event) {
+            if (event.target === modal) {
+                modal.classList.add('hidden');
+            }
+        });
+        
+        const form = document.querySelector('form');
+        form.addEventListener('submit', function(event) {
+            const errorElements = document.querySelectorAll('.js-form-error');
+            errorElements.forEach(element => element.remove());
 
+            let hasErrors = false;
+            
+            const nameInput = document.getElementById('product_name');
+            if (nameInput && nameInput.value.length < 2) {
+                const errorElement = document.createElement('p');
+                errorElement.classList.add('text-red-500', 'text-sm', 'mt-1', 'js-form-error');
+                errorElement.textContent = 'Le nom doit contenir au moins 2 caractères.';
+                nameInput.parentNode.appendChild(errorElement);
+                hasErrors = true;
+            }
+            
+            const priceInput = document.getElementById('product_unitPrice');
+            if (priceInput) {
+                const value = parseFloat(priceInput.value.replace(',', '.'));
+                if (isNaN(value) || value <= 0) {
+                    const errorElement = document.createElement('p');
+                    errorElement.classList.add('text-red-500', 'text-sm', 'mt-1', 'js-form-error');
+                    errorElement.textContent = 'Veuillez entrer un prix valide supérieur à 0.';
+                    priceInput.parentNode.appendChild(errorElement);
+                    hasErrors = true;
+                }
+            }
+            
+            const categorySelect = document.getElementById('product_category');
+            if (categorySelect && categorySelect.value === "") {
+                const errorElement = document.createElement('p');
+                errorElement.classList.add('text-red-500', 'text-sm', 'mt-1', 'js-form-error');
+                errorElement.textContent = 'Veuillez sélectionner une catégorie.';
+                categorySelect.parentNode.appendChild(errorElement);
+                hasErrors = true;
+            }
+            
+            if (hasErrors) {
+                event.preventDefault();
+            }
+        });
+
+        var companySelect = document.querySelector('#product_company');
+        var categorySelect = document.querySelector('#product_category');
+        var originalCategoryId = categorySelect ? categorySelect.value : null;
+        
+        if (companySelect && categorySelect) {
+            companySelect.addEventListener('change', function() {
+                var companyId = this.value;
+                categorySelect.disabled = true;
+                categorySelect.innerHTML = '<option value="">Chargement des catégories...</option>';
+                
+                if (!companyId) {
+                    categorySelect.innerHTML = '<option value="">Veuillez d\'abord sélectionner une entreprise</option>';
+                    categorySelect.disabled = true;
+                    return;
+                }
+                
+                fetch('{{ path('admin_product_categories') }}?company_id=' + companyId)
+                    .then(response => response.json())
+                    .then(data => {
+                        categorySelect.innerHTML = '<option value="">Sélectionnez une catégorie</option>';
+                        
+                        if (data.length === 0) {
+                            categorySelect.innerHTML += '<option value="" disabled>Aucune catégorie disponible pour cette entreprise</option>';
+                        } else {
+                            data.forEach(function(category) {
+                                var option = document.createElement('option');
+                                option.value = category.id;
+                                option.textContent = category.name;
+                                if (category.id === originalCategoryId) {
+                                    option.selected = true;
+                                }
+                                categorySelect.appendChild(option);
+                            });
+                        }
+                        
+                        categorySelect.disabled = false;
+                    })
+                    .catch(error => {
+                        console.error('Erreur lors du chargement des catégories:', error);
+                        categorySelect.innerHTML = '<option value="">Erreur de chargement des catégories</option>';
+                        categorySelect.disabled = true;
+                    });
+            });
+            
+            originalCategoryId = categorySelect.value;
+            
+            if (companySelect.value && !categorySelect.value) {
+                companySelect.dispatchEvent(new Event('change'));
+            }
+        }
+    });
+    
+    function openDeleteModal() {
+        document.getElementById('deleteConfirmModal').classList.remove('hidden');
+    }
+</script>
 {% endblock %}
