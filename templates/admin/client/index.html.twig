@@ -1,0 +1,71 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Clients{% endblock %}
+
+{% block page_content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="mb-6">
+        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Clients</h1>
+    </div>
+    
+    <div class="flex justify-between items-center mb-6">
+        <div>
+            <h2 class="text-xl font-semibold text-gray-900 dark:text-white">Tous les clients</h2>
+            <p class="text-gray-500 dark:text-gray-400">Gérez tous les clients de la plateforme</p>
+        </div>
+        <a href="{{ path('admin_client_new') }}" class="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-baluBlue hover:bg-baluBlue-light rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-baluBlue">
+            <svg xmlns="http://www.w3.org/2000/svg" class="mr-2 h-4 w-4" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M5 12h14"></path>
+                <path d="M12 5v14"></path>
+            </svg>
+            Ajouter un client
+        </a>
+    </div>
+
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden">
+        <div class="relative w-full overflow-auto">
+            <table class="w-full caption-bottom text-sm">
+                <thead>
+                    <tr class="border-b transition-colors hover:bg-muted/50">
+                        <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Nom</th>
+                        <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Email</th>
+                        <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Téléphone</th>
+                        <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Adresse</th>
+                        <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Entreprise</th>
+                        <th class="h-12 px-4 text-right align-middle font-medium text-muted-foreground">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for client in clients %}
+                        <tr class="border-b transition-colors hover:bg-muted/50">
+                            <td class="p-4 align-middle">{{ client.name }}</td>
+                            <td class="p-4 align-middle">{{ client.email }}</td>
+                            <td class="p-4 align-middle">{{ client.phone }}</td>
+                            <td class="p-4 align-middle">{{ client.address }}</td>
+                            <td class="p-4 align-middle">{{ client.company ? client.company.name : '-' }}</td>
+                            <td class="p-4 align-middle text-right">
+                                <div class="flex justify-end space-x-2">
+                                    <a href="{{ path('admin_client_show', {'id': client.id}) }}" class="inline-flex items-center justify-center px-3 py-1 text-xs font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-baluBlue dark:bg-gray-800 dark:border-gray-700 dark:text-gray-200 dark:hover:bg-gray-700">
+                                        Voir
+                                    </a>
+                                    <a href="{{ path('admin_client_edit', {'id': client.id}) }}" class="inline-flex items-center justify-center px-3 py-1 text-xs font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-baluBlue dark:bg-gray-800 dark:border-gray-700 dark:text-gray-200 dark:hover:bg-gray-700">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"></path>
+                                            <path d="m15 5 4 4"></path>
+                                        </svg>
+                                        Modifier
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="6" class="p-4 align-middle text-center text-gray-500 dark:text-gray-400">Aucun client trouvé</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
