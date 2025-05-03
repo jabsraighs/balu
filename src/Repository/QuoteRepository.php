@@ -93,15 +93,27 @@ class QuoteRepository extends ServiceEntityRepository
 
     /**
      * Find all quotes for a specific company
+     * 
+     * @param Company $company The company to filter by
+     * @param array $orderBy Optional ordering criteria, e.g. ['createdAt' => 'DESC']
+     * @return Quote[]
      */
-    public function findByCompany(Company $company): array
+    public function findByCompany(Company $company, array $orderBy = []): array
     {
-        return $this->createQueryBuilder('q')
+        $qb = $this->createQueryBuilder('q')
             ->andWhere('q.company = :company')
-            ->setParameter('company', $company)
-            ->orderBy('q.dateCreated', 'DESC')
-            ->getQuery()
-            ->getResult();
+            ->setParameter('company', $company);
+            
+        // Apply ordering if provided, otherwise default to dateCreated DESC
+        if (!empty($orderBy)) {
+            foreach ($orderBy as $field => $direction) {
+                $qb->orderBy('q.' . $field, $direction);
+            }
+        } else {
+            $qb->orderBy('q.dateCreated', 'DESC');
+        }
+        
+        return $qb->getQuery()->getResult();
     }
 
     /**

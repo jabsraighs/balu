@@ -57,6 +57,13 @@ final class PaymentController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($payment);
             
+            // Vérifier si le paiement est total
+            $newTotalPaid = $totalPaid + (float)$payment->getAmount();
+            if ($newTotalPaid >= (float)$invoice->getTotalAmount()) {
+                $invoice->setStatus('paid');
+                $invoice->setDatePaid(new \DateTime());
+            }
+            
             // Mettre à jour le statut de la facture
             $this->updateInvoiceStatus($invoice, $entityManager);
             
@@ -96,9 +103,21 @@ final class PaymentController extends AbstractController
         
         if ($this->isCsrfTokenValid('delete'.$payment->getId(), $request->getPayload()->getString('_token'))) {
             $invoice = $payment->getInvoice();
+            
+            $totalPaid = 0;
+            foreach ($invoice->getPayments() as $existingPayment) {
+                if ($existingPayment->getId() !== $payment->getId()) {
+                    $totalPaid += (float)$existingPayment->getAmount();
+                }
+            }
+            
             $entityManager->remove($payment);
             
-            // Mettre à jour le statut de la facture
+            if ($totalPaid < (float)$invoice->getTotalAmount()) {
+                $invoice->setStatus('pending');
+                $invoice->setDatePaid(null);
+            }
+            
             $this->updateInvoiceStatus($invoice, $entityManager);
             
             $entityManager->flush();

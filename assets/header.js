@@ -1,4 +1,5 @@
-document.addEventListener('turbo:load', function () {
+const setupHeaderFonctions = () => {
+    console.log('Header functions initialized');
     // User menu toggle
     const userMenuToggle = document.querySelector('.user-menu-toggle');
     const userMenuDropdown = document.querySelector('.user-menu-dropdown');
@@ -67,4 +68,7 @@ document.addEventListener('turbo:load', function () {
             }));
         });
     }
-});
+}
+
+document.addEventListener('turbo:load',setupHeaderFonctions);
+document.addEventListener('DOMContentLoaded', setupHeaderFonctions);

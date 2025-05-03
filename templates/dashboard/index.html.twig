@@ -278,8 +278,8 @@
 
 	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 	<script>
-		document.addEventListener('turbo:load', function() {
-			const monthlyData = {{ invoiceStats.monthlyRevenue|json_encode|raw }};
+	function setupChart() {
+					const monthlyData = {{ invoiceStats.monthlyRevenue|json_encode|raw }};
 			const labels = monthlyData.map(item => item.label);
 			const amounts = monthlyData.map(item => item.amount);
 
@@ -319,6 +319,8 @@
 					}
 				}
 			});
-		});
+		}
+		document.addEventListener('turbo:load', setupChart);
+		document.addEventListener('DOMContentLoaded', setupChart);
 	</script>
 {% endblock %}

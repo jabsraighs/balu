@@ -89,6 +89,11 @@ final class CategoryController extends AbstractController{
             $this->addFlash('error', 'Vous n\'avez pas accès à cette catégorie.');
             return $this->redirectToRoute('app_category_index');
         }
+
+        if (!$category->getProducts()->isEmpty()) {
+            $this->addFlash('error', 'Impossible de supprimer cette catégorie car elle est liée à des produits.');
+            return $this->redirectToRoute('app_category_index');
+        }
         
         if ($this->isCsrfTokenValid('delete'.$category->getId(), $request->getPayload()->getString('_token'))) {
             $entityManager->remove($category);

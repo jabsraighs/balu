@@ -5,10 +5,8 @@ namespace App\Controller;
 use App\Entity\Invoice;
 use App\Form\InvoiceType;
 use App\Repository\InvoiceRepository;
+use App\Service\PdfService;
 use Doctrine\ORM\EntityManagerInterface;
-use Dompdf\Dompdf;
-use Dompdf\Options;
-use Knp\Snappy\Pdf;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -113,7 +111,7 @@ final class InvoiceController extends AbstractController{
     }
 
     #[Route('/{id}/send-email', name: 'app_invoice_send_email', methods: ['GET'])]
-    public function sendEmail(Invoice $invoice, Dompdf $dompdf, MailerInterface $mailer): Response
+    public function sendEmail(Invoice $invoice, MailerInterface $mailer, PdfService $pdfService): Response
     {
         if ($invoice->getCompany() !== $this->getUser()->getCompany()) {
             $this->addFlash('error', 'Vous n\'avez pas accès à cette facture.');
@@ -124,14 +122,7 @@ final class InvoiceController extends AbstractController{
             'invoice' => $invoice
         ]);
 
-        $options = new Options();
-        $options->set('isHtml5ParserEnabled', true);
-        $options->set('isPhpEnabled', true);
-        $options->set('defaultFont', 'Arial');
-
-        $dompdf->loadHtml($html);
-        $dompdf->render();
-        $pdfContent = $dompdf->output();
+        $pdfContent = $pdfService->generatePdf($html);
         
         $email = (new Email())
             ->from($this->getParameter('app_email_from'))

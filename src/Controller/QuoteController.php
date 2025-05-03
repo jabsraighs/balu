@@ -30,7 +30,7 @@ final class QuoteController extends AbstractController
         $company = $user->getCompany();
 
         return $this->render('quote/index.html.twig', [
-            'quotes' => $quoteRepository->findByCompany($company),
+            'quotes' => $quoteRepository->findByCompany($company, ['createdAt' => 'DESC']),
         ]);
     }
 
@@ -63,7 +63,7 @@ final class QuoteController extends AbstractController
 
             $entityManager->persist($quote);
             $entityManager->flush();
-
+            $this->addFlash('success', 'Le devis a été créé avec succès.');
             return $this->redirectToRoute('app_quote_index', [], Response::HTTP_SEE_OTHER);
         }
 

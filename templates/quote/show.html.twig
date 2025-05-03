@@ -28,9 +28,11 @@
 						<a href="{{ path('app_quote_send_email', {'id': quote.id}) }}" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
 							Envoyer par email
 						</a>
-						<a href="{{ path('app_quote_convert_to_invoice', {'id': quote.id}) }}" class="block px-4 py-2 text-sm text-green-700 dark:text-green-500 hover:bg-gray-100 dark:hover:bg-gray-700">
-							Convertir en facture
-						</a>
+						{% if quote.status == 'draft' %}
+							<a href="{{ path('app_quote_convert_to_invoice', {'id': quote.id}) }}" class="block px-4 py-2 text-sm text-green-700 dark:text-green-500 hover:bg-gray-100 dark:hover:bg-gray-700">
+								Convertir en facture
+							</a>
+						{% endif %}
 					</div>
 				</div>
 			</div>
@@ -154,21 +156,25 @@
 
 	{% block javascripts %}
 		{{ parent() }}
-		<script>
-			document.addEventListener('turbo:load', function () {
-const dropdown = document.querySelector('.dropdown');
+				<script>
+        function setupDropdown() {
+            console.log('Dropdown setup');
+                const dropdown = document.querySelector('.dropdown');
 
-dropdown.addEventListener('click', function () {
-const menu = this.querySelector('.dropdown-menu');
-menu.classList.toggle('hidden');
-});
+            dropdown.addEventListener('click', function () {
+            const menu = this.querySelector('.dropdown-menu');
+            menu.classList.toggle('hidden');
+            });
 
-// Fermer le menu quand on clique en dehors
-document.addEventListener('click', function (event) {
-if (! dropdown.contains(event.target)) {
-dropdown.querySelector('.dropdown-menu').classList.add('hidden');
+            // Fermer le menu quand on clique en dehors
+            document.addEventListener('click', function (event) {
+            if (! dropdown.contains(event.target)) {
+            dropdown.querySelector('.dropdown-menu').classList.add('hidden');
+            }
+            });
 }
-});
-});
+			document.addEventListener('turbo:load', setupDropdown);
+            document.addEventListener('DOMContentLoaded', setupDropdown);
+
 		</script>
 	{% endblock %}

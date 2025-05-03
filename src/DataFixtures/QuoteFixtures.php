@@ -3,6 +3,7 @@
 namespace App\DataFixtures;
 
 use App\Entity\Quote;
+use App\Entity\QuoteLine;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
@@ -20,33 +21,31 @@ class QuoteFixtures extends Fixture implements DependentFixtureInterface
         $status = ['draft', 'sent', 'accepted', 'rejected', 'expired'];
         $statusDistribution = [15, 30, 35, 10, 10];
         
-        $monthlyDistribution = [
-            '01' => 5,  // Janvier
-            '02' => 6,  // Février
-            '03' => 7,  // Mars
-            '04' => 8,  // Avril
-            '05' => 9,  // Mai
-            '06' => 10, // Juin 
-            '07' => 9,  // Juillet
-            '08' => 6,  // Août
-            '09' => 12, // Septembre
-            '10' => 14, // Octobre
-            '11' => 7,  // Novembre
-            '12' => 7   // Décembre
-        ];
-        
+        // Période des 6 derniers mois
+        $now = new \DateTimeImmutable();
+        $sixMonthsAgo = (new \DateTimeImmutable())->modify('-5 months')->modify('first day of this month');
         $quoteNumber = 1;
-        $year = 2024;
         
-        foreach ($monthlyDistribution as $month => $count) {
-            for ($i = 0; $i < $count; $i++) {
+        // Générer des devis pour chaque mois des 6 derniers mois
+        $currentDate = clone $sixMonthsAgo;
+        while ($currentDate <= $now) {
+            $monthName = $currentDate->format('F');
+            $year = $currentDate->format('Y');
+            $month = $currentDate->format('m');
+            
+            // Nombre de devis pour ce mois (entre 5 et 15)
+            $quoteCount = $faker->numberBetween(5, 15);
+            
+            for ($i = 0; $i < $quoteCount; $i++) {
                 // Générer une date dans le mois concerné
-                $day = str_pad($faker->numberBetween(1, 28), 2, '0', STR_PAD_LEFT);
-                $dateString = "$year-$month-$day";
-                $createdAt = \DateTimeImmutable::createFromFormat('Y-m-d', $dateString);
+                $day = $faker->numberBetween(1, min(28, (int)$currentDate->format('t')));
+                $quoteDate = \DateTimeImmutable::createFromFormat(
+                    'Y-m-d',
+                    sprintf('%s-%s-%02d', $year, $month, $day)
+                );
                 
                 // Date d'expiration (30 jours après création)
-                $expiredAt = $createdAt->modify('+30 days');
+                $expiredAt = $quoteDate->modify('+30 days');
                 
                 // Déterminer le statut selon la distribution souhaitée
                 $randomValue = $faker->numberBetween(1, 100);
@@ -68,19 +67,48 @@ class QuoteFixtures extends Fixture implements DependentFixtureInterface
                 // Création du devis
                 $quote = new Quote();
                 $quote->setQuoteNumber('DEV-' . str_pad($quoteNumber, 5, '0', STR_PAD_LEFT))
-                    ->setDateCreated($createdAt)
-                    ->setCreatedAt($createdAt)
+                    ->setDateCreated($quoteDate)
+                    ->setCreatedAt($quoteDate)
                     ->setDateValidUntil($expiredAt)
                     ->setStatus($selectedStatus)
                     ->setCompany($mainCompany)
                     ->setClient($client)
-                    ->setCustomer($companyUser)
-                    ->setTotalAmount(0);
+                    ->setCustomer($companyUser);
+                
+                // Ajouter des lignes au devis (entre 1 et 4 lignes)
+                $lineCount = $faker->numberBetween(1, 4);
+                $totalAmount = 0;
+                
+                for ($j = 0; $j < $lineCount; $j++) {
+                    // Sélectionner un produit aléatoire
+                    $productIndex = $faker->numberBetween(0, 9);
+                    $product = $this->getReference('category-' . $productIndex, \App\Entity\Category::class);
+                    
+                    $quoteLine = new QuoteLine();
+                    $quoteLine->setProductName('Produit #' . ($j + 1))
+                            ->setProductDescription('Description du produit #' . ($j + 1))
+                            ->setDescription('Prestation ' . ($j + 1))
+                            ->setQuantity($faker->numberBetween(1, 5))
+                            ->setUnitPrice($faker->randomFloat(2, 100, 1000))
+                            ->setDiscount($faker->numberBetween(0, 15))
+                            ->setQuote($quote);
+                    
+                    $manager->persist($quoteLine);
+                    
+                    // Calcul du montant
+                    $lineAmount = $quoteLine->getQuantity() * $quoteLine->getUnitPrice() * (1 - $quoteLine->getDiscount() / 100);
+                    $totalAmount += $lineAmount;
+                }
+                
+                $quote->setTotalAmount((string)round($totalAmount, 2));
                 
                 $manager->persist($quote);
                 $this->addReference('quote-' . $quoteNumber, $quote);
                 $quoteNumber++;
             }
+            
+            // Passer au mois suivant
+            $currentDate = $currentDate->modify('+1 month');
         }
         
         $manager->flush();
@@ -92,6 +120,7 @@ class QuoteFixtures extends Fixture implements DependentFixtureInterface
             ClientFixtures::class,
             CompanyFixtures::class,
             UserFixtures::class,
+            CategoryFixtures::class,
         ];
     }
 }

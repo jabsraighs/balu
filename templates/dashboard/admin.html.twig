@@ -195,7 +195,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        document.addEventListener('turbo:load', function() {
+    function setupAdminDashboard() {
             // Données fictives pour le graphique des inscriptions
             // Ces données devraient venir du contrôleur dans une implémentation complète
             const registrationsData = {{ registrationsData is defined ? registrationsData|json_encode|raw : '{}' }};
@@ -237,6 +237,9 @@
                     }
                 }
             });
-        });
+        }
+
+        document.addEventListener('turbo:load', setupAdminDashboard);
+        document.addEventListener('DOMContentLoaded', setupAdminDashboard);
     </script>
 {% endblock %}

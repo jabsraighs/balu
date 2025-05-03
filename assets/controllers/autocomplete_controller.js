@@ -59,29 +59,44 @@ export default class extends Controller {
   
   selectItem(item) {
     this.inputTarget.value = item.textContent
-    console.log(item)
     this.productNameTarget.value = item.dataset.name
     this.descriptionTarget.value = item.dataset.description || "Description non disponible"
     this.productDescriptionTarget.value = item.dataset.description || "Description par défaut"
-    console.log(item.dataset.price)
-    if (this.hasUnitPriceTarget && item.dataset.price) {
-      // Convertir explicitement en nombre à virgule flottante
+    
+    // Find the unitPrice input either as a target or outside the controller
+    if (item.dataset.price) {
       const price = parseFloat(item.dataset.price)
       if (!isNaN(price)) {
-        this.unitPriceTarget.value = price.toFixed(2)
-        
-        // Déclencher l'événement input natif pour que les listeners standard soient activés
-        const inputEvent = new Event('input', { bubbles: true })
-        this.unitPriceTarget.dispatchEvent(inputEvent)
-        
-        // Déclencher manuellement le calcul sur le contrôleur line_item si présent
-        const lineItemController = this.application.getControllerForElementAndIdentifier(
-          this.element.closest('.line-item'),
-          'line-item'
-        )
-        
-        if (lineItemController && typeof lineItemController.calculate === 'function') {
-          lineItemController.calculate()
+        // Check if we have a unitPrice target
+        if (this.hasUnitPriceTarget) {
+          this.unitPriceTarget.value = price.toFixed(2)
+          
+          // Déclencher l'événement input natif pour que les listeners standard soient activés
+          const inputEvent = new Event('input', { bubbles: true })
+          this.unitPriceTarget.dispatchEvent(inputEvent)
+          
+          // Déclencher manuellement le calcul sur le contrôleur line_item si présent
+          const lineItemController = this.application.getControllerForElementAndIdentifier(
+            this.element.closest('.line-item'),
+            'line-item'
+          )
+          
+          if (lineItemController && typeof lineItemController.calculate === 'function') {
+            lineItemController.calculate()
+          }
+        } else {
+          // Try to find a related unit price input if not a direct target
+          const lineItem = this.element.closest('.line-item')
+          if (lineItem) {
+            const unitPriceInput = lineItem.querySelector('.unit-price-input')
+            if (unitPriceInput) {
+              unitPriceInput.value = price.toFixed(2)
+              
+              // Trigger input event
+              const inputEvent = new Event('input', { bubbles: true })
+              unitPriceInput.dispatchEvent(inputEvent)
+            }
+          }
         }
       }
     }
